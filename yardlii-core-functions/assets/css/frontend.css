@@ -1,0 +1,194 @@
+/**
+ * Consolidated Styles for YARDLII Homepage Search Form
+ * Version: 4.0 (Cleaned and Merged)
+ */
+
+/* === Main Form Container & General Fields === */
+.yardlii-search-form {
+    display: flex;
+    align-items: flex-start; /* Align items to the top */
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 12px 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.yardlii-search-form .search-field {
+    flex-grow: 1; /* Allows this field to expand */
+    min-width: 250px; /* Ensures it's wide enough for placeholder */
+}
+
+.yardlii-search-form .search-field input[type="search"] {
+    width: 100%; /* Makes the input fill its container */
+}
+
+.yardlii-search-form select,
+.yardlii-search-form input[type="search"],
+.yardlii-search-form .yardlii-location-input {
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box; /* Ensures padding doesn't add to width */
+}
+
+.yardlii-search-form button {
+    background: #0A2240;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.yardlii-search-form button:hover {
+    background: #FF7A00;
+}
+
+
+/* === Location & Radius Components === */
+.yardlii-search-dropdown.location {
+    display: flex;
+    flex-direction: column; /* Stacks the location input and slider vertically */
+    gap: 8px; /* Creates space between the input and the slider */
+    flex-grow: 1;
+    min-width: 240px;
+}
+
+/* Wrapper for the location input to contain the icon */
+.yardlii-location-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Consolidated Location Input Style */
+.yardlii-location-input {
+    width: 100%;
+    padding-right: 34px !important; /* Make space for the icon */
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.yardlii-location-input:focus {
+    border-color: #0a55a8;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(10, 85, 168, 0.15);
+}
+
+/* Location Icon (Compass) */
+.yardlii-locate-icon {
+    position: absolute;
+    right: 8px;
+    color: #0a55a8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.yardlii-locate-icon:hover {
+    transform: scale(1.15);
+    color: #084b90;
+}
+
+/* Spinning animation for the icon */
+.yardlii-locate-icon.locating svg {
+    animation: yardlii-spin 1s linear infinite;
+    color: #0a55a8;
+}
+
+@keyframes yardlii-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Advanced Radius Slider */
+.yardlii-slider-wrap {
+    position: relative;
+    width: 100%;
+    margin-top: 6px;
+}
+
+.yardlii-radius-input {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 4px;
+    background: linear-gradient(to right, #0a55a8, #ccc);
+    outline: none;
+    cursor: pointer;
+}
+
+.yardlii-radius-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #0a55a8;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.yardlii-radius-input::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+/* === Tooltip ABOVE slider with fade-in/out === */
+.yardlii-radius-tooltip {
+  position: absolute;
+  top: -34px; /* move above slider */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0a55a8;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, left 0.15s ease;
+}
+
+.yardlii-radius-tooltip.active {
+  opacity: 1;
+}
+
+.yardlii-radius-tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: -4px; /* arrow now points downward */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: #0a55a8 transparent transparent transparent;
+}
+
+
+.yardlii-radius-input:active + .yardlii-radius-tooltip,
+.yardlii-radius-input:focus + .yardlii-radius-tooltip {
+    opacity: 1;
+}
+
+
+/* === Responsive Styles === */
+@media (max-width: 768px) {
+    .yardlii-search-form .search-field,
+    .yardlii-search-form .search-dropdowns,
+    .yardlii-search-form .search-button {
+        width: 100%;
+        flex-basis: 100%;
+    }
+}

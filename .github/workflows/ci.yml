@@ -23,8 +23,3 @@ jobs:
         run: composer stan
       - name: PHPUnit (unit only)
         run: composer test:unit
-        env:
-          WP_TESTS_DOMAIN: example.org
-          WP_TESTS_EMAIL: admin@example.org
-          WP_TESTS_TITLE: 'My Test Blog'
-          WP_PHP_BINARY: /usr/bin/php

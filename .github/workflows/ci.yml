@@ -44,11 +44,14 @@ jobs:
           coverage: none
 
       - name: Install deps
-        run: composer install --no-interaction --prefer-dist
+        run: composer install --no-interaction --prefer-dist --no-progress --no-suggest
+
+      # (optional but harmless) ensure stubs are executable
+      - name: Make vendor bin executable (defensive)
+        run: chmod +x vendor/bin/* || true
 
       - name: PHPStan
-        run: vendor/bin/phpstan analyse -c phpstan.neon
+        run: php vendor/bin/phpstan analyse -c phpstan.neon
 
-      # For now, run ONLY unit tests (no WP env yet)
       - name: PHPUnit
-        run: vendor/bin/phpunit -c phpunit.xml.dist --testsuite Unit
+        run: php vendor/bin/phpunit -c phpunit.xml.dist --colors=always

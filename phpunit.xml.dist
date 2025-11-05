@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="tests/bootstrap.php" colors="true"
-         beStrictAboutChangesToGlobalState="false"
-         beStrictAboutOutputDuringTests="true">
+<phpunit colors="true" bootstrap="tests/bootstrap.php">
   <testsuites>
-    <testsuite name="unit">
-      <directory suffix="Test.php">tests/unit</directory>
+    <testsuite name="Unit">
+      <directory>tests/unit</directory>
     </testsuite>
-    <testsuite name="integration">
-      <directory suffix="Test.php">tests/integration</directory>
+    <testsuite name="Integration">
+      <directory>tests/integration</directory>
     </testsuite>
   </testsuites>
-  <php>
-    <env name="WP_PHPUNIT__DIR" value="vendor/wp-phpunit/wp-phpunit"/>
-    <env name="WP_DEBUG" value="1"/>
-  </php>
 </phpunit>
+

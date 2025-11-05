@@ -222,6 +222,14 @@ final class SettingsPageTabs
         ]);
     }
 
+    // Advanced → Uninstall toggle (opt-in purge on plugin delete)
+register_setting(self::GROUP_DEBUG, 'yardlii_remove_data_on_delete', [
+    'type'              => 'boolean',
+    'sanitize_callback' => static fn($v) => (bool) $v,
+    'default'           => false,
+]);
+
+
     /** Feature Flags: group-scoped success + toggles */
     private function register_feature_flags_settings(): void
     {
@@ -633,6 +641,27 @@ body.settings_page_yardlii-core-settings .update-nag { display:none!important; }
                         </label>
                         <?php submit_button(__('Save Debug Setting', 'yardlii-core')); ?>
                     </form>
+
+                    <?php
+$purge = (bool) get_option('yardlii_remove_data_on_delete', false);
+?>
+<form method="post" action="options.php" style="margin-top:16px;">
+  <?php settings_fields(self::GROUP_DEBUG); ?>
+  <label for="yardlii_remove_data_on_delete" style="font-weight:600;">
+    <input type="hidden" name="yardlii_remove_data_on_delete" value="0" />
+    <input type="checkbox"
+           name="yardlii_remove_data_on_delete"
+           id="yardlii_remove_data_on_delete"
+           value="1"
+           <?php checked($purge, true); ?> />
+    <?php esc_html_e('Remove all YARDLII data on plugin deletion', 'yardlii-core'); ?>
+  </label>
+  <p class="description">
+    <?php esc_html_e('Deletes Trust & Verification requests, YARDLII options, and seed meta. Custom roles are retained.', 'yardlii-core'); ?>
+  </p>
+  <?php submit_button(__('Save Uninstall Preference', 'yardlii-core')); ?>
+</form>
+
 
                     <?php
                     $flag_from_code = defined('YARDLII_ENABLE_ACF_USER_SYNC');

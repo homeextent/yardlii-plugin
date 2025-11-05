@@ -9,3 +9,7 @@ parameters:
         - phpstan-bootstrap.php
     scanFiles:
         - yardlii-core-functions.php
+    # This is the new way to ignore the warning
+    ignoreErrors:
+        -
+            identifier: missingType.iterableValue

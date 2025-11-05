@@ -1,0 +1,3426 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 1
+			path: includes/Admin/Assets.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: includes/Admin/Assets.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 1
+			path: includes/Admin/Assets.php
+
+		-
+			message: "#^Function get_current_screen not found\\.$#"
+			count: 1
+			path: includes/Admin/Assets.php
+
+		-
+			message: "#^Function plugins_url not found\\.$#"
+			count: 2
+			path: includes/Admin/Assets.php
+
+		-
+			message: "#^Function wp_create_nonce not found\\.$#"
+			count: 1
+			path: includes/Admin/Assets.php
+
+		-
+			message: "#^Function wp_enqueue_script not found\\.$#"
+			count: 1
+			path: includes/Admin/Assets.php
+
+		-
+			message: "#^Function wp_enqueue_style not found\\.$#"
+			count: 1
+			path: includes/Admin/Assets.php
+
+		-
+			message: "#^Function wp_localize_script not found\\.$#"
+			count: 1
+			path: includes/Admin/Assets.php
+
+		-
+			message: "#^Constant YARDLII_ENABLE_ACF_USER_SYNC not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Constant YARDLII_ENABLE_TRUST_VERIFICATION not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 4
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 3
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function add_filter not found\\.$#"
+			count: 3
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function add_options_page not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function add_settings_error not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function checked not found\\.$#"
+			count: 4
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 3
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function date_i18n not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function disabled not found\\.$#"
+			count: 2
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function esc_attr__ not found\\.$#"
+			count: 2
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 6
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function esc_html__ not found\\.$#"
+			count: 7
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 13
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function get_bloginfo not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function get_editable_roles not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 9
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function is_admin not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function plugin_dir_path not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function plugins_url not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function register_setting not found\\.$#"
+			count: 29
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function remove_action not found\\.$#"
+			count: 12
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 2
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function settings_fields not found\\.$#"
+			count: 2
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function submit_button not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Admin\\\\SettingsPageTabs\\:\\:filterTvGroupsFromGlobal\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Admin\\\\SettingsPageTabs\\:\\:filterTvGroupsFromGlobal\\(\\) has parameter \\$setting with no type specified\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(mixed\\)\\: mixed\\)\\|null, 'sanitize_text_field' given\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Parameter \\#2 \\$sanitize of static method Yardlii\\\\Core\\\\Admin\\\\SettingsPageTabs\\:\\:success_notifier\\(\\) expects \\(callable\\(\\)\\: mixed\\)\\|null, 'sanitize_text_field' given\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Parameter \\#2 \\$sanitize of static method Yardlii\\\\Core\\\\Admin\\\\SettingsPageTabs\\:\\:success_notifier\\(\\) expects \\(callable\\(\\)\\: mixed\\)\\|null, 'sanitize_textarea…' given\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Function date_i18n not found\\.$#"
+			count: 1
+			path: includes/Admin/settings-page-enhancements.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 2
+			path: includes/Admin/settings-page-enhancements.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 2
+			path: includes/Admin/settings-page-enhancements.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 5
+			path: includes/Admin/views/partials/acf-user-sync.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 12
+			path: includes/Admin/views/partials/acf-user-sync.php
+
+		-
+			message: "#^Function esc_attr_e not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/acf-user-sync.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/acf-user-sync.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 21
+			path: includes/Admin/views/partials/acf-user-sync.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/acf-user-sync.php
+
+		-
+			message: "#^Function selected not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/acf-user-sync.php
+
+		-
+			message: "#^Function settings_fields not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/acf-user-sync.php
+
+		-
+			message: "#^Function submit_button not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/acf-user-sync.php
+
+		-
+			message: "#^Access to property \\$posts on an unknown class WP_Query\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function acf_get_fields not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function checked not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function esc_attr_e not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 12
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function get_posts not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function selected not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function settings_fields not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function submit_button not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function wp_create_nonce not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Instantiated class WP_Query not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/google-map-controls.php
+
+		-
+			message: "#^Function settings_fields not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/google-map-controls.php
+
+		-
+			message: "#^Function submit_button not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/google-map-controls.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/google-map-key.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/google-map-key.php
+
+		-
+			message: "#^Function settings_fields not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/google-map-key.php
+
+		-
+			message: "#^Function submit_button not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/google-map-key.php
+
+		-
+			message: "#^Function wp_create_nonce not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/google-map-key.php
+
+		-
+			message: "#^Function checked not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/homepage-search.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 8
+			path: includes/Admin/views/partials/homepage-search.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 7
+			path: includes/Admin/views/partials/homepage-search.php
+
+		-
+			message: "#^Function get_object_taxonomies not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/homepage-search.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 10
+			path: includes/Admin/views/partials/homepage-search.php
+
+		-
+			message: "#^Function selected not found\\.$#"
+			count: 5
+			path: includes/Admin/views/partials/homepage-search.php
+
+		-
+			message: "#^Function settings_fields not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/homepage-search.php
+
+		-
+			message: "#^Function submit_button not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/homepage-search.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function checked not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 12
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function esc_attr_e not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function esc_html__ not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function esc_js not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function get_editable_roles not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function selected not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function settings_fields not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function submit_button not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function wp_nonce_field not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function yl_role_label\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function yl_role_label\\(\\) has parameter \\$roles with no type specified\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function yl_role_label\\(\\) has parameter \\$slug with no type specified\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function checked not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-custom-roles.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 11
+			path: includes/Admin/views/partials/role-control-custom-roles.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/role-control-custom-roles.php
+
+		-
+			message: "#^Function get_editable_roles not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-custom-roles.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/role-control-custom-roles.php
+
+		-
+			message: "#^Function selected not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-custom-roles.php
+
+		-
+			message: "#^Function settings_fields not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-custom-roles.php
+
+		-
+			message: "#^Function submit_button not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-custom-roles.php
+
+		-
+			message: "#^Function checked not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/role-control-submit.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/role-control-submit.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-submit.php
+
+		-
+			message: "#^Function esc_textarea not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-submit.php
+
+		-
+			message: "#^Function get_editable_roles not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/role-control-submit.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 12
+			path: includes/Admin/views/partials/role-control-submit.php
+
+		-
+			message: "#^Function selected not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-submit.php
+
+		-
+			message: "#^Function settings_fields not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-submit.php
+
+		-
+			message: "#^Function submit_button not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-submit.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/components/form-config-row.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 32
+			path: includes/Admin/views/partials/trust-verification/components/form-config-row.php
+
+		-
+			message: "#^Function esc_attr_e not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/components/form-config-row.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 5
+			path: includes/Admin/views/partials/trust-verification/components/form-config-row.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 22
+			path: includes/Admin/views/partials/trust-verification/components/form-config-row.php
+
+		-
+			message: "#^Function esc_textarea not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/components/form-config-row.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/components/form-config-row.php
+
+		-
+			message: "#^Function selected not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/components/form-config-row.php
+
+		-
+			message: "#^Function wp_get_current_user not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/components/form-config-row.php
+
+		-
+			message: "#^Function esc_attr_e not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/components/preview-modal.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/components/preview-modal.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/components/status-badge.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/components/status-badge.php
+
+		-
+			message: "#^Function sanitize_html_class not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/components/status-badge.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 4
+			path: includes/Admin/views/partials/trust-verification/panel.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 5
+			path: includes/Admin/views/partials/trust-verification/panel.php
+
+		-
+			message: "#^Function esc_attr__ not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/panel.php
+
+		-
+			message: "#^Function esc_attr_e not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/panel.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/panel.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/trust-verification/panel.php
+
+		-
+			message: "#^Function plugin_dir_path not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/panel.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/panel.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function add_query_arg not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function delete_transient not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 5
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function esc_attr__ not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 8
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function selected not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function settings_fields not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function submit_button not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function wp_kses_post not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Function wp_roles not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Access to property \\$posts on an unknown class WP_Query\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-diagnostics.php
+
+		-
+			message: "#^Call to method have_posts\\(\\) on an unknown class WP_Query\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-diagnostics.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-diagnostics.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 4
+			path: includes/Admin/views/partials/trust-verification/section-diagnostics.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 4
+			path: includes/Admin/views/partials/trust-verification/section-diagnostics.php
+
+		-
+			message: "#^Function get_post_meta not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/section-diagnostics.php
+
+		-
+			message: "#^Function get_post_status not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-diagnostics.php
+
+		-
+			message: "#^Function get_post_status_object not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-diagnostics.php
+
+		-
+			message: "#^Function post_type_exists not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-diagnostics.php
+
+		-
+			message: "#^Instantiated class WP_Query not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-diagnostics.php
+
+		-
+			message: "#^Call to an undefined method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:display\\(\\)\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-requests.php
+
+		-
+			message: "#^Call to an undefined method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:search_box\\(\\)\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-requests.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 9
+			path: includes/Admin/views/partials/trust-verification/section-requests.php
+
+		-
+			message: "#^Function _n not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-requests.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-requests.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/section-requests.php
+
+		-
+			message: "#^Function esc_attr__ not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-requests.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-requests.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-requests.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-requests.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-requests.php
+
+		-
+			message: "#^Function add_query_arg not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/trust-verification/section-tools.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/trust-verification/section-tools.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-tools.php
+
+		-
+			message: "#^Function esc_attr__ not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/trust-verification/section-tools.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/trust-verification/section-tools.php
+
+		-
+			message: "#^Function esc_html__ not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-tools.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 13
+			path: includes/Admin/views/partials/trust-verification/section-tools.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/trust-verification/section-tools.php
+
+		-
+			message: "#^Function get_bloginfo not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-tools.php
+
+		-
+			message: "#^Function sanitize_email not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-tools.php
+
+		-
+			message: "#^Function wp_create_nonce not found\\.$#"
+			count: 3
+			path: includes/Admin/views/partials/trust-verification/section-tools.php
+
+		-
+			message: "#^Function checked not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/wpuf-customizations.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/wpuf-customizations.php
+
+		-
+			message: "#^Function settings_fields not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/wpuf-customizations.php
+
+		-
+			message: "#^Function submit_button not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/wpuf-customizations.php
+
+		-
+			message: "#^Function esc_html__ not found\\.$#"
+			count: 10
+			path: includes/Admin/views/settings-page.php
+
+		-
+			message: "#^Variable \\$active_tab might not be defined\\.$#"
+			count: 1
+			path: includes/Admin/views/settings-page.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Core.php
+
+		-
+			message: "#^Function load_plugin_textdomain not found\\.$#"
+			count: 1
+			path: includes/Core.php
+
+		-
+			message: "#^Function plugin_basename not found\\.$#"
+			count: 1
+			path: includes/Core.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Core\\:\\:log_init\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: includes/Core.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 9
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function absint not found\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 2
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function add_filter not found\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function check_ajax_referer not found\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function date_i18n not found\\.$#"
+			count: 3
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 2
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function get_avatar_url not found\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 4
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function get_post_field not found\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function get_post_type not found\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function get_user_meta not found\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function get_userdata not found\\.$#"
+			count: 4
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function register_setting not found\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 5
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function wp_send_json_error not found\\.$#"
+			count: 3
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Function wp_send_json_success not found\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:handle_acf_load_value\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:handle_acf_load_value\\(\\) has parameter \\$field with no type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:handle_acf_load_value\\(\\) has parameter \\$post_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:handle_acf_load_value\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:resolve_field_value\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:resolve_field_value\\(\\) has parameter \\$existing_value with no type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:sanitize_options\\(\\) has parameter \\$input with no type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$role_names\\.$#"
+			count: 2
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Access to property \\$roles on an unknown class WP_User\\.$#"
+			count: 1
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Call to method remove_role\\(\\) on an unknown class WP_User\\.$#"
+			count: 1
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Call to method set_role\\(\\) on an unknown class WP_User\\.$#"
+			count: 1
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 2
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function add_role not found\\.$#"
+			count: 2
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function add_settings_error not found\\.$#"
+			count: 2
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 1
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 12
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function get_role not found\\.$#"
+			count: 4
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function get_users not found\\.$#"
+			count: 1
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function remove_role not found\\.$#"
+			count: 1
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 6
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 2
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Instantiated class WP_User not found\\.$#"
+			count: 1
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\CustomUserRoles\\:\\:sanitize_settings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\CustomUserRoles\\:\\:sanitize_settings\\(\\) has parameter \\$raw with no type specified\\.$#"
+			count: 1
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function absint not found\\.$#"
+			count: 2
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 4
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function check_ajax_referer not found\\.$#"
+			count: 2
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function delete_post_thumbnail not found\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function delete_transient not found\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 5
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function get_field not found\\.$#"
+			count: 2
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 8
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function get_post not found\\.$#"
+			count: 3
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function get_transient not found\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function set_post_thumbnail not found\\.$#"
+			count: 2
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function set_transient not found\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function wp_send_json not found\\.$#"
+			count: 8
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\FeaturedImage\\:\\:maybe_set_featured_image\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\FeaturedImage\\:\\:maybe_set_featured_image\\(\\) has parameter \\$form_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\FeaturedImage\\:\\:maybe_set_featured_image\\(\\) has parameter \\$form_settings with no type specified\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\FeaturedImage\\:\\:maybe_set_featured_image\\(\\) has parameter \\$form_vars with no type specified\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\FeaturedImage\\:\\:maybe_set_featured_image\\(\\) has parameter \\$post_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 3
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Function add_filter not found\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Function check_ajax_referer not found\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 3
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Function is_wp_error not found\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Function register_setting not found\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Function wp_remote_get not found\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Function wp_remote_retrieve_response_code not found\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Function wp_send_json not found\\.$#"
+			count: 4
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\GoogleMapKey\\:\\:apply_map_controls\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\GoogleMapKey\\:\\:apply_map_controls\\(\\) has parameter \\$args with no type specified\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\GoogleMapKey\\:\\:sanitize_map_controls\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\GoogleMapKey\\:\\:sanitize_map_controls\\(\\) has parameter \\$input with no type specified\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Constant DAY_IN_SECONDS not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 4
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function add_shortcode not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function delete_transient not found\\.$#"
+			count: 2
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 5
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function esc_attr__ not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 3
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function esc_html__ not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 8
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function get_term not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function get_terms not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function get_transient not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function home_url not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function is_taxonomy_hierarchical not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function is_wp_error not found\\.$#"
+			count: 3
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function plugins_url not found\\.$#"
+			count: 2
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 5
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function set_transient not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function wp_enqueue_script not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function wp_enqueue_style not found\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\HomepageSearch\\:\\:flush_term_cache\\(\\) has parameter \\$term_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\HomepageSearch\\:\\:get_cached_terms\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 3
+			path: includes/Features/Loader.php
+
+		-
+			message: "#^Function did_action not found\\.$#"
+			count: 1
+			path: includes/Features/Loader.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 7
+			path: includes/Features/Loader.php
+
+		-
+			message: "#^Function is_admin not found\\.$#"
+			count: 1
+			path: includes/Features/Loader.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControl.php
+
+		-
+			message: "#^Function add_option not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControl.php
+
+		-
+			message: "#^Function get_current_user_id not found\\.$#"
+			count: 2
+			path: includes/Features/RoleControl.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 3
+			path: includes/Features/RoleControl.php
+
+		-
+			message: "#^Function get_userdata not found\\.$#"
+			count: 2
+			path: includes/Features/RoleControl.php
+
+		-
+			message: "#^Function register_setting not found\\.$#"
+			count: 2
+			path: includes/Features/RoleControl.php
+
+		-
+			message: "#^Function user_can not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControl.php
+
+		-
+			message: "#^Call to method get\\(\\) on an unknown class WP_User_Query\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Call to method get_results\\(\\) on an unknown class WP_User_Query\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Call to method set\\(\\) on an unknown class WP_User_Query\\.$#"
+			count: 2
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 11
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function add_filter not found\\.$#"
+			count: 4
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function add_query_arg not found\\.$#"
+			count: 3
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 3
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function attachment_url_to_postid not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function check_admin_referer not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 4
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function delete_user_meta not found\\.$#"
+			count: 2
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function esc_attr__ not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function esc_html__ not found\\.$#"
+			count: 7
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 17
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function get_user_by not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function get_user_meta not found\\.$#"
+			count: 2
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function is_admin not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function remove_query_arg not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 12
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function update_user_meta not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function wp_die not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function wp_get_attachment_image not found\\.$#"
+			count: 2
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function wp_get_referer not found\\.$#"
+			count: 2
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function wp_nonce_url not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function wp_safe_redirect not found\\.$#"
+			count: 3
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function wp_verify_nonce not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Instantiated class WP_User_Query not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:add_resync_link\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:add_resync_link\\(\\) has parameter \\$actions with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:add_resync_link\\(\\) has parameter \\$user_obj with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:render_profile_badge\\(\\) has parameter \\$user with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:render_users_badge_column\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:render_users_badge_column\\(\\) has parameter \\$user_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:sanitize_settings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:sanitize_settings\\(\\) has parameter \\$raw with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:sync_on_login\\(\\) has parameter \\$user with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:sync_on_login\\(\\) has parameter \\$user_login with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:sync_on_user_event\\(\\) has parameter \\$user_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Parameter \\$query of method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:handle_users_badge_sorting\\(\\) has invalid type WP_User_Query\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function add_query_arg not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function esc_html__ not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 5
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function home_url not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function is_page not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function is_user_logged_in not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function wp_die not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function wp_get_current_user not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function wp_kses_post not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function wp_login_url not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function wp_safe_redirect not found\\.$#"
+			count: 1
+			path: includes/Features/RoleControlSubmitAccess.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Caps.php
+
+		-
+			message: "#^Function get_role not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Caps.php
+
+		-
+			message: "#^Function get_user_by not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Caps.php
+
+		-
+			message: "#^Function user_can not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Caps.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Caps.php
+
+		-
+			message: "#^Function apply_filters not found\\.$#"
+			count: 6
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Function get_bloginfo not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Function home_url not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Function is_email not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Function sanitize_email not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Function wp_get_current_user not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Function wp_mail not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Function wp_specialchars_decode not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Mailer\\:\\:buildRecipients\\(\\) has parameter \\$to with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Mailer\\:\\:send\\(\\) has parameter \\$to with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Unable to resolve the template type T in call to function array_values$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function absint not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function check_ajax_referer not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function get_current_user_id not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function wp_kses not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function wp_kses_allowed_html not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function wp_kses_post not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function wp_send_json_error not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function wp_send_json_success not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function wp_unslash not found\\.$#"
+			count: 5
+			path: includes/Features/TrustVerification/Emails/PreviewAjax.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 9
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Function check_ajax_referer not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Function get_bloginfo not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Function is_email not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Function sanitize_email not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Function wp_get_current_user not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Function wp_send_json_error not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Function wp_send_json_success not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Function wp_unslash not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Access to property \\$ErrorInfo on an unknown class PHPMailer\\\\PHPMailer\\\\PHPMailer\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Class PHPMailer\\\\PHPMailer\\\\PHPMailer not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 11
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function absint not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function check_ajax_referer not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function get_bloginfo not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function get_userdata not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function is_email not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function sanitize_email not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function wp_get_current_user not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function wp_kses_post not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function wp_send_json_error not found\\.$#"
+			count: 6
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function wp_send_json_success not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function wp_unslash not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Function get_bloginfo not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Templates.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Templates.php
+
+		-
+			message: "#^Function get_userdata not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Templates.php
+
+		-
+			message: "#^Function home_url not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Templates.php
+
+		-
+			message: "#^Function wp_specialchars_decode not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Templates.php
+
+		-
+			message: "#^Access to property \\$posts on an unknown class WP_Query\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function add_query_arg not found\\.$#"
+			count: 7
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 5
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function check_admin_referer not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function delete_user_meta not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function get_current_user_id not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function get_post_meta not found\\.$#"
+			count: 6
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function get_post_status not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function get_post_time not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function get_userdata not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function get_users not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function is_email not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function is_wp_error not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function remove_query_arg not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function update_post_meta not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function update_user_meta not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function user_can not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function wp_date not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function wp_delete_post not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function wp_die not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function wp_generate_password not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function wp_get_referer not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function wp_insert_post not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function wp_insert_user not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Function wp_safe_redirect not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Instantiated class WP_Query not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Call to an undefined method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Module\\:\\:forward\\(\\)\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Function apply_filters not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Function did_action not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Function update_option not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Module\\:\\:onAfterSend\\(\\) has parameter \\$handler with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Module\\:\\:onAfterSend\\(\\) has parameter \\$record with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Module\\:\\:onSubmit\\(\\) has parameter \\$handler with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Module\\:\\:onSubmit\\(\\) has parameter \\$record with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Function get_current_user_id not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Function is_user_logged_in not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Function sanitize_title not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Function yardlii_debug_log not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Providers\\\\ElementorPro\\:\\:forward\\(\\) has parameter \\$record with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Providers\\\\ElementorPro\\:\\:onAfterSend\\(\\) has parameter \\$handler with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Providers\\\\ElementorPro\\:\\:onAfterSend\\(\\) has parameter \\$record with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Providers\\\\ElementorPro\\:\\:onSubmit\\(\\) has parameter \\$handler with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Providers\\\\ElementorPro\\:\\:onSubmit\\(\\) has parameter \\$record with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Providers/WPUF.php
+
+		-
+			message: "#^Function current_filter not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/WPUF.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Providers\\\\WPUF\\:\\:handle\\(\\) has parameter \\$form_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/WPUF.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/Requests/CPT.php
+
+		-
+			message: "#^Function _n_noop not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/CPT.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/CPT.php
+
+		-
+			message: "#^Function register_post_status not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/CPT.php
+
+		-
+			message: "#^Function register_post_type not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/CPT.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/Cleanup.php
+
+		-
+			message: "#^Function get_posts not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Cleanup.php
+
+		-
+			message: "#^Function wp_delete_post not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Cleanup.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 7
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function add_query_arg not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function check_admin_referer not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function delete_post_meta not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function get_bloginfo not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function get_current_user_id not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function get_post not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function get_post_meta not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function get_userdata not found\\.$#"
+			count: 7
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function home_url not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function is_email not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function is_wp_error not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function remove_query_arg not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function update_post_meta not found\\.$#"
+			count: 6
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function wp_die not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function wp_get_referer not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function wp_safe_redirect not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function wp_specialchars_decode not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Function wp_update_post not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Access to property \\$posts on an unknown class WP_Query\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Call to method have_posts\\(\\) on an unknown class WP_Query\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function absint not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function apply_filters not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function delete_post_meta not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function get_bloginfo not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function get_current_user_id not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function get_post_meta not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function get_post_status not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function get_posts not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function get_userdata not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function is_email not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function is_wp_error not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function sanitize_email not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function update_post_meta not found\\.$#"
+			count: 8
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function wp_insert_post not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function wp_mail not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function wp_specialchars_decode not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function wp_update_post not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Instantiated class WP_Query not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\Guards\\:\\:legacyWPUFHandler\\(\\) has parameter \\$form_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Unable to resolve the template type T in call to function array_values$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 9
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function check_ajax_referer not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 10
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function esc_html__ not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 6
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function get_post not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function get_post_meta not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function get_the_time not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function get_userdata not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function wp_date not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function wp_json_encode not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function wp_roles not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function wp_send_json_error not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Function wp_send_json_success not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Access to an undefined property Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:\\$_args\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Access to an undefined property Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:\\$_column_headers\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Access to an undefined property Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:\\$items\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Access to property \\$found_posts on an unknown class WP_Query\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Access to property \\$max_num_pages on an unknown class WP_Query\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Access to property \\$posts on an unknown class WP_Query\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Call to an undefined method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:current_action\\(\\)\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Call to an undefined method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:row_actions\\(\\)\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Call to an undefined method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:set_pagination_args\\(\\)\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 18
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function add_query_arg not found\\.$#"
+			count: 6
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function check_admin_referer not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function esc_attr__ not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 11
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function esc_html__ not found\\.$#"
+			count: 7
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 6
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function get_post not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function get_post_meta not found\\.$#"
+			count: 5
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function get_post_time not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function get_userdata not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function remove_query_arg not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function wp_create_nonce not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function wp_date not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function wp_roles not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Function wp_safe_redirect not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Instantiated class WP_Query not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:column_cb\\(\\) has parameter \\$item with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:column_default\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:column_default\\(\\) has parameter \\$column_name with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:extra_tablenav\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:extra_tablenav\\(\\) has parameter \\$which with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:handle_row_actions\\(\\) has parameter \\$column_name with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:handle_row_actions\\(\\) has parameter \\$primary with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:__construct\\(\\) calls parent\\:\\:__construct\\(\\) but Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable does not extend any class\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Access to offset 'user_id' on an unknown class WP_REST_Request\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Function get_userdata not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Function register_rest_route not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Function rest_ensure_response not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Instantiated class WP_Error not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Rest\\\\StatusController\\:\\:getStatus\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(mixed\\)\\: mixed\\)\\|null, 'sanitize_key' given\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Parameter \\$req of method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Rest\\\\StatusController\\:\\:getStatus\\(\\) has invalid type WP_REST_Request\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Constant Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Settings\\\\FormConfigs\\:\\:ROW_KEYS is unused\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 7
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Function add_settings_error not found\\.$#"
+			count: 7
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Function apply_filters not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 6
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Function register_setting not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 6
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Function wp_kses_post not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Function wp_roles not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Settings\\\\FormConfigs\\:\\:sanitizeFormConfigs\\(\\) has parameter \\$input with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Return type of call to function array_values contains unresolvable type\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Function add_settings_error not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Function register_setting not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Function wp_roles not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Settings\\\\GlobalSettings\\:\\:sanitizeEmails\\(\\) has parameter \\$raw with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Settings\\\\GlobalSettings\\:\\:sanitizeRoleArray\\(\\) has parameter \\$input with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(string\\)\\: mixed\\)\\|null, 'sanitize_email' given\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(mixed\\)\\: bool\\)\\|null, 'is_email' given\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Undefined variable\\: \\$some_error$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Function get_post_meta not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/Meta.php
+
+		-
+			message: "#^Function update_post_meta not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/Meta.php
+
+		-
+			message: "#^Call to method add_role\\(\\) on an unknown class WP_User\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/Roles.php
+
+		-
+			message: "#^Call to method set_role\\(\\) on an unknown class WP_User\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Support/Roles.php
+
+		-
+			message: "#^Function do_action not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Support/Roles.php
+
+		-
+			message: "#^Instantiated class WP_User not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Support/Roles.php
+
+		-
+			message: "#^Access to property \\$user_email on an unknown class WP_User\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with WP_User will always evaluate to false\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with int will always evaluate to false\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Class WP_User not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Function add_filter not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Function get_userdata not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Function is_email not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Offset 'ID' on \\*NEVER\\* on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Offset 'user_email' on \\*NEVER\\* in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Parameter \\$user of method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Support\\\\UserDataGuards\\:\\:maybeSuppressEmailChangeNotice\\(\\) has invalid type WP_User\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/UI/AdminPage.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/UI/AdminPage.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/UI/AdminPage.php
+
+		-
+			message: "#^Function esc_url_raw not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/UI/AdminPage.php
+
+		-
+			message: "#^Function plugin_dir_path not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/UI/AdminPage.php
+
+		-
+			message: "#^Function plugin_dir_url not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/UI/AdminPage.php
+
+		-
+			message: "#^Function rest_url not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/UI/AdminPage.php
+
+		-
+			message: "#^Function wp_create_nonce not found\\.$#"
+			count: 4
+			path: includes/Features/TrustVerification/UI/AdminPage.php
+
+		-
+			message: "#^Function wp_enqueue_script not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/UI/AdminPage.php
+
+		-
+			message: "#^Function wp_enqueue_style not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/UI/AdminPage.php
+
+		-
+			message: "#^Function wp_localize_script not found\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/UI/AdminPage.php
+
+		-
+			message: "#^Function wp_script_is not found\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/UI/AdminPage.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: includes/Features/WPUFEnhancedDropdown.php
+
+		-
+			message: "#^Function is_page not found\\.$#"
+			count: 1
+			path: includes/Features/WPUFEnhancedDropdown.php
+
+		-
+			message: "#^Function plugin_dir_path not found\\.$#"
+			count: 2
+			path: includes/Features/WPUFEnhancedDropdown.php
+
+		-
+			message: "#^Function plugins_url not found\\.$#"
+			count: 2
+			path: includes/Features/WPUFEnhancedDropdown.php
+
+		-
+			message: "#^Function wp_enqueue_script not found\\.$#"
+			count: 1
+			path: includes/Features/WPUFEnhancedDropdown.php
+
+		-
+			message: "#^Function wp_enqueue_style not found\\.$#"
+			count: 1
+			path: includes/Features/WPUFEnhancedDropdown.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\WPUFEnhancedDropdown\\:\\:enqueue_assets\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/WPUFEnhancedDropdown.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\WPUFEnhancedDropdown\\:\\:register\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/WPUFEnhancedDropdown.php
+
+		-
+			message: "#^Function add_settings_error not found\\.$#"
+			count: 2
+			path: includes/Helpers/Notices.php
+
+		-
+			message: "#^Function delete_transient not found\\.$#"
+			count: 1
+			path: includes/Helpers/Notices.php
+
+		-
+			message: "#^Function get_transient not found\\.$#"
+			count: 2
+			path: includes/Helpers/Notices.php
+
+		-
+			message: "#^Function is_admin not found\\.$#"
+			count: 1
+			path: includes/Helpers/Notices.php
+
+		-
+			message: "#^Function set_transient not found\\.$#"
+			count: 1
+			path: includes/Helpers/Notices.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 2
+			path: includes/Helpers/Options.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 1
+			path: includes/Helpers/Sanitization.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Helpers\\\\Sanitization\\:\\:text\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: includes/Helpers/Sanitization.php

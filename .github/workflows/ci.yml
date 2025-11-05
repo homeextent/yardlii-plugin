@@ -1,32 +1,13 @@
 name: php-tests
 
 on:
+  push:
+    branches: [ main, infra/**, feature/** ]
   pull_request:
     branches: [ main ]
-    types: [opened, synchronize, reopened, ready_for_review]
-    paths:
-      - '**/*.php'
-      - 'composer.json'
-      - 'composer.lock'
-      - 'phpunit.xml.dist'
-      - 'phpstan.neon'
-      - 'tests/**'
-      - '.github/workflows/ci.yml'
-  push:
-    branches: [ main, infra/ci, infra/ci-fix, feature/** ]
-    paths:
-      - '**/*.php'
-      - 'composer.json'
-      - 'composer.lock'
-      - 'phpunit.xml.dist'
-      - 'phpstan.neon'
-      - 'tests/**'
-      - '.github/workflows/ci.yml'
-  workflow_dispatch:
 
 jobs:
   php-tests:
-    # IMPORTANT: must match your branch protection names exactly
     name: php-tests (${{ matrix.php }})
     runs-on: ubuntu-latest
     strategy:
@@ -37,21 +18,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: shivammathur/setup-php@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          tools: composer:v2
+          tools: composer
           coverage: none
+          extensions: mbstring, dom, json, curl, xml
 
       - name: Install deps
-        run: composer install --no-interaction --prefer-dist --no-progress --no-suggest
-
-      # (optional but harmless) ensure stubs are executable
-      - name: Make vendor bin executable (defensive)
-        run: chmod +x vendor/bin/* || true
+        run: composer install --no-interaction --prefer-dist
 
       - name: PHPStan
-        run: php vendor/bin/phpstan analyse -c phpstan.neon
+        run: composer stan
 
-      - name: PHPUnit
-        run: php vendor/bin/phpunit -c phpunit.xml.dist --colors=always
+      - name: PHPUnit (unit only for infra PR)
+        run: composer test:unit

@@ -14,7 +14,7 @@ final class Templates
     public static function findConfigByFormId(string $form_id): ?array
     {
         /** @var array<int,array<string,mixed>> $configs */
-        $configs = (array) get_option(FormConfigs::OPT_KEY, []);
+        $configs = (array) \get_option(FormConfigs::OPT_KEY, []);
         foreach ($configs as $row) {
             if ((string) ($row['form_id'] ?? '') === $form_id) {
                 return $row;
@@ -29,21 +29,30 @@ final class Templates
      * @return array<string,string>
      */
     public static function buildContext(?int $user_id, string $form_id, int $request_id = 0): array
-    {
-        $site_title = wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES);
-        $site_url   = home_url('/');
-        $user       = $user_id ? get_userdata($user_id) : null;
+{
+    // Site title with WP fallback
+    $rawTitle = function_exists('get_bloginfo') ? (string) get_bloginfo('name') : 'Yardlii';
+    $site_title = function_exists('wp_specialchars_decode')
+        ? wp_specialchars_decode($rawTitle, ENT_QUOTES)
+        : html_entity_decode($rawTitle, ENT_QUOTES);
 
-        return [
-            '{display_name}' => $user?->display_name ?: 'Sample User',
-            '{user_email}'   => $user?->user_email   ?: 'sample@example.com',
-            '{user_login}'   => $user?->user_login   ?: 'sample_login',
-            '{form_id}'      => $form_id,
-            '{request_id}'   => (string) $request_id,
-            '{site_title}'   => $site_title,
-            '{site_url}'     => $site_url,
-        ];
-    }
+    // Site URL with WP fallback
+    $site_url = function_exists('home_url') ? (string) home_url('/') : '/';
+
+    // User with WP fallback
+    $user = ($user_id && function_exists('get_userdata')) ? get_userdata($user_id) : null;
+
+    return [
+        '{display_name}' => $user->display_name ?? 'Sample User',
+        '{user_email}'   => $user->user_email   ?? 'sample@example.com',
+        '{user_login}'   => $user->user_login   ?? 'sample_login',
+        '{form_id}'      => $form_id,
+        '{request_id}'   => (string) $request_id,
+        '{site_title}'   => $site_title,
+        '{site_url}'     => $site_url,
+    ];
+}
+
 
     /**
      * Replace {{dot.notation}} and legacy {token} placeholders.

@@ -3,12 +3,17 @@ declare(strict_types=1);
 
 namespace Yardlii\Core\Features\TrustVerification\Emails;
 
+use Stringable;
 use Yardlii\Core\Features\TrustVerification\Settings\FormConfigs;
 
 final class Templates
 {
+    /**
+     * @return array<string,mixed>|null
+     */
     public static function findConfigByFormId(string $form_id): ?array
     {
+        /** @var array<int,array<string,mixed>> $configs */
         $configs = (array) get_option(FormConfigs::OPT_KEY, []);
         foreach ($configs as $row) {
             if ((string) ($row['form_id'] ?? '') === $form_id) {
@@ -18,11 +23,16 @@ final class Templates
         return null;
     }
 
+    /**
+     * Build a legacy placeholder context (keys like "{site_title}").
+     *
+     * @return array<string,string>
+     */
     public static function buildContext(?int $user_id, string $form_id, int $request_id = 0): array
     {
-        $site_title = wp_specialchars_decode( get_bloginfo('name'), ENT_QUOTES );
+        $site_title = wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES);
         $site_url   = home_url('/');
-        $user = $user_id ? get_userdata($user_id) : null;
+        $user       = $user_id ? get_userdata($user_id) : null;
 
         return [
             '{display_name}' => $user?->display_name ?: 'Sample User',
@@ -35,72 +45,100 @@ final class Templates
         ];
     }
 
+    /**
+     * Replace {{dot.notation}} and legacy {token} placeholders.
+     *
+     * @param array<string,mixed> $ctx
+     */
     public static function mergePlaceholders(string $html, array $ctx): string
-{
-    // Expose legacy {token} keys as plain keys too (e.g., "{site_title}" → "site_title")
-    $context = self::normalizeContext($ctx);
+    {
+        // Normalize to a flat map supporting both dot-notated and {braced} keys.
+        /** @var array<string,mixed> $map */
+        $map = self::normalizeContext($ctx);
 
-    // 1) New {{ dot.notation }} tokens from nested context
-    $html = preg_replace_callback(
-        '/\{\{\s*([A-Za-z0-9_\.]+)\s*\}\}/',
-        static function (array $m) use ($context) {
-            $value = self::resolvePath($context, $m[1]);
-            return self::isStringable($value) ? (string) $value : $m[0]; // leave as-is if not stringable
-        },
-        $html
-    );
+        // 1) {{dot.path}} — leave unknown tokens unchanged
+        $html = (string) preg_replace_callback(
+            '/\{\{\s*([A-Za-z0-9_.]+)\s*\}\}/',
+            static function (array $m) use ($map): string {
+                $key = $m[1];
+                $val = self::resolvePath($key, $map);
+                return self::isStringable($val) ? (string) $val : $m[0];
+            },
+            $html
+        );
 
-    // 2) Legacy {token} tokens (root only)
-    $html = preg_replace_callback(
-        '/\{([A-Za-z0-9_]+)\}/',
-        static function (array $m) use ($context) {
-            $key = $m[1];
-            if (array_key_exists($key, $context) && self::isStringable($context[$key])) {
-                return (string) $context[$key];
+        // 2) {legacy_token} — only replace with stringable values
+        $replacements = [];
+        foreach ($map as $k => $v) {
+            if ($k !== '' && $k[0] === '{' && substr($k, -1) === '}' && self::isStringable($v)) {
+                $replacements[$k] = (string) $v;
             }
-            return $m[0]; // leave unknown/non-stringable tokens untouched
-        },
-        $html
-    );
-
-    // Do NOT escape; tests expect HTML to be preserved
-    return $html;
-}
-
-/** Turn a legacy strtr()-style map into a plain array too: "{foo}" => "bar" also becomes ["foo" => "bar"] */
-private static function normalizeContext(array $ctx): array
-{
-    $out = $ctx;
-    foreach ($ctx as $k => $v) {
-        if (is_string($k) && strlen($k) > 2 && $k[0] === '{' && substr($k, -1) === '}') {
-            $out[substr($k, 1, -1)] = $v;
         }
-    }
-    return $out;
-}
 
-/** Resolve "a.b.c" paths into arrays/objects; null if not found. */
-private static function resolvePath($context, string $path)
-{
-    $current = $context;
-    foreach (explode('.', $path) as $part) {
-        if (is_array($current) && array_key_exists($part, $current)) {
-            $current = $current[$part];
-        } elseif (is_object($current) && isset($current->{$part})) {
-            $current = $current->{$part};
-        } else {
-            return null;
+        return $replacements ? strtr($html, $replacements) : $html;
+    }
+
+    /**
+     * Flatten nested arrays to "a.b.c" => value and also provide "{a.b.c}" keys.
+     *
+     * @param  array<string,mixed> $ctx
+     * @return array<string,mixed>
+     */
+    private static function normalizeContext(array $ctx): array
+    {
+        /** @var array<string,mixed> $flat */
+        $flat = [];
+
+        $walk = static function (array $node, string $prefix = '') use (&$flat, &$walk): void {
+            foreach ($node as $k => $v) {
+                $k = (string) $k;
+                $path = $prefix === '' ? $k : $prefix . '.' . $k;
+
+                if (is_array($v)) {
+                    $walk($v, $path);
+                } else {
+                    $flat[$path] = $v;
+                }
+            }
+        };
+
+        $walk($ctx);
+
+        // Add braced aliases for dot-keys and carry through any already-braced keys from input.
+        foreach ($flat as $k => $v) {
+            $flat['{' . $k . '}'] = $v;
         }
+        foreach ($ctx as $k => $v) {
+            $k = (string) $k;
+            if ($k !== '' && $k[0] === '{' && substr($k, -1) === '}') {
+                $flat[$k] = $v;
+            }
+        }
+
+        return $flat;
     }
-    return $current;
-}
 
-/** True if a value can be safely cast to string. */
-private static function isStringable($value): bool
+    /**
+     * Resolve a flattened "a.b.c" key from the normalized map.
+     *
+     * @param  array<string,mixed> $context
+     * @return mixed
+     */
+    private static function resolvePath(string $path, array $context)
+    {
+        return $context[$path] ?? null;
+    }
+
+    private static function isStringable(mixed $value): bool
 {
-    return is_scalar($value) || (is_object($value) && method_exists($value, '__toString'));
+    // Unknown key → null → keep token verbatim (do not replace)
+    if ($value === null) {
+        return false;
+    }
+
+    return is_scalar($value)
+        || $value instanceof \Stringable
+        || (is_object($value) && method_exists($value, '__toString'));
 }
-
-
 
 }

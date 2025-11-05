@@ -1,1 +1,74 @@
-# yardlii-plugin
+# 🧩 YARDLII Core Functions
+
+[![WordPress Tested](https://img.shields.io/badge/tested_up_to-6.8-blue.svg)](https://wordpress.org/plugins/)
+[![PHP Version](https://img.shields.io/badge/php-8.0%2B-blue.svg)](https://www.php.net/)
+[![License](https://img.shields.io/badge/license-GPLv2%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![YARDLII](https://img.shields.io/badge/YARDLII-Core%20Platform-blueviolet.svg)](https://yardlii.com)
+
+> The **YARDLII Core Functions** plugin provides the modular engine for advanced real estate listing systems, admin automation, and dynamic feature control — built with ACF, FacetWP, and WPUF integrations.
+
+---
+
+## 🧠 Description
+
+**YARDLII Core Functions** is the backbone of the YARDLII platform — a modular, expandable framework designed for enterprise-grade WordPress automation.
+
+It powers all major YARDLII components through a clean, extensible architecture with centralized controls, admin branding, and modular settings management.
+
+### 🔧 Core Features
+
+- 🗺️ **Google Maps API** key management + diagnostics  
+- 🖼️ **Automated featured image** assignment (from WPUF or ACF gallery)  
+- 🔍 **Homepage search form** with FacetWP binding  
+- 👤 **ACF → User field synchronization** (toggleable)  
+- 🧩 **Feature Flag system** — enable/disable modules individually  
+- 🧭 **Scoped admin tabs** (Main / Sub / Inner)  
+- ⚙️ **Built-in debug**, logging, and diagnostics  
+- 🎨 **YARDLII-branded admin interface** with consistent UX styling  
+
+---
+
+## 📦 Changelog
+
+### 3.3.0 — 2025-11-02
+- Email system polish:
+  - Centralized mail send via `Emails\Mailer` (standardized From / Reply-To / HTML headers)
+  - New filters: `yardlii_tv_email_recipients`, `yardlii_tv_email_headers`, `yardlii_tv_placeholder_context` (+ `yardlii_tv_from*`)
+  - “Send me a copy” toggle (BCC the acting admin on bulk resend)
+- Tools: “Send test for all forms” (approve / reject / both), fully placeholder-aware
+- Requests UI: History modal with copy-to-clipboard; small accessibility/UX tweaks
+- Security: aligned nonces + strict capability checks for AJAX routes
+
+
+## 🚀 New in 3.1.0
+
+- **Feature Flags Architecture** — enable/disable modules from the Advanced tab UI  
+- **Read-only Constants** — lock features via `wp-config.php` or plugin constants  
+- **Nested Tab System** — three-layer tab architecture (Main, General Subtabs, Inner Map Tabs)  
+- **Scoped JS Isolation** — prevents tab conflicts between different levels  
+- **Enhanced Accessibility** — keyboard navigation + ARIA roles for all tabs  
+- **Refined CSS System** — unified visual style for all YARDLII components  
+
+---
+
+## 🧩 Installation
+
+1. Upload the `yardlii-core-functions` folder to `/wp-content/plugins/`
+2. Activate the plugin through the **Plugins** menu in WordPress  
+3. Go to **Settings → YARDLII Core** to configure your modules  
+
+---
+
+## 💡 Frequently Asked Questions
+
+### ❓ Can I add my own modules?
+Yes. Add your feature under `/includes/Features/` and register it in `Loader.php`.  
+Each feature can have its own UI partial in `/includes/Admin/views/partials/`, and a corresponding Feature Flag for easy control.
+
+### ❓ Can I disable the ACF User Sync feature?
+Yes. Toggle it off from  
+**Settings → YARDLII Core → Advanced → Feature Flags**,  
+or hard-disable it in code:
+
+```php
+define('YARDLII_ENABLE_ACF_USER_SYNC', false);

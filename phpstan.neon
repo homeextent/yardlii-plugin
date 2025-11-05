@@ -1,21 +1,8 @@
-includes:
-  - vendor/szepeviktor/phpstan-wordpress/extension.neon
-  - vendor/szepeviktor/phpstan-wordpress/rules.neon
-
 parameters:
   level: 6
   paths:
     - includes
-
-  tmpDir: build/phpstan
-
-  # Make PHPStan aware of a few WP constants without loading WordPress.
   bootstrapFiles:
-    - tests/tools/phpstan-bootstrap.php
-
-  # You can fine-tune these as you go.
-  checkMissingIterableValueType: false
-  checkGenericClassInNonGenericObjectType: false
-
-  # Start strict and relax with ignoreErrors if needed.
-  ignoreErrors: []
+    - vendor/autoload.php
+  ignoreErrors:
+    - '#^function (apply_filters|do_action|esc_|wp_).*$#'

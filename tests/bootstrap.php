@@ -1,14 +1,22 @@
 <?php
-// Composer autoload for dev deps + PSR-4 autoload for plugin classes.
-require __DIR__ . '/../vendor/autoload.php';
+// Composer autoload
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-// Keep tests deterministic.
-date_default_timezone_set('UTC');
+// Point to WordPress test suite (provided by wp-phpunit)
+if (!getenv('WP_PHPUNIT__DIR')) {
+    putenv('WP_PHPUNIT__DIR=' . dirname(__DIR__) . '/vendor/wp-phpunit/wp-phpunit');
+}
+$_tests_dir = getenv('WP_PHPUNIT__DIR');
 
-// Define a couple of common WP constants so classes that reference them don't explode.
-if (!defined('ABSPATH')) {
-    define('ABSPATH', __DIR__ . '/../');
-}
-if (!defined('WPINC')) {
-    define('WPINC', 'wp-includes');
-}
+// Boot WordPress' test suite
+require $_tests_dir . '/includes/bootstrap.php';
+
+// Load this plugin as an MU plugin during tests
+tests_add_filter('muplugins_loaded', function () {
+    require dirname(__DIR__) . '/yardlii-core-functions.php';
+});
+
+// Do not actually send emails in tests
+tests_add_filter('pre_wp_mail', function ($short_circuit, $atts = []) {
+    return true; // report success and skip PHPMailer
+}, 10, 2);

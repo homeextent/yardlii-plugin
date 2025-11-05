@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-  bootstrap="tests/bootstrap.php"
-  colors="true"
-  cacheResult="false"
-  failOnWarning="false"
-  failOnRisky="false"
-  beStrictAboutOutputDuringTests="false"
-  beStrictAboutTestsThatDoNotTestAnything="false"
-  beStrictAboutChangesToGlobalState="false"
->
+<phpunit bootstrap="tests/bootstrap.php" colors="true"
+         beStrictAboutChangesToGlobalState="false"
+         beStrictAboutOutputDuringTests="true">
   <testsuites>
     <testsuite name="unit">
-      <directory>tests/unit</directory>
+      <directory suffix="Test.php">tests/unit</directory>
     </testsuite>
     <testsuite name="integration">
-      <directory>tests/integration</directory>
+      <directory suffix="Test.php">tests/integration</directory>
     </testsuite>
   </testsuites>
-
-  <source>
-    <include>
-      <directory suffix=".php">includes</directory>
-    </include>
-  </source>
+  <php>
+    <env name="WP_PHPUNIT__DIR" value="vendor/wp-phpunit/wp-phpunit"/>
+    <env name="WP_DEBUG" value="1"/>
+  </php>
 </phpunit>

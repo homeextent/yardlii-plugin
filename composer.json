@@ -20,6 +20,7 @@
     "stan": "php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon --error-format=github",
     "test:unit": "php -d memory_limit=-1 vendor/bin/phpunit -c phpunit.xml.dist --testsuite unit"
   }
+}
   "config": {
     "platform": { "php": "8.0.0" },
     "sort-packages": true

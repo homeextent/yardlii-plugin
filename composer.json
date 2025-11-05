@@ -18,8 +18,8 @@
     }
   },
   "scripts": {
-  "test": "vendor/bin/phpunit -c phpunit.xml.dist",
-  "stan": "vendor/bin/phpstan analyse -c phpstan.neon"
+  "test": "phpunit -c phpunit.xml.dist",
+  "stan": "phpstan analyse -c phpstan.neon"
 },
   "config": {
     "platform": { "php": "8.0.0" },

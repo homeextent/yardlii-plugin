@@ -4,7 +4,7 @@ Tags: acf, facetwp, wpuf, listings, maps, admin-tools, feature-flags, automation
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 3.2.0
+Stable tag: 3.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,6 +41,9 @@ Scoped admin tab system (Main tabs / Subtabs / Inner tabs)
 Built-in debug, logging, and diagnostics mode
 
 YARDLII-branded admin interface with consistent UX styling
+
+
+
 
 🚀 New in 3.2.0
 
@@ -282,6 +285,14 @@ Badge Assignment mapping UI (repeater rows)
 Users list with Badge column & profile badge preview
 
 Changelog
+= 3.4.0 — 2025-11-04 =
+* CI: PHPUnit + PHPStan gates in place (green baseline).
+* Tests: Mailer/Placeholders/Caps + AJAX happy path.
+* New: Diagnostics Panel (MVP) with “Send self-test email”.
+* Email polish: final filters + placeholders; stable headers.
+* Security/UX: strict nonces/caps on AJAX + clearer notices.
+
+
 3.2.0
 
 New: Role Control → Badge Assignment (role → ACF field mapping; stores image ID in user meta; sync on role/profile/login).

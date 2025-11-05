@@ -1,25 +1,36 @@
-name: CI
+name: php-tests # <-- RENAMED
+
 on:
   pull_request:
   push:
 
 jobs:
-  php:
+  php-tests: # <-- RENAMED
+    name: php-tests (${{ matrix.php }}) # <-- ADDED to match branch protection
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: ['8.1'] # or match your plugin’s min supported
+        php: ['8.1', '8.2'] # <-- ADDED 8.2
     steps:
       - uses: actions/checkout@v4
+
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           coverage: none
           tools: composer
           extensions: mbstring, json, dom, xml, zip
+
       - name: Install deps
         run: composer install --no-interaction --no-progress --prefer-dist
+
       - name: PHPStan
         run: composer stan
+
       - name: PHPUnit (unit only)
         run: composer test:unit
+        env: # <-- ADDED to fix PHPUnit error
+          WP_TESTS_DOMAIN: example.org
+          WP_TESTS_EMAIL: admin@example.org
+          WP_TESTS_TITLE: 'My Test Blog'
+          WP_PHP_BINARY: /usr/bin/php

@@ -1,6 +1,5 @@
 includes:
     - phpstan-baseline.neon
-    - vendor/phpstan/phpstan-phpunit/extension.neon
 
 parameters:
     level: 6
@@ -10,4 +9,3 @@ parameters:
         - phpstan-bootstrap.php
     scanFiles:
         - yardlii-core-functions.php
-    checkMissingIterableValueType: false

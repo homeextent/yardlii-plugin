@@ -13,6 +13,7 @@
   "scripts": {
     "stan": "php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon --error-format=github",
     "test:unit": "php -d memory_limit=-1 vendor/bin/phpunit -c phpunit.xml.dist --testsuite unit"
+    "stan:baseline": "vendor/bin/phpstan analyse -c phpstan.neon --generate-baseline=phpstan-baseline.neon"
   },
   "config": {
     "allow-plugins": {

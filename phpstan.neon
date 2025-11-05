@@ -1,15 +1,23 @@
 includes:
-    - phpstan-baseline.neon
+    # Do NOT add vendor/szepeviktor/phpstan-wordpress/extension.neon here.
+    # extension-installer loads it automatically.
 
 parameters:
     level: 6
     paths:
         - includes
+        - tests/unit
+
+    # Keep vendor & assets out of analysis
+    excludePaths:
+        analyse:
+            - vendor/*
+            - assets/*
+
     bootstrapFiles:
-        - phpstan-bootstrap.php
-    scanFiles:
-        - yardlii-core-functions.php
-    # This is the new way to ignore the warning
-    ignoreErrors:
-        -
-            identifier: missingType.iterableValue
+        - tests/phpstan-bootstrap.php
+
+    memoryLimit: 0
+
+    # If you’re using a baseline, keep it:
+    # baseline: phpstan-baseline.neon

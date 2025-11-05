@@ -23,13 +23,9 @@ jobs:
           composer install --no-interaction --prefer-dist
 
       - name: PHPStan
-    run: |
-      chmod +x vendor/bin/phpstan
-      composer stan
+    run: composer stan
 
       - name: PHPUnit
     env:
       WP_PHPUNIT__DIR: vendor/wp-phpunit/wp-phpunit
-    run: |
-      chmod +x vendor/bin/phpunit
-      composer test
+    run: composer test

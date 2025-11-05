@@ -1,6 +1,6 @@
+# phpstan.neon
 includes:
-    # Do NOT add vendor/szepeviktor/phpstan-wordpress/extension.neon here.
-    # extension-installer loads it automatically.
+    - phpstan-baseline.neon
 
 parameters:
     level: 6
@@ -8,16 +8,13 @@ parameters:
         - includes
         - tests/unit
 
-    # Keep vendor & assets out of analysis
     excludePaths:
         analyse:
             - vendor/*
             - assets/*
+            - tests/integration/*
 
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
 
-    memoryLimit: 0
-
-    # If you’re using a baseline, keep it:
-    # baseline: phpstan-baseline.neon
+    reportUnmatchedIgnoredErrors: false

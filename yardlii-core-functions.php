@@ -5,7 +5,7 @@
  * Version:      3.4.0
  * Author:       The Innovative Group
  * Text Domain:  yardlii-core
- * License:      GPLv2 or later
+ * License:      GPLv2 or later.
  */
 
 defined('ABSPATH') || exit;

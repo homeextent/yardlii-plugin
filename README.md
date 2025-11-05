@@ -30,12 +30,11 @@ It powers all major YARDLII components through a clean, extensible architecture 
 
 ## 📦 Changelog
 
-### 3.4.0 — 2025-11-04
-- CI: PHPUnit + PHPStan gates are now green by default (tests/bootstrap + wp-phpunit).
-- Tests: Added first unit/integration coverage (Mailer, Placeholders, Caps, AJAX).
-- New: Diagnostics Panel (MVP) under Trust & Verification → Diagnostics, including a “Send self-test email” button powered by the central Mailer.
-- Email: Finalized filters and placeholder docs, consistent From/Reply-To, optional `X-Mailer` header via `yardlii_tv_email_headers`.
-- Security/UX: Aligned nonces/caps for TV AJAX routes; improved error banners.
+## 3.4.0 — 2025-11-05
+- CI: add PHPStan with baseline and WP ruleset
+- Tests: unit coverage for placeholder rendering (legacy `{token}` and `{{dot.notation}}`)
+- Templates: safer context building when WP isn’t loaded (guards + fallbacks)
+- Actions: unified php-tests workflow (PHP 8.1/8.2)
 
 
 ### 3.3.0 — 2025-11-02

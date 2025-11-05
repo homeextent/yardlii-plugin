@@ -1,0 +1,20 @@
+# phpstan.neon
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 6
+    paths:
+        - includes
+        - tests/unit
+
+    excludePaths:
+        analyse:
+            - vendor/*
+            - assets/*
+            - tests/integration/*
+
+    bootstrapFiles:
+        - tests/phpstan-bootstrap.php
+
+    reportUnmatchedIgnoredErrors: false

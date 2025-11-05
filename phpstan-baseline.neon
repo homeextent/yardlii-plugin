@@ -1,0 +1,751 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Constant YARDLII_CORE_FILE not found\\.$#"
+			count: 2
+			path: includes/Admin/Assets.php
+
+		-
+			message: "#^Constant YARDLII_CORE_VERSION not found\\.$#"
+			count: 2
+			path: includes/Admin/Assets.php
+
+		-
+			message: "#^Constant YARDLII_CORE_FILE not found\\.$#"
+			count: 2
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Constant YARDLII_CORE_VERSION not found\\.$#"
+			count: 2
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Constant YARDLII_ENABLE_ACF_USER_SYNC not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Constant YARDLII_ENABLE_TRUST_VERIFICATION not found\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Admin\\\\SettingsPageTabs\\:\\:filterTvGroupsFromGlobal\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Admin\\\\SettingsPageTabs\\:\\:filterTvGroupsFromGlobal\\(\\) has parameter \\$errors with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Admin\\\\SettingsPageTabs\\:\\:filterTvGroupsFromGlobal\\(\\) has parameter \\$setting with no type specified\\.$#"
+			count: 1
+			path: includes/Admin/SettingsPageTabs.php
+
+		-
+			message: "#^Constant YARDLII_CORE_VERSION not found\\.$#"
+			count: 1
+			path: includes/Admin/settings-page-enhancements.php
+
+		-
+			message: "#^Function acf_get_fields not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/featured-image.php
+
+		-
+			message: "#^Function yl_role_label\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function yl_role_label\\(\\) has parameter \\$roles with no type specified\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Function yl_role_label\\(\\) has parameter \\$slug with no type specified\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/role-control-badge-assignment.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_attr expects string, int\\<0, max\\> given\\.$#"
+			count: 5
+			path: includes/Admin/views/partials/role-control-custom-roles.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/components/form-config-row.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$current has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/components/form-config-row.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$roles_map has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/components/form-config-row.php
+
+		-
+			message: "#^Constant YARDLII_CORE_FILE not found\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/panel.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Offset 'message' on array\\{setting\\: string, code\\: string, message\\: string, type\\: string\\} on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Offset 'type' on array\\{setting\\: string, code\\: string, message\\: string, type\\: string\\} on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Parameter \\#3 \\$name of function submit_button expects string, null given\\.$#"
+			count: 2
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Property WP_Roles\\:\\:\\$role_names \\(array\\<string\\>\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^Property WP_Roles\\:\\:\\$roles \\(array\\<array\\>\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-configuration.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: includes/Admin/views/partials/trust-verification/section-diagnostics.php
+
+		-
+			message: "#^Variable \\$active_tab might not be defined\\.$#"
+			count: 1
+			path: includes/Admin/views/settings-page.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Core\\:\\:log_init\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: includes/Core.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:get_registered_special_handlers\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:handle_acf_load_value\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:handle_acf_load_value\\(\\) has parameter \\$field with no type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:handle_acf_load_value\\(\\) has parameter \\$post_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:handle_acf_load_value\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:resolve_field_value\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:resolve_field_value\\(\\) has parameter \\$existing_value with no type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:resolve_field_value\\(\\) has parameter \\$map with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:sanitize_options\\(\\) has parameter \\$input with no type specified\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\ACFUserSync\\:\\:sanitize_options\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/ACFUserSync.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$role_names\\.$#"
+			count: 2
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\CustomUserRoles\\:\\:sanitize_settings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\CustomUserRoles\\:\\:sanitize_settings\\(\\) has parameter \\$raw with no type specified\\.$#"
+			count: 1
+			path: includes/Features/CustomUserRoles.php
+
+		-
+			message: "#^Function get_field not found\\.$#"
+			count: 2
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\FeaturedImage\\:\\:maybe_set_featured_image\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\FeaturedImage\\:\\:maybe_set_featured_image\\(\\) has parameter \\$form_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\FeaturedImage\\:\\:maybe_set_featured_image\\(\\) has parameter \\$form_settings with no type specified\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\FeaturedImage\\:\\:maybe_set_featured_image\\(\\) has parameter \\$form_vars with no type specified\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\FeaturedImage\\:\\:maybe_set_featured_image\\(\\) has parameter \\$post_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/FeaturedImage.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\GoogleMapKey\\:\\:apply_map_controls\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\GoogleMapKey\\:\\:apply_map_controls\\(\\) has parameter \\$args with no type specified\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\GoogleMapKey\\:\\:sanitize_map_controls\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\GoogleMapKey\\:\\:sanitize_map_controls\\(\\) has parameter \\$input with no type specified\\.$#"
+			count: 1
+			path: includes/Features/GoogleMapKey.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\HomepageSearch\\:\\:flush_term_cache\\(\\) has parameter \\$term_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\HomepageSearch\\:\\:get_cached_terms\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/HomepageSearch.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControl\\:\\:get_all_roles\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/RoleControl.php
+
+		-
+			message: "#^Property WP_Roles\\:\\:\\$roles \\(array\\<array\\>\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: includes/Features/RoleControl.php
+
+		-
+			message: "#^Callback expects 1 parameter, \\$accepted_args is set to 2\\.$#"
+			count: 3
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Callback expects 1 parameter, \\$accepted_args is set to 3\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:add_resync_link\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:add_resync_link\\(\\) has parameter \\$actions with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:add_resync_link\\(\\) has parameter \\$user_obj with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:add_users_badge_column\\(\\) has parameter \\$columns with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:add_users_badge_column\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:make_users_badge_sortable\\(\\) has parameter \\$columns with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:make_users_badge_sortable\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:render_profile_badge\\(\\) has parameter \\$user with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:render_users_badge_column\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:render_users_badge_column\\(\\) has parameter \\$user_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:sanitize_settings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:sanitize_settings\\(\\) has parameter \\$raw with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:sync_on_login\\(\\) has parameter \\$user with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:sync_on_login\\(\\) has parameter \\$user_login with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\RoleControlBadgeAssignment\\:\\:sync_on_user_event\\(\\) has parameter \\$user_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/RoleControlBadgeAssignment.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Caps.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Mailer\\:\\:buildHeaders\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Mailer\\:\\:buildHeaders\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Mailer\\:\\:buildRecipients\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Mailer\\:\\:buildRecipients\\(\\) has parameter \\$to with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Mailer\\:\\:buildRecipients\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Mailer\\:\\:getFromPair\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Mailer\\:\\:getFromPair\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Mailer\\:\\:renderPlaceholders\\(\\) has parameter \\$ctx with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Mailer\\:\\:send\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Mailer\\:\\:send\\(\\) has parameter \\$to with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Ternary operator condition is always true\\.$#"
+			count: 7
+			path: includes/Features/TrustVerification/Emails/Mailer.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendAllTestsAjax.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/SendTestAjax.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Templates\\:\\:buildContext\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Templates.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Templates\\:\\:findConfigByFormId\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Templates.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Emails\\\\Templates\\:\\:mergePlaceholders\\(\\) has parameter \\$ctx with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Emails/Templates.php
+
+		-
+			message: "#^Right side of && is always true\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Export/CsvController.php
+
+		-
+			message: "#^Call to an undefined method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Module\\:\\:forward\\(\\)\\.$#"
+			count: 2
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Module\\:\\:onAfterSend\\(\\) has parameter \\$handler with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Module\\:\\:onAfterSend\\(\\) has parameter \\$record with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Module\\:\\:onSubmit\\(\\) has parameter \\$handler with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Module\\:\\:onSubmit\\(\\) has parameter \\$record with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Module.php
+
+		-
+			message: "#^Function yardlii_debug_log not found\\.$#"
+			count: 3
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Providers\\\\ElementorPro\\:\\:forward\\(\\) has parameter \\$record with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Providers\\\\ElementorPro\\:\\:onAfterSend\\(\\) has parameter \\$handler with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Providers\\\\ElementorPro\\:\\:onAfterSend\\(\\) has parameter \\$record with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Providers\\\\ElementorPro\\:\\:onSubmit\\(\\) has parameter \\$handler with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Providers\\\\ElementorPro\\:\\:onSubmit\\(\\) has parameter \\$record with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/ElementorPro.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Providers\\\\WPUF\\:\\:handle\\(\\) has parameter \\$form_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Providers/WPUF.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\Decisions\\:\\:applyDecision\\(\\) has parameter \\$opts with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\Decisions\\:\\:loadConfigForForm\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\Decisions\\:\\:sendDecisionEmail\\(\\) has parameter \\$cfg with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\Decisions\\:\\:sendDecisionEmail\\(\\) has parameter \\$opts with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Decisions.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\Guards\\:\\:legacyWPUFHandler\\(\\) has parameter \\$form_id with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\Guards\\:\\:loadConfigForForm\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\Guards\\:\\:maybeCreateRequest\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Parameter \\#1 \\$args of function get_posts expects array\\{numberposts\\?\\: int, category\\?\\: int\\|string, include\\?\\: array\\<int\\>, exclude\\?\\: array\\<int\\>, suppress_filters\\?\\: bool, attachment_id\\?\\: int, author\\?\\: int\\|string, author_name\\?\\: string, \\.\\.\\.\\}\\|null, array\\{post_type\\: 'verification_request', post_status\\: array\\{'vp_pending', 'vp_approved', 'vp_rejected'\\}, meta_key\\: '_vp_user_id', meta_value\\: int, orderby\\: 'date', order\\: 'DESC', posts_per_page\\: 1, fields\\: 'ids', \\.\\.\\.\\} given\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/Guards.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Property WP_Roles\\:\\:\\$role_names \\(array\\<string\\>\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/HistoryAjax.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:column_cb\\(\\) has parameter \\$item with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:column_default\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:countByStatus\\(\\) has parameter \\$statuses with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:extra_tablenav\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Requests\\\\ListTable\\:\\:get_views\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Property WP_Roles\\:\\:\\$role_names \\(array\\<string\\>\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Requests/ListTable.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Rest\\\\StatusController\\:\\:getStatus\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Rest\\\\StatusController\\:\\:getStatus\\(\\) has parameter \\$req with generic class WP_REST_Request but does not specify its types\\: T$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Rest\\\\StatusController\\:\\:getVerifiedRoles\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Property WP_User\\:\\:\\$roles \\(array\\<string\\>\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Rest/StatusController.php
+
+		-
+			message: "#^Constant Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Settings\\\\FormConfigs\\:\\:ROW_KEYS is unused\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Settings\\\\FormConfigs\\:\\:sanitizeFormConfigs\\(\\) has parameter \\$input with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Settings\\\\FormConfigs\\:\\:sanitizeFormConfigs\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Property WP_Roles\\:\\:\\$roles \\(array\\<array\\>\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/FormConfigs.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Settings\\\\GlobalSettings\\:\\:sanitizeEmails\\(\\) has parameter \\$raw with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Settings\\\\GlobalSettings\\:\\:sanitizeRoleArray\\(\\) has parameter \\$input with no type specified\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Settings\\\\GlobalSettings\\:\\:sanitizeRoleArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Property WP_Roles\\:\\:\\$roles \\(array\\<array\\>\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Undefined variable\\: \\$some_error$#"
+			count: 1
+			path: includes/Features/TrustVerification/Settings/GlobalSettings.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Support\\\\Meta\\:\\:appendLog\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/Meta.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Support\\\\Roles\\:\\:restoreRoles\\(\\) has parameter \\$roles with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/Roles.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with WP_User will always evaluate to false\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with int will always evaluate to false\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Support\\\\UserDataGuards\\:\\:maybeSuppressEmailChangeNotice\\(\\) has parameter \\$userdata with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Support\\\\UserDataGuards\\:\\:preserveEmailIfEmpty\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\TrustVerification\\\\Support\\\\UserDataGuards\\:\\:preserveEmailIfEmpty\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Offset 'ID' on \\*NEVER\\* on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Offset 'user_email' on \\*NEVER\\* in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: includes/Features/TrustVerification/Support/UserDataGuards.php
+
+		-
+			message: "#^Constant YARDLII_CORE_FILE not found\\.$#"
+			count: 4
+			path: includes/Features/WPUFEnhancedDropdown.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\WPUFEnhancedDropdown\\:\\:enqueue_assets\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/WPUFEnhancedDropdown.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Features\\\\WPUFEnhancedDropdown\\:\\:register\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/Features/WPUFEnhancedDropdown.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Helpers\\\\Notices\\:\\:groups\\(\\) has parameter \\$groups with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Helpers/Notices.php
+
+		-
+			message: "#^Method Yardlii\\\\Core\\\\Helpers\\\\Sanitization\\:\\:text\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: includes/Helpers/Sanitization.php

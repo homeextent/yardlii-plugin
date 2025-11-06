@@ -35,4 +35,43 @@ final class MailerTest extends TestCase
         $this->assertEquals([], $mailer->buildRecipients('', []));
         $this->assertEquals([], $mailer->buildRecipients([], []));
     }
+    /**
+     * Test: buildHeaders correctly assembles From and Reply-To headers.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function test_build_headers_assembles_correctly_without_context(): void
+    {
+        $mailer = new Mailer();
+        $headers = $mailer->buildHeaders([]); // Pass empty context
+
+        // 1. Check for Content-Type
+        $this->assertContains('Content-Type: text/html; charset=UTF-8', $headers);
+
+        // 2. Check for From (should use get_bloginfo fallbacks)
+        // get_bloginfo('name') returns 'Test Blog' from our bootstrap
+        $this->assertContains('From: Test Blog <test_blog_value>', $headers);
+
+        // 3. Check for Reply-To (should fall back to From email)
+        $this->assertContains('Reply-To: test_blog_value', $headers);
+    }
+
+    /**
+     * Test: buildHeaders correctly uses 'reply_to' from context.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function test_build_headers_uses_context_for_reply_to(): void
+    {
+        $mailer = new Mailer();
+        $context = [
+            'reply_to' => 'custom-reply@example.com',
+        ];
+        $headers = $mailer->buildHeaders($context);
+
+        // Check Reply-To is the custom one
+        $this->assertContains('Reply-To: custom-reply@example.com', $headers);
+    }
 }

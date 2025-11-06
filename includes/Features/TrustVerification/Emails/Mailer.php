@@ -52,7 +52,7 @@ final class Mailer
         return (array) apply_filters('yardlii_tv_from', $pair, $context);
     }
 
-    private function buildHeaders(array $context): array
+    public function buildHeaders(array $context): array
     {
         $h = ['Content-Type: text/html; charset=UTF-8'];
 
@@ -83,7 +83,7 @@ final class Mailer
         return $h;
     }
 
-    private function buildRecipients($to, array $context): array
+    public function buildRecipients($to, array $context): array
     {
         $list = is_array($to) ? $to : explode(',', (string) $to);
         $list = array_map('trim', $list);

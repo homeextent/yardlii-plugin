@@ -34,4 +34,33 @@ final class TemplatesPlaceholdersTest extends TestCase
             $result
         );
     }
+    /**
+     * Test: It correctly replaces modern {{dot.notation}} placeholders.
+     * This also tests the recursive array flattening.
+     */
+    public function test_merge_placeholders_replaces_modern_dot_notation_tokens(): void
+    {
+        $html = 'Hi {{user.name}}, site is {{site.url}}. Your form is {{form.id}}.';
+        
+        // Context is a nested array, not flat.
+        $context = [
+            'user' => [
+                'name' => 'Modern User',
+                'id' => 5,
+            ],
+            'site' => [
+                'url' => 'https://example.com',
+            ],
+            'form' => [
+                'id' => 'f_123'
+            ]
+        ];
+
+        $result = Templates::mergePlaceholders($html, $context);
+
+        $this->assertEquals(
+            'Hi Modern User, site is https://example.com. Your form is f_123.',
+            $result
+        );
+    }
 }

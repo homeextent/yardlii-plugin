@@ -1,36 +1,76 @@
-name: php-tests # <-- RENAMED
-
+name: php-tests
 on:
   pull_request:
   push:
 
 jobs:
-  php-tests: # <-- RENAMED
-    name: php-tests (${{ matrix.php }}) # <-- ADDED to match branch protection
+  php-tests:
+    name: php-tests (${{ matrix.php }})
     runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wp_phpunit_tests
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+          
     strategy:
       matrix:
-        php: ['8.1', '8.2'] # <-- ADDED 8.2
-    steps:
-      - uses: actions/checkout@v4
+        php: ['8.1', '8.2']
 
-      - uses: shivammathur/setup-php@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          coverage: none
-          tools: composer
-          extensions: mbstring, json, dom, xml, zip
+          tools: composer # Make composer available
 
-      - name: Install deps
-        run: composer install --no-interaction --no-progress --prefer-dist
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
 
-      - name: PHPStan
-        run: composer stan
+      # --- THIS IS THE MISSING STEP ---
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+      # ---------------------------------
 
-      - name: PHPUnit (unit only)
-        run: composer test:unit
-        env: # <-- ADDED to fix PHPUnit error
+      - name: Provide wp-tests-config.php to wp-phpunit
+        run: |
+          # This step will now work because 'vendor/...' exists
+          cp tests/integration/wp-tests-config.php vendor/wp-phpunit/wp-phpunit/wp-tests-config.php
+          test -f vendor/wp-phpunit/wp-phpunit/wp-tests-config.php && echo "Config in place ✅"
+
+      - name: PHPUnit (integration)
+        env:
+          # Database variables
+          WP_DB_NAME: wp_phpunit_tests
+          WP_DB_USER: root
+          WP_DB_PASS: root
+          WP_DB_HOST: 127.0.0.1 # Use 127.0.0.1 for the service
+          WP_PHPUNIT__DIR: ${{ github.workspace }}/vendor/wp-phpunit/wp-phpunit
+          
+          # These are the variables you correctly added
           WP_TESTS_DOMAIN: example.org
           WP_TESTS_EMAIL: admin@example.org
-          WP_TESTS_TITLE: 'My Test Blog'
+          WP_TESTS_TITLE: My Test Blog
           WP_PHP_BINARY: /usr/bin/php
+        run: composer test:integration
+
+      # Add your PHPStan step back in
+      - name: PHPStan
+        run: composer stan

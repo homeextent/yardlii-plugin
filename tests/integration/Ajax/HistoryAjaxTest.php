@@ -68,4 +68,56 @@ final class HistoryAjaxTest extends WP_Ajax_UnitTestCase
             );
         }
     }
+	/**
+     * Test: The endpoint must succeed and return HTML when called by an authorized user
+     * with a valid nonce and request ID.
+     */
+    public function test_admin_with_valid_request_should_succeed(): void
+    {
+        // 1. Create an admin user and log in.
+        $admin_id = self::factory()->user->create(['role' => 'administrator']);
+        wp_set_current_user($admin_id);
+
+        // 2. Create a fake verification request post.
+        $request_id = self::factory()->post->create([
+            'post_type' => 'vp_request', // CPT slug
+            'post_status' => 'vp_pending',
+        ]);
+
+        // 3. Add some fake log data to the post's meta.
+        $logs = [
+            [
+                'ts' => '2025-11-06T10:00:00Z',
+                'action' => 'created',
+                'by' => 123,
+                'data' => ['form_id' => 'test_form']
+            ]
+        ];
+        // The 'true' at the end means it's a single value, not an array.
+        add_post_meta($request_id, '_vp_action_logs', $logs, true);
+
+        // 4. Set the valid nonce and the request_id in the $_POST data.
+        $_POST['_ajax_nonce'] = wp_create_nonce('yardlii_tv_history');
+        $_POST['request_id'] = $request_id;
+
+        try {
+            // 5. Run the handler
+            $this->_handleAjax($this->ajax_action);
+
+            $this->fail('AJAX handler did not die as expected.');
+        } catch (\WPAjaxDieStopException $e) {
+            // 6. We expect a JSON success response.
+            $data = json_decode($e->getMessage(), true);
+
+            $this->assertIsArray($data);
+            $this->assertTrue($data['success']);
+
+            // 7. Assert the HTML contains our log data.
+            $this->assertArrayHasKey('html', $data['data']);
+            $this->assertStringContainsString(
+                'Request created', // This label comes from the 'created' action [cite: 387-389]
+                $data['data']['html']
+            );
+        }
+    }
 }

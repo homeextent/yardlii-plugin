@@ -15,20 +15,14 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: wp_phpunit_tests
-        ports:
-          - 3306:3306
+        ports: ['3306:3306']
         options: >-
           --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+          --health-interval=5s --health-timeout=5s --health-retries=20
 
     strategy:
       matrix:
         php: ['8.1', '8.2']
-
-    env:
-      WP_CORE_VERSION: '6.8.3' # WordPress core version to fetch for wp-phpunit
 
     steps:
       - uses: actions/checkout@v4
@@ -38,7 +32,7 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none
           tools: composer
-          extensions: mbstring, json, dom, xml, zip
+          extensions: mbstring, json, dom, xml, zip, mysqli
 
       - name: Install deps
         run: composer install --no-interaction --no-progress --prefer-dist
@@ -47,37 +41,36 @@ jobs:
         run: composer stan
 
       - name: PHPUnit (unit only)
-        env:
-          WP_TESTS_DOMAIN: example.org
-          WP_TESTS_EMAIL: admin@example.org
-          WP_TESTS_TITLE: 'My Test Blog'
-          WP_PHP_BINARY: /usr/bin/php
         run: composer test:unit
 
-      - name: Install WordPress core for wp-phpunit
-        shell: bash
-        run: |
-          set -euo pipefail
-          export WP_PHPUNIT__DIR="$GITHUB_WORKSPACE/vendor/wp-phpunit/wp-phpunit"
-          mkdir -p "$WP_PHPUNIT__DIR"
-          curl -sL "https://wordpress.org/wordpress-${WP_CORE_VERSION}.zip" -o /tmp/wp.zip
-          unzip -q /tmp/wp.zip -d "$WP_PHPUNIT__DIR"
-          test -f "$WP_PHPUNIT__DIR/wordpress/wp-settings.php"
-
-      - name: Create test DB
-        shell: bash
-        run: |
-          mysql --protocol=tcp -h 127.0.0.1 -uroot -proot -e 'CREATE DATABASE IF NOT EXISTS wp_phpunit_tests;'
-
-      - name: PHPUnit (integration)
+      # --- Integration prep (wp-phpunit) ---
+      - name: Install WordPress (wp-phpunit) test suite
         env:
-          WP_PHPUNIT__DIR: ${{ github.workspace }}/vendor/wp-phpunit/wp-phpunit
-          WP_PHP_BINARY: /usr/bin/php
-          WP_TESTS_DOMAIN: example.org
-          WP_TESTS_EMAIL: admin@example.org
-          WP_TESTS_TITLE: 'My Test Blog'
           WP_DB_NAME: wp_phpunit_tests
           WP_DB_USER: root
           WP_DB_PASS: root
           WP_DB_HOST: 127.0.0.1
+        run: |
+          bash vendor/wp-phpunit/wp-phpunit/bin/install-wp-tests.sh "$WP_DB_NAME" "$WP_DB_USER" "$WP_DB_PASS" "$WP_DB_HOST" latest
+
+      - name: Provide wp-tests-config.php to wp-phpunit
+        run: |
+          cp tests/integration/wp-tests-config.php vendor/wp-phpunit/wp-phpunit/wp-tests-config.php
+          test -f vendor/wp-phpunit/wp-phpunit/wp-tests-config.php && echo "Config in place ✅"
+
+      - name: PHPUnit (integration)
+        env:
+          # Database variables (you already had these)
+          WP_DB_NAME: wp_phpunit_tests
+          WP_DB_USER: root
+          WP_DB_PASS: root
+          WP_DB_HOST: 127.0.0.1
+          WP_PHPUNIT__DIR: ${{ github.workspace }}/vendor/wp-phpunit/wp-phpunit
+          
+          # --- ADD THESE MISSING VARIABLES ---
+          WP_TESTS_DOMAIN: example.org
+          WP_TESTS_EMAIL: admin@example.org
+          WP_TESTS_TITLE: My Test Blog
+          WP_PHP_BINARY: /usr/bin/php 
+          
         run: composer test:integration

@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="tests/integration/wp-bootstrap.php"
-         colors="true"
-         beStrictAboutCoversAnnotation="false"
-         backupGlobals="false">
+<phpunit bootstrap="tests/integration/wp-bootstrap.php" colors="true" beStrictAboutCoversAnnotation="false" backupGlobals="false">
   <testsuites>
     <testsuite name="integration">
       <directory>tests/integration</directory>
@@ -10,9 +6,6 @@
   </testsuites>
   <php>
     <env name="WP_PHPUNIT__DIR" value="vendor/wp-phpunit/wp-phpunit"/>
-    <env name="WP_TESTS_DOMAIN" value="example.org"/>
-    <env name="WP_TESTS_EMAIL" value="admin@example.org"/>
-    <env name="WP_TESTS_TITLE" value="Yardlii Integration Tests"/>
-    <env name="WP_PHP_BINARY" value="php"/>
+    <env name="WP_PHPUNIT__TESTS_CONFIG" value="tests/integration/wp-tests-config.php"/>
   </php>
 </phpunit>

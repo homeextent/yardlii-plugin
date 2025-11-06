@@ -1,16 +1,35 @@
-name: php-tests # <-- RENAMED
+name: php-tests
 
 on:
   pull_request:
   push:
 
 jobs:
-  php-tests: # <-- RENAMED
-    name: php-tests (${{ matrix.php }}) # <-- ADDED to match branch protection
+  php-tests:
+    name: php-tests (${{ matrix.php }})
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wp_phpunit_tests
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     strategy:
       matrix:
-        php: ['8.1', '8.2'] # <-- ADDED 8.2
+        php: ['8.1', '8.2']
+
+    env:
+      WP_CORE_VERSION: '6.8.3' # WordPress core version to fetch for wp-phpunit
+
     steps:
       - uses: actions/checkout@v4
 
@@ -28,12 +47,37 @@ jobs:
         run: composer stan
 
       - name: PHPUnit (unit only)
-        run: composer test:unit
-        env: # <-- ADDED to fix PHPUnit error
+        env:
           WP_TESTS_DOMAIN: example.org
           WP_TESTS_EMAIL: admin@example.org
           WP_TESTS_TITLE: 'My Test Blog'
           WP_PHP_BINARY: /usr/bin/php
-	
+        run: composer test:unit
+
+      - name: Install WordPress core for wp-phpunit
+        shell: bash
+        run: |
+          set -euo pipefail
+          export WP_PHPUNIT__DIR="$GITHUB_WORKSPACE/vendor/wp-phpunit/wp-phpunit"
+          mkdir -p "$WP_PHPUNIT__DIR"
+          curl -sL "https://wordpress.org/wordpress-${WP_CORE_VERSION}.zip" -o /tmp/wp.zip
+          unzip -q /tmp/wp.zip -d "$WP_PHPUNIT__DIR"
+          test -f "$WP_PHPUNIT__DIR/wordpress/wp-settings.php"
+
+      - name: Create test DB
+        shell: bash
+        run: |
+          mysql --protocol=tcp -h 127.0.0.1 -uroot -proot -e 'CREATE DATABASE IF NOT EXISTS wp_phpunit_tests;'
+
       - name: PHPUnit (integration)
-    	run: composer test:integration
+        env:
+          WP_PHPUNIT__DIR: ${{ github.workspace }}/vendor/wp-phpunit/wp-phpunit
+          WP_PHP_BINARY: /usr/bin/php
+          WP_TESTS_DOMAIN: example.org
+          WP_TESTS_EMAIL: admin@example.org
+          WP_TESTS_TITLE: 'My Test Blog'
+          WP_DB_NAME: wp_phpunit_tests
+          WP_DB_USER: root
+          WP_DB_PASS: root
+          WP_DB_HOST: 127.0.0.1
+        run: composer test:integration

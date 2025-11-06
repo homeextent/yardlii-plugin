@@ -1,0 +1,6 @@
+/vendor/
+/.wordpress-tests-lib/
+/.wp-env/
+/.idea/
+/.vscode/
+.DS_Store

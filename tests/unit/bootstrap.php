@@ -29,7 +29,7 @@ if (!function_exists('sanitize_email')) {
 
 if (!function_exists('apply_filters')) {
     // Correctly accepts a variable number of arguments
-    function apply_filters(string $hook, mixed $value, ...$args): mixed {
+    function apply_filters(string $hook, mixed $value, ...mixed $args): mixed {
         // We don't do anything with the filters, just return the original value
         return $value;
     }

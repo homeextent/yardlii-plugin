@@ -14,6 +14,7 @@ use Yardlii\Core\Features\TrustVerification\Emails\Templates;
  */
 final class TemplatesPlaceholdersTest extends TestCase
 {    
+    
     /**
      * Test: It correctly leaves unknown/missing tokens in place.
      */
@@ -84,5 +85,29 @@ final class TemplatesPlaceholdersTest extends TestCase
             'Hi Modern User, site is https://example.com. Your form is f_123.',
             $result
         );
+    }
+    /**
+     * Test: buildContext must run without WordPress and provide sensible fallbacks.
+     * We cannot mock global functions easily in PHPUnit, so we rely on the
+     * code's 'function_exists' guards. Since WP isn't loaded, they will
+     * return false, triggering the fallback paths.
+     */
+    public function test_build_context_runs_without_wordpress_and_provides_fallbacks(): void
+    {
+        // Call buildContext with no user ID.
+        $result = Templates::buildContext(null, 'test_form', 123);
+
+        // Define the expected array, based on the fallbacks in Templates.php
+        $expected = [
+            '{display_name}' => 'Sample User',
+            '{user_email}' => 'sample@example.com',
+            '{user_login}' => 'sample_login',
+            '{form_id}' => 'test_form',
+            '{request_id}' => '123',
+            '{site_title}' => 'Yardlii', // The hard-coded fallback
+            '{site_url}' => '/', // The hard-coded fallback
+        ];
+
+        $this->assertEquals($expected, $result);
     }
 }

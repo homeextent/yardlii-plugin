@@ -52,7 +52,7 @@ jobs:
           WP_DB_HOST: 127.0.0.1
         
 	run: |
-  bash vendor/bin/install-wp-tests.sh "$WP_DB_NAME" "$WP_DB_USER" "$WP_DB_PASS" "$WP_DB_HOST" latest
+          bash vendor/wp-phpunit/wp-phpunit/bin/install-wp-tests.sh "$WP_DB_NAME" "$WP_DB_USER" "$WP_DB_PASS" "$WP_DB_HOST" latest
 
       - name: Provide wp-tests-config.php to wp-phpunit
         run: |

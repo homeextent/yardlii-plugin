@@ -40,36 +40,32 @@ final class HistoryAjaxTest extends WP_Ajax_UnitTestCase
     }
 	
     /**
-     * Test: The endpoint must fail if the user lacks the 'Caps::MANAGE' capability.
-     *
-     * This corresponds to the current_user_can(Caps::MANAGE) check.
+     * Test: The endpoint must fail if the user doesn't have the 'manage_verifications' cap.
      */
-    public function test_user_without_capability_should_fail(): void
+    public function test_user_without_cap_should_fail(): void
     {
-        // 1. Create a user who does NOT have the capability.
-        // The 'subscriber' role is perfect for this.
+        // 1. Create a user who does NOT have the correct capability.
         $user_id = self::factory()->user->create(['role' => 'subscriber']);
-
-        // 2. Make this user the one "running" the test.
         wp_set_current_user($user_id);
 
-        // 3. Set the required nonce. This user is "logged in",
-        // so they can pass the nonce check.
+        // 2. Set a valid nonce for this user.
         $_POST['_ajax_nonce'] = wp_create_nonce('yardlii_tv_history');
 
         try {
-            // Run the handler
+            // 3. Run the handler
             $this->_handleAjax($this->ajax_action);
 
             $this->fail('AJAX handler did not die as expected.');
         } catch (\WPAjaxDieStopException $e) {
-            // This is the expected outcome.
-            // We assert the handler sent a JSON error response.
-            $response = json_decode($e->getMessage(), true);
+            // 4. We expect a JSON error response.
+            $data = json_decode($e->getMessage(), true);
 
-            $this->assertIsArray($response, 'Response was not valid JSON.');
-            $this->assertFalse($response['success'], 'AJAX success was not false.');
-            $this->assertSame(403, $response['data']['message'][1] ?? null, 'HTTP status code was not 403.');
+            $this->assertIsArray($data);
+            $this->assertFalse($data['success']);
+            $this->assertStringContainsString(
+                'Permission denied',
+                $data['data']['message'] ?? ''
+            );
         }
     }
 }

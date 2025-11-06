@@ -52,7 +52,7 @@ final class Mailer
         return (array) apply_filters('yardlii_tv_from', $pair, $context);
     }
 
-    private function buildHeaders(array $context): array
+    public function buildHeaders(array $context): array
     {
         $h = ['Content-Type: text/html; charset=UTF-8'];
 

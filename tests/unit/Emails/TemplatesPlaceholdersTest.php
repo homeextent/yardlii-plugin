@@ -13,7 +13,29 @@ use Yardlii\Core\Features\TrustVerification\Emails\Templates;
  * @covers \Yardlii\Core\Features\TrustVerification\Emails\Templates
  */
 final class TemplatesPlaceholdersTest extends TestCase
-{
+{    
+    /**
+     * Test: It correctly leaves unknown/missing tokens in place.
+     */
+    public function test_merge_placeholders_leaves_unknown_tokens(): void
+    {
+        $html = 'Hi {{user.name}}, your token is {{unknown.token}} and {legacy_unknown}.';
+        
+        $context = [
+            'user' => [
+                'name' => 'Test User',
+            ],
+            '{legacy_known}' => 'foo', // This one won't be used
+        ];
+
+        $result = Templates::mergePlaceholders($html, $context);
+
+        // We expect {{user.name}} to be replaced, but the others to be left alone.
+        $this->assertEquals(
+            'Hi Test User, your token is {{unknown.token}} and {legacy_unknown}.',
+            $result
+        );
+    }
     /**
      * Test: It correctly replaces legacy {token} placeholders.
      */

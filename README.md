@@ -30,6 +30,10 @@ It powers all major YARDLII components through a clean, extensible architecture 
 
 ## 📦 Changelog
 
+## 3.6.0 - 2025-11-07
+* [cite_start]**Feature**: Refactored the "Resync All Users" badge assignment to use Action Scheduler for reliable background processing[cite: 2241, 2245, 2253]. This prevents server timeouts on large sites by queuing individual user sync jobs.
+* **Dev**: Added `woocommerce/action-scheduler` as a Composer dependency.
+
 ## 3.5.0 - 2025-11-06
 * [cite_start]**New**: Added an `uninstall.php` routine to remove all plugin data on deletion (CPTs, options, meta) [cite: 74-83].
 * [cite_start]**New**: Added a "Remove all data on deletion" safety toggle in the Advanced tab to control the uninstall routine[cite: 77].

@@ -61,14 +61,17 @@ final class Caps
     /**
      * Convenience checker you can use in non-global contexts.
      */
-    public static function userCanManage(?int $userId = null): bool
-    {
-        if ($userId === null) {
-            return current_user_can(self::MANAGE);
-        }
-        $user = get_user_by('id', $userId);
-        return $user ? user_can($user, self::MANAGE) : false;
-    }
+    public static function userCanManage(?int $userld = null): bool
+	{
+		if ($userld === null) {
+			// Check capability for the *current* user
+			return current_user_can(self::MANAGE);
+		}
+
+		// Check capability for a *specific* user ID
+		$user = get_user_by('id', $userld);
+		return $user ? user_can($user, self::MANAGE) : false;
+	}
 
     /**
      * Handy permission callback for REST routes:

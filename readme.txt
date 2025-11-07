@@ -4,7 +4,7 @@ Tags: acf, facetwp, wpuf, listings, maps, admin-tools, feature-flags, automation
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 3.5.0
+Stable tag: 3.6.0
 License: GPLv2 or later.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -285,6 +285,11 @@ Badge Assignment mapping UI (repeater rows)
 Users list with Badge column & profile badge preview
 
 Changelog
+= 3.6.0 - 2025-11-07 =
+* [cite_start]Feature: Refactored the "Resync All Users" badge assignment to use Action Scheduler for reliable background processing[cite: 2241, 2245, 2253].
+* Feature: This prevents server timeouts on large sites by queuing individual user sync jobs.
+* Dev: Added `woocommerce/action-scheduler` as a Composer dependency.
+
 = 3.5.0 - 2025-11-06 =
 * New: Added an `uninstall.php` routine to remove all plugin data on deletion (CPTs, options, meta) [cite: 74-83].
 * New: Added a "Remove all data on deletion" safety toggle in the Advanced tab to control the uninstall routine[cite: 77].

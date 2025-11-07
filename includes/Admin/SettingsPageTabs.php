@@ -220,6 +220,11 @@ final class SettingsPageTabs
             'default'           => false,
             'sanitize_callback' => self::success_notifier(self::GROUP_DEBUG, static fn($v)=>(bool)$v),
         ]);
+	register_setting(self::GROUP_DEBUG, 'yardlii_remove_data_on_delete', [
+			'type'              => 'boolean',
+			'default'           => false,
+			'sanitize_callback' => self::success_notifier(self::GROUP_DEBUG, static fn($v) => (bool)$v),
+		]);
     }
 
     /** Feature Flags: group-scoped success + toggles */
@@ -633,6 +638,28 @@ body.settings_page_yardlii-core-settings .update-nag { display:none!important; }
                         </label>
                         <?php submit_button(__('Save Debug Setting', 'yardlii-core')); ?>
                     </form>
+
+	            <hr style="margin: 2rem 0;">
+				<form method="post" action="options.php">
+					<?php
+					settings_fields(self::GROUP_DEBUG);
+					$purge_enabled = (bool) get_option('yardlii_remove_data_on_delete', false);
+					?>
+					<h3 style="color: #d63638; margin-bottom: 0.5rem;"><?php esc_html_e('Danger Zone', 'yardlii-core'); ?></h3>
+					<div class="yardlii-card" style="border-color: #d63638;">
+						<label for="yardlii_remove_data_on_delete" style="font-weight:600; display: block;">
+							<input type="hidden" name="yardlii_remove_data_on_delete" value="0" />
+							<input type="checkbox" name="yardlii_remove_data_on_delete"
+								id="yardlii_remove_data_on_delete" value="1" <?php checked($purge_enabled, true); ?> />
+							<?php esc_html_e('Enable Data Deletion on Uninstall', 'yardlii-core'); ?>
+						</label>
+						<p class="description" style="margin-top: 0.5rem;">
+							<?php esc_html_e('CAUTION: If this is checked, ALL YARDLII data (verification requests, settings, role configs, and user badges) will be permanently deleted from the database when you "Delete" the plugin from the Plugins page.', 'yardlii-core'); ?>
+						</p>
+						<?php submit_button(__('Save Deletion Setting', 'yardlii-core'), 'button-primary'); ?>
+					</div>
+				</form>
+				<hr style="margin: 2rem 0;">
 
                     <?php
                     $flag_from_code = defined('YARDLII_ENABLE_ACF_USER_SYNC');

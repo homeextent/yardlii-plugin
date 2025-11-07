@@ -29,16 +29,16 @@ final class Module
         if (class_exists(\Yardlii\Core\Features\TrustVerification\Caps::class)) {
             add_action('admin_init', static function () {
                 // Only run once per site to avoid needless work every admin request
-                if (!get_option('yardlii_tv_cap_seeded')) {
-                    \Yardlii\Core\Features\TrustVerification\Caps::grantDefault();
-                    update_option('yardlii_tv_cap_seeded', 1, false);
+                if (!get_option('yardlii_tv_cap_seeded')) { // [cite: 956]
+                    \Yardlii\Core\Features\TrustVerification\Caps::grantDefault(); // [cite: 957]
+                    update_option('yardlii_tv_cap_seeded', 1, false); // [cite: 958]
                 }
             });
         }
 
         // UI first (adds tab + enqueues assets via AdminPage)
-        if (class_exists(AdminPage::class)) {
-            (new AdminPage($this->pluginFile, $this->version))->register();
+        if (class_exists(AdminPage::class)) { // [cite: 963]
+            (new AdminPage($this->pluginFile, $this->version))->register(); // [cite: 965]
         }
 
         // --- NEW: Manual Dependency Injection for Decisions ---
@@ -68,103 +68,99 @@ final class Module
 
 
         // Storage / Workflow
-        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\CPT::class);
-        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\Guards::class);
-        // REMOVED: $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\Decisions::class);
-        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\Cleanup::class);
-        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\HistoryAjax::class);
+        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\CPT::class); // [cite: 967]
+        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\Guards::class); // [cite: 968]
+        // REMOVED: $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\Decisions::class); 
+        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\Cleanup::class); // 
+        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\HistoryAjax::class); // 
 
         // Emails
-        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Emails\PreviewAjax::class);
-        // REMOVED: $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Emails\Mailer::class);
-        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Emails\SendTestAjax::class);
-        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Emails\SendAllTestsAjax::class);
+        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Emails\PreviewAjax::class); // [cite: 972]
+        // REMOVED: $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Emails\Mailer::class); [cite: 972]
+        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Emails\SendTestAjax::class); // [cite: 973]
+        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Emails\SendAllTestsAjax::class); // [cite: 973]
 
         // Tools / API
-        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Export\CsvController::class);
-        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Rest\StatusController::class);
+        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Export\CsvController::class); // [cite: 975]
+        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Rest\StatusController::class); // [cite: 975]
 
         // Configuration / Global Settings
-        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Settings\GlobalSettings::class);
+        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Settings\GlobalSettings::class); // [cite: 977]
 
         // User update guards (prevent bogus email changes and blanks)
-        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Support\UserDataGuards::class);
+        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Support\UserDataGuards::class); // [cite: 979]
 
         // Providers layer (decouples from WPUF)
-        $this->bootProviders();
+        $this->bootProviders(); // [cite: 980]
     }
 
     private function bootProviders(): void
     {
-        $enabled = apply_filters('yardlii_tv_enabled_providers', [
-            'wpuf' => true,
-            'elementor' => true,
+        $enabled = apply_filters('yardlii_tv_enabled_providers', [ // [cite: 985]
+            'wpuf' => true, // [cite: 986]
+            'elementor' => true, // [cite: 987]
         ]);
 
         // WPUF
         if (
             !empty($enabled['wpuf']) &&
-            class_exists('\Yardlii\Core\Features\TrustVerification\Providers\WPUF')
+            class_exists('\Yardlii\Core\Features\TrustVerification\Providers\WPUF') // <-- FIX: Was WWPUF
         ) {
             try {
-                (new \Yardlii\Core\Features\TrustVerification\Providers\WWPUF())->registerHooks();
+                (new \Yardlii\Core\Features\TrustVerification\Providers\WPUF())->registerHooks(); // <-- FIX: Was WWPUF
             } catch (\Throwable $e) {
             }
         }
 
         // Elementor
-        // register NOW if already initialized, otherwise defer until it is.
-        if (!empty($enabled['elementor'])) {
-            $register = static function () {
-                if (class_exists('\Yardlii\Core\Features\TrustVerification\Providers\ElementorPro')) {
+        if (!empty($enabled['elementor'])) { // [cite: 997]
+            $register = static function () { // [cite: 998]
+                if (class_exists('\Yardlii\Core\Features\TrustVerification\Providers\ElementorPro')) { // [cite: 999]
                     static $done = false;
-                    if ($done) {
-                        return;
-                    } // avoid double registration
-                    $done = true;
+                    if ($done) { return; } // [cite: 1000]
+                    $done = true; // [cite: 1001]
                     try {
-                        (new \Yardlii\Core\Features\TrustVerification\Providers\ElementorPro())->registerHooks();
+                        (new \Yardlii\Core\Features\TrustVerification\Providers\ElementorPro())->registerHooks(); // [cite: 1003]
                     } catch (\Throwable $e) {
                     }
                 }
             };
 
-            if (did_action('elementor_pro/init')) {
-                $register();
+            if (did_action('elementor_pro/init')) { // [cite: 1006]
+                $register(); // [cite: 1007]
             } else {
-                add_action('elementor_pro/init', $register, 0);
+                add_action('elementor_pro/init', $register, 0); // [cite: 1009]
             }
         }
     }
     
-    // This function [cite: 1013-1019] appears to be misplaced OOP definition, 
-    // it was in the original Module.php. We will leave it as-is.
+    // These methods were misplaced in the original file [cite: 1013-1019]
     public function onSubmit($record, $handler): void
     {
-        error_log('[TV] Elementor onSubmit fired');
-        $this->forward($record, 'new_record');
+        error_log('[TV] Elementor onSubmit fired'); // [cite: 1014]
+        // $this->forward($record, 'new_record'); // [cite: 1015] (forward method doesn't exist, commenting out)
     }
 
     public function onAfterSend($record, $handler): void
     {
-        error_log('[TV] Elementor onAfterSend fired');
-        $this->forward($record, 'after_send');
+        error_log('[TV] Elementor onAfterSend fired'); // [cite: 1017]
+        // $this->forward($record, 'after_send'); // [cite: 1018] (forward method doesn't exist, commenting out)
     }
 
 
     private function safeRegister(string $fqcn): void
     {
-        if (!class_exists($fqcn)) {
+        if (!class_exists($fqcn)) { // [cite: 1022]
             return;
         }
         try {
-            $obj = new $fqcn();
-            if (method_exists($obj, 'register')) {
-                $obj->register();
+            $obj = new $fqcn(); // 
+            if (method_exists($obj, 'register')) { // [cite: 1025]
+                $obj->register(); // [cite: 1028]
             }
         } catch (\Throwable $e) {
             // swallow
-            if (defined('YARDLII_DEBUG') && YARDLII_DEBUG) {
+            if (defined('YARDLII_DEBUG') && YARDLII_DEBUG) { // [cite: 93]
                 error_log('[YARDLII] safeRegister failed for ' . $fqcn . ': ' . $e->getMessage());
             }
         }

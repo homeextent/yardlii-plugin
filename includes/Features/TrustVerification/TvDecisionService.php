@@ -8,6 +8,7 @@ use Yardlii\Core\Features\TrustVerification\Support\Meta;
 use Yardlii\Core\Features\TrustVerification\Support\Roles;
 use Yardlii\Core\Features\TrustVerification\Settings\FormConfigs as TVFormConfigs;
 use Yardlii\Core\Features\TrustVerification\Emails\Mailer;
+use Yardlii\Core\Features\TrustVerification\Requests\CPT; // <-- FIX: ADDED THIS USE STATEMENT
 use WP_User;
 
 /**
@@ -29,7 +30,7 @@ final class TvDecisionService
      *
      * @param int $request_id
      * @param string $action 'approve', 'reject', 'reopen', or 'resend'
-     * @param array $opts ['cc_self' => bool]
+     * @param array<string, bool> $opts ['cc_self' => bool]
      * @return bool True on success, false on failure or if no-op.
      */
     public function applyDecision(int $request_id, string $action, array $opts = []): bool
@@ -50,8 +51,8 @@ final class TvDecisionService
         $by = get_current_user_id(); // [cite: 1111]
         $now = gmdate('c'); // [cite: 1110]
 
-        // Load config [cite: 1109]
-        $cfg = $this->loadConfigForForm($form_id); // [cite: 1274]
+        // Load config
+        $cfg = $this->loadConfigForForm($form_id); // [cite: 1109]
         if (!$cfg && $action !== 'reopen') {
             return false; // [cite: 1109]
         }
@@ -91,23 +92,27 @@ final class TvDecisionService
         return $result;
     }
 
+    /**
+     * @param array<string, mixed> $cfg
+     * @param array<string, bool> $opts
+     */
     private function handleApprove(int $request_id, string $status, ?WP_User $user, array $cfg, int $by, string $now, array $opts): bool
     {
-        if ($status !== 'vp_pending') return false; // [cite: 1114, 1894]
+        if ($status !== 'vp_pending') return false; // [cite: 1114]
 
         $role = sanitize_key($cfg['approved_role'] ?? ''); // [cite: 1115]
         Meta::appendLog($request_id, 'approve_begin', $by, []); // [cite: 1116]
 
-        $old_roles = $user ? (array) $user->roles : []; // [cite: 1120]
+        $old_roles = $user ? (array) $user->roles : []; // [cite: 1118-1120]
         update_post_meta($request_id, '_vp_old_roles', $old_roles); // [cite: 1121]
 
         if ($user && $role !== '') {
-            Roles::setSingleRole($user->ID, $role); // [cite: 1123, 1689]
+            Roles::setSingleRole($user->ID, $role); // [cite: 1122-1123]
         }
 
-        $new_roles = $user ? (array) get_userdata($user->ID)->roles : []; // [cite: 1127]
+        $new_roles = $user ? (array) get_userdata($user->ID)->roles : []; // [cite: 1126-1127]
 
-        $updated = wp_update_post(['ID' => $request_id, 'post_status' => 'vp_approved'], true); // [cite: 1130, 1895]
+        $updated = wp_update_post(['ID' => $request_id, 'post_status' => 'vp_approved'], true); // [cite: 1130]
         if (is_wp_error($updated)) return false; // [cite: 1131]
 
         update_post_meta($request_id, '_vp_processed_by', $by); // [cite: 1132]
@@ -123,23 +128,27 @@ final class TvDecisionService
         return true;
     }
 
+    /**
+     * @param array<string, mixed> $cfg
+     * @param array<string, bool> $opts
+     */
     private function handleReject(int $request_id, string $status, ?WP_User $user, array $cfg, int $by, string $now, array $opts): bool
     {
-        if ($status !== 'vp_pending') return false; // [cite: 1142, 1894]
+        if ($status !== 'vp_pending') return false; // [cite: 1142]
 
         $role = sanitize_key($cfg['rejected_role'] ?? ''); // [cite: 1143]
         Meta::appendLog($request_id, 'reject_begin', $by, []); // [cite: 1144]
 
-        $old_roles = $user ? (array) $user->roles : []; // [cite: 1148]
+        $old_roles = $user ? (array) $user->roles : []; // [cite: 1146-1148]
         update_post_meta($request_id, '_vp_old_roles', $old_roles); // [cite: 1149]
 
         if ($user && $role !== '') {
-            Roles::setSingleRole($user->ID, $role); // [cite: 1152, 1689]
+            Roles::setSingleRole($user->ID, $role); // [cite: 1150-1152]
         }
 
-        $new_roles = $user ? (array) get_userdata($user->ID)->roles : []; // [cite: 1155]
+        $new_roles = $user ? (array) get_userdata($user->ID)->roles : []; // [cite: 1154-1155]
 
-        $updated = wp_update_post(['ID' => $request_id, 'post_status' => 'vp_rejected'], true); // [cite: 1157, 1896]
+        $updated = wp_update_post(['ID' => $request_id, 'post_status' => 'vp_rejected'], true); // [cite: 1157]
         if (is_wp_error($updated)) return false; // [cite: 1158]
 
         update_post_meta($request_id, '_vp_processed_by', $by); // [cite: 1159]
@@ -157,18 +166,18 @@ final class TvDecisionService
 
     private function handleReopen(int $request_id, string $status, ?WP_User $user, int $by): bool
     {
-        if (!in_array($status, ['vp_approved', 'vp_rejected'], true)) return false; // [cite: 1169, 1895, 1896]
+        if (!in_array($status, ['vp_approved', 'vp_rejected'], true)) return false; // [cite: 1169]
 
-        $cur_roles = $user ? (array) $user->roles : []; // [cite: 1174]
+        $cur_roles = $user ? (array) $user->roles : []; // [cite: 1171-1174]
         $old_roles_to_restore = (array) get_post_meta($request_id, '_vp_old_roles', true); // [cite: 1176]
 
         if ($user) {
-            Roles::restoreRoles($user->ID, $old_roles_to_restore); // [cite: 1179, 1695]
+            Roles::restoreRoles($user->ID, $old_roles_to_restore); // [cite: 1177-1179]
         }
 
-        $new_roles = $user ? (array) get_userdata($user->ID)->roles : []; // [cite: 1182]
+        $new_roles = $user ? (array) get_userdata($user->ID)->roles : []; // [cite: 1181-1182]
 
-        $updated = wp_update_post(['ID' => $request_id, 'post_status' => 'vp_pending'], true); // [cite: 1184, 1894]
+        $updated = wp_update_post(['ID' => $request_id, 'post_status' => 'vp_pending'], true); // [cite: 1184]
         if (is_wp_error($updated)) return false; // [cite: 1185]
 
         delete_post_meta($request_id, '_vp_processed_by'); // [cite: 1186]
@@ -182,13 +191,16 @@ final class TvDecisionService
         return true;
     }
 
+    /**
+     * @param array<string, mixed> $cfg
+     * @param array<string, bool> $opts
+     */
     private function handleResend(int $request_id, string $status, ?WP_User $user, string $form_id, array $cfg, int $by, array $opts): bool
     {
-        if (!in_array($status, ['vp_approved', 'vp_rejected'], true)) return false; // [cite: 1195, 1895, 1896]
+        if (!in_array($status, ['vp_approved', 'vp_rejected'], true)) return false; // [cite: 1195]
 
         $type = ($status === 'vp_approved') ? 'approve' : 'reject'; // [cite: 1196]
         
-        // Note: $user is passed to sendDecisionEmail, which handles logging if email is skipped [cite: 1251-1261]
         $this->sendDecisionEmail($user, $form_id, $type, $cfg, $request_id, $opts); // [cite: 1197]
         
         Meta::appendLog($request_id, 'resend', $by, ['type' => $type]); // [cite: 1198]
@@ -197,17 +209,16 @@ final class TvDecisionService
 
     /**
      * Send decision email using per-form templates.
-     * This logic is moved from Decisions.php [cite: 1204]
+     * @param array<string, mixed> $cfg
+     * @param array<string, bool> $opts
      */
     private function sendDecisionEmail(?WP_User $user, string $form_id, string $type, array $cfg, int $request_id = 0, array $opts = []): void
     {
         if (!$user) {
-            // No user, nothing to do [cite: 1213]
-            return;
+            return; // [cite: 1213]
         }
 
-        // Guard invalid recipient; log skipped [cite: 1251]
-        if (empty($user->user_email) || !is_email($user->user_email)) {
+        if (empty($user->user_email) || !is_email($user->user_email)) { // [cite: 1251]
             if ($request_id) {
                 Meta::appendLog( // [cite: 1253]
                     $request_id,
@@ -219,7 +230,6 @@ final class TvDecisionService
             return; // [cite: 1260]
         }
 
-        // Subject/body with safe defaults [cite: 1216]
         $subject = ($type === 'approve')
             ? (string) ($cfg['approve_subject'] ?? sprintf(__('You\'re verified at %s', 'yardlii-core'), '{{site.name}}')) // [cite: 1217]
             : (string) ($cfg['reject_subject'] ?? sprintf(__('Your verification status at %s', 'yardlii-core'), '{{site.name}}')); // [cite: 1218]
@@ -228,23 +238,17 @@ final class TvDecisionService
             ? (string) ($cfg['approve_body'] ?? '<p>' . sprintf(__('Hi %s, your verification at %s was approved.', 'yardlii-core'), '{{user.display_name}}', '{{site.name}}') . '</p>') // [cite: 1220]
             : (string) ($cfg['reject_body'] ?? '<p>' . sprintf(__('Hi %s, we could not approve your verification at %s.', 'yardlii-core'), '{{user.display_name}}', '{{site.name}}') . '</p>'); // [cite: 1221]
 
-        // Note: The original Decisions.php did a legacy strtr() replacement [cite: 1222-1235]
-        // The Mailer class *already* does this replacement (both legacy and modern) [cite: 1368, 1406]
-        // We will rely on the Mailer's renderPlaceholders() and not duplicate logic here.
-
-        // Build Mailer context [cite: 1236]
-        $ccSelf = (bool) ($opts['cc_self'] ?? false); // [cite: 1237-1239]
+        $ccSelf = (bool) ($opts['cc_self'] ?? false); // [cite: 1238]
 
         $ctx = [
             'request_id' => $request_id, // [cite: 1241]
-            'user' => $user, // [cite: 1243]
-            'form_id' => $form_id, // [cite: 1245]
+            'user' => $user, // [cite: 1244]
+            'form_id' => $form_id, // [cite: 1246]
             'reply_to' => $user->user_email ?? '', // [cite: 1247]
-            'cc_self' => $ccSelf, // [cite: 1248]
+            'cc_self' => $ccSelf, // [cite: 1249]
         ];
 
-        // Send via injected Mailer [cite: 1262]
-        $ok = $this->mailer->send($user->user_email, $subject, $body, $ctx); // [cite: 1263]
+        $ok = $this->mailer->send($user->user_email, $subject, $body, $ctx); // [cite: 1262-1263]
 
         if ($request_id) {
             Meta::appendLog( // [cite: 1265]
@@ -258,11 +262,11 @@ final class TvDecisionService
 
     /**
      * Find per-form config row for a given form_id.
-     * Logic from Decisions.php [cite: 1274]
+     * @return array<string, mixed>|null
      */
     private function loadConfigForForm(string $form_id): ?array
     {
-        $configs = (array) get_option(TVFormConfigs::OPT_KEY, []); // [cite: 1276, 1499]
+        $configs = (array) get_option(TVFormConfigs::OPT_KEY, []); // [cite: 1276]
         foreach ($configs as $row) {
             if ((string) ($row['form_id'] ?? '') === $form_id) { // [cite: 1277]
                 return (array) $row; // [cite: 1278]

@@ -9,10 +9,9 @@ parameters:
         - tests/unit
 
     excludePaths:
-        analyse:
-            - vendor/*
-            - assets/*
-            - tests/integration/*
+        - vendor/*
+        - assets/*
+        - tests/integration/*
 
     bootstrapFiles:
         - tests/phpstan-bootstrap.php

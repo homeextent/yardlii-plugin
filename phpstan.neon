@@ -8,13 +8,11 @@ parameters:
         - includes
         - tests/unit
 
-    # FIX: 'excludePaths' must be at this top 'parameters' level
     excludePaths:
         - vendor/*
         - assets/*
         - tests/integration/*
 
-    # 'bootstrapFiles' is also at this level
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
 

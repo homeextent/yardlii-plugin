@@ -31,7 +31,6 @@ jobs:
 
       wordpress:
         image: wordpress:latest
-        depends-on: mysql
         ports:
           - 8888:80
         env:

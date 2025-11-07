@@ -8,11 +8,10 @@ parameters:
         - includes
         - tests/unit
 
-    excludePaths:
-        analyse:
-            - vendor/*
-            - assets/*
-            - tests/integration/*
+    excludePaths: # <-- FIX: Removed the incorrect 'analyse:' key
+        - vendor/*
+        - assets/*
+        - tests/integration/*
 
     bootstrapFiles:
         - tests/phpstan-bootstrap.php

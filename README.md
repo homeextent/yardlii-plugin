@@ -30,6 +30,14 @@ It powers all major YARDLII components through a clean, extensible architecture 
 
 ## 📦 Changelog
 
+## 3.5.0 - 2025-11-06
+* [cite_start]**New**: Added an `uninstall.php` routine to remove all plugin data on deletion (CPTs, options, meta) [cite: 74-83].
+* [cite_start]**New**: Added a "Remove all data on deletion" safety toggle in the Advanced tab to control the uninstall routine[cite: 77].
+* [cite_start]**Test**: Added integration smoke test for the feature Loader to ensure flags are respected[cite: 58].
+* [cite_start]**Fix**: Corrected logic bug in `Caps::userCanManage` method [cite: 394-398].
+* [cite_start]**Dev**: Completed full unit test coverage for `Mailer`, `Caps`, and `Templates` [cite: 50-52].
+* [cite_start]**Dev**: Integrated PHPStan (Level 6) into the CI pipeline for static analysis[cite: 149].
+
 ## 3.4.0 — 2025-11-05
 - CI: add PHPStan with baseline and WP ruleset
 - Tests: unit coverage for placeholder rendering (legacy `{token}` and `{{dot.notation}}`)

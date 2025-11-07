@@ -4,7 +4,7 @@ Tags: acf, facetwp, wpuf, listings, maps, admin-tools, feature-flags, automation
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 3.4.0
+Stable tag: 3.5.0
 License: GPLv2 or later.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -285,6 +285,14 @@ Badge Assignment mapping UI (repeater rows)
 Users list with Badge column & profile badge preview
 
 Changelog
+= 3.5.0 - 2025-11-06 =
+* New: Added an `uninstall.php` routine to remove all plugin data on deletion (CPTs, options, meta) [cite: 74-83].
+* New: Added a "Remove all data on deletion" safety toggle in the Advanced tab to control the uninstall routine[cite: 77].
+* Test: Added integration smoke test for the feature Loader to ensure flags are respected[cite: 58].
+* Fix: Corrected logic bug in `Caps::userCanManage` method [cite: 394-398].
+* Dev: Completed full unit test coverage for `Mailer`, `Caps`, and `Templates` [cite: 50-52].
+* Dev: Integrated PHPStan (Level 6) into the CI pipeline for static analysis[cite: 149].
+
 = 3.4.0 — 2025-11-04 =
 * CI: PHPUnit + PHPStan gates in place (green baseline).
 * Tests: Mailer/Placeholders/Caps + AJAX happy path.

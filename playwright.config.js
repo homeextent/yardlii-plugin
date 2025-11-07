@@ -37,12 +37,7 @@ module.exports = defineConfig({
     },
   ],
 
-  /* Run your local dev server before starting the tests */
-  // This is a key part for our CI setup
-  webServer: {
-    command: 'npm run start:wordpress', // We will define this script later
-    url: 'http://localhost:8888',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000, // 2 minutes
-  },
+  //
+  // The 'webServer' block has been removed.
+  //
 });

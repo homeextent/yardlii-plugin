@@ -8,11 +8,13 @@ parameters:
         - includes
         - tests/unit
 
-    excludePaths: # <-- FIX: Removed the incorrect 'analyse:' key
+    # FIX: 'excludePaths' must be at this top 'parameters' level
+    excludePaths:
         - vendor/*
         - assets/*
         - tests/integration/*
 
+    # 'bootstrapFiles' is also at this level
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
 

@@ -204,7 +204,12 @@ function yl_role_label($slug, $roles) {
     <?php else : ?>
       <div class="notice notice-warning" style="margin-top:8px;"><p><?php echo esc_html__('Resync skipped (feature disabled).', 'yardlii-core'); ?></p></div>
     <?php endif; ?>
+  
+  <?php elseif ( isset($_GET['yl_rc_badges_resync']) && 'queued' === $_GET['yl_rc_badges_resync'] ) : ?>
+	<div class="notice notice-info is-dismissible" style="margin-top:8px;">
+		<p><?php echo esc_html__('Resync scheduled. Badges will be updated for all users in the background.', 'yardlii-core'); ?></p>
+	</div>
   <?php endif; ?>
-<?php endif; ?>
+  <?php endif; ?>
 
 </section>

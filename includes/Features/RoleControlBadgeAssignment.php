@@ -25,6 +25,7 @@ class RoleControlBadgeAssignment
         // Optional: per-user “Resync Badge” in Users table
         add_filter('user_row_actions', [$this, 'add_resync_link'], 10, 2);
         add_action('admin_init',       [$this, 'handle_manual_resync']);
+        add_action('yardlii_rc_resync_user_badge', [$this, 'sync_user_badge'], 10, 1);
 
          self::register_admin_hooks();
          self::register_profile_preview();
@@ -213,11 +214,15 @@ private static function is_feature_active(): bool {
         }
     }
 
-    private function sync_user_badge(int $user_id): bool
+    public function sync_user_badge(int $user_id): void
     {
-        if (!function_exists('get_field')) return false; // needs ACF Options
+        if (!function_exists('get_field')) {
+            return; // needs ACF Options
+        }
         $user = get_user_by('id', $user_id);
-        if (!$user) return false;
+        if (!$user) {
+            return;
+        }
 
         $s   = get_option(self::OPTION_KEY, []);
         $map = is_array($s['map'] ?? null) ? $s['map'] : [];
@@ -228,9 +233,14 @@ private static function is_feature_active(): bool {
         foreach ((array) $user->roles as $role) {
             if (!empty($map[$role])) { $field = sanitize_key($map[$role]); break; }
         }
-        if (!$field && $fallback) $field = $fallback;
+        if (!$field && $fallback) {
+            $field = $fallback;
+        }
 
-        if (!$field) { delete_user_meta($user_id, $meta_key); return true; }
+        if (!$field) {
+            delete_user_meta($user_id, $meta_key);
+            return;
+        }
 
         $image = get_field($field, 'option'); // ACF Options field
         $image_id = null;
@@ -238,9 +248,11 @@ private static function is_feature_active(): bool {
         elseif (is_array($image) && isset($image['ID'])) $image_id = (int) $image['ID'];
         elseif (is_string($image)) $image_id = attachment_url_to_postid($image);
 
-        if ($image_id) { update_user_meta($user_id, $meta_key, $image_id); return true; }
-        delete_user_meta($user_id, $meta_key);
-        return false;
+        if ($image_id) {
+            update_user_meta($user_id, $meta_key, $image_id);
+        } else {
+            delete_user_meta($user_id, $meta_key);
+        }
     }
 
     /** Users list “Resync Badge” action */
@@ -272,46 +284,77 @@ private static function is_feature_active(): bool {
     }
 
     public static function handle_resync_all(): void {
-    // Capability + nonce checks
-    if (!current_user_can('manage_options')) {
-        wp_die(esc_html__('Insufficient permissions.', 'yardlii-core'));
+		// Capability + nonce checks
+		if (!current_user_can('manage_options')) {
+			wp_die(esc_html__('Insufficient permissions.', 'yardlii-core'));
+		}
+		check_admin_referer('yardlii_rc_badges_resync_all');
+
+		// Master + feature toggle guard
+		if (!self::is_feature_active()) {
+			wp_safe_redirect(add_query_arg(['yl_rc_badges_resynced' => '0'], wp_get_referer() ?: admin_url()));
+			exit;
+		}
+
+		// --- NEW LOGIC ---
+		// Check if Action Scheduler is available
+		if (!function_exists('as_enqueue_async_action')) {
+			// Fallback: Run the old, blocking code if AS is missing
+			self::run_legacy_resync();
+			wp_safe_redirect(add_query_arg(['yl_rc_badges_resynced' => '1'], wp_get_referer() ?: admin_url('users.php')));
+			exit;
+		}
+
+		// Get all user IDs
+		$q = new \WP_User_Query([
+			'number' => -1,
+			'fields' => 'ID',
+		]);
+		$ids = (array) $q->get_results();
+
+		if (empty($ids)) {
+			// Nothing to do, but show a success message
+			wp_safe_redirect(add_query_arg(['yl_rc_badges_resync' => 'queued'], wp_get_referer() ?: admin_url('users.php')));
+			exit;
+		}
+
+		// Enqueue a job for every user
+		foreach ($ids as $uid) {
+			as_enqueue_async_action(
+				'yardlii_rc_resync_user_badge',
+				[ 'user_id' => (int) $uid ],
+				'yardlii-rc-badges' // Grouping
+			);
+		}
+
+		// Redirect back with a new "queued" message
+		wp_safe_redirect(add_query_arg(['yl_rc_badges_resync' => 'queued'], wp_get_referer() ?: admin_url('users.php')));
+		exit;
     }
-    check_admin_referer('yardlii_rc_badges_resync_all');
 
-    // Master + feature toggle guard (matches runtime guards)
-    $master = (bool) get_option('yardlii_enable_role_control', false);
-    if (defined('YARDLII_ENABLE_ROLE_CONTROL')) {
-        $master = (bool) YARDLII_ENABLE_ROLE_CONTROL;
-    }
-    $feature = (bool) get_option(self::ENABLE_OPTION, true);
-
-    if (!$master || !$feature) {
-        // Nothing to do; bounce back with a notice
-        wp_safe_redirect(add_query_arg(['yl_rc_badges_resynced' => '0'], wp_get_referer() ?: admin_url()));
-        exit;
-    }
-
-    // Chunk through users to avoid timeouts
-    $paged = 1;
-    $per_page = 500; // adjust if needed
-    do {
-        $q = new \WP_User_Query([
-            'number' => $per_page,
-            'paged'  => $paged,
-            'fields' => 'ID',
-        ]);
-        $ids = (array) $q->get_results();
-        foreach ($ids as $uid) {
-            // Use the same sync the runtime path uses
-            (new self())->sync_user_badge((int) $uid);
-        }
-        $paged++;
-        $more = count($ids) === $per_page;
-        } while ($more);
-
-    wp_safe_redirect(add_query_arg(['yl_rc_badges_resynced' => '1'], wp_get_referer() ?: admin_url('users.php')));
-    exit;
-     }
+	/**
+	 * Legacy fallback for sites without Action Scheduler.
+	 * This is the old, blocking resync code.
+	 */
+	private static function run_legacy_resync(): void {
+		// Chunk through users to avoid timeouts
+		$paged = 1;
+		$per_page = 500; // adjust if needed
+		do {
+			$q = new \WP_User_Query([
+				'number' => $per_page,
+				'paged'  => $paged,
+				'fields' => 'ID',
+			]);
+			$ids = (array) $q->get_results();
+			foreach ($ids as $uid) {
+				// Use the same sync the runtime path uses
+				(new self())->sync_user_badge((int) $uid);
+			}
+			$paged++;
+			$more = count($ids) === $per_page;
+		} while ($more);
+	}
 
      /** Show current badge on user profile screens */
     public static function register_profile_preview(): void {

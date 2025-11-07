@@ -29,14 +29,12 @@ jobs:
           --health-retries=20
 
       wordpress:
-        image: wordpress:latest # This image includes wp-cli
+        image: wordpress:latest
         ports:
           - 8888:80
-        # Mount our checked-out code into the container
         volumes:
           - ${{ github.workspace }}:/var/www/html/wp-content/plugins/yardlii-core-functions
         env:
-          # We only need the DB env vars for wp-cli to work
           WORDPRESS_DB_HOST: 'mysql:3306'
           WORDPRESS_DB_USER: 'root'
           WORDPRESS_DB_PASSWORD: 'password'
@@ -60,14 +58,12 @@ jobs:
       - name: Wait for WordPress container to be ready
         run: |
           echo "Waiting for WordPress service..."
-          # Just wait for the port to be open, it will be the setup screen
           timeout 60 bash -c 'until curl -s http://localhost:8888 > /dev/null; do echo -n "."; sleep 2; done'
           echo "WordPress service is up!"
 
       - name: Find WordPress Container ID
         id: find-container
         run: |
-          # Find the container ID of the 'wordpress:latest' image
           cid=$(docker ps --filter "ancestor=wordpress:latest" --format "{{.ID}}")
           echo "container_id=$cid" >> $GITHUB_OUTPUT
 
@@ -76,7 +72,8 @@ jobs:
           cid=${{ steps.find-container.outputs.container_id }}
           
           echo "Installing WordPress core..."
-          docker exec $cid wp core install \
+          # FIX: Use full path to wp-cli
+          docker exec $cid /usr/local/bin/wp core install \
             --url=http://localhost:8888 \
             --title="E2E Test Site" \
             --admin_user=admin \
@@ -85,18 +82,21 @@ jobs:
             --skip-email
             
           echo "Activating our plugin..."
-          docker exec $cid wp plugin activate yardlii-core-functions
+          docker exec $cid /usr/local/bin/wp plugin activate yardlii-core-functions
           
           echo "Creating test user..."
-          docker exec $cid wp user create test_user test@example.com \
+          docker exec $cid /usr/local/bin/wp user create test_user test@example.com \
             --user_pass=test_password \
             --role=subscriber
             
           echo "Installing WPUF..."
-          docker exec $cid wp plugin install wp-user-frontend --activate
+          docker exec $cid /usr/local/bin/wp plugin install wp-user-frontend --activate
           
           echo "Creating submit page..."
-          docker exec $cid wp post create --post_type=page --post_title='Submit Listing' --post_content='[wpuf_form id="123"]' --post_status=publish --post_name=submit-listing
+          # FIX: Use full path to wp-cli. 
+          # We also create a dummy WPUF form post (ID 123) so the shortcode doesn't fail
+          docker exec $cid /usr/local/bin/wp post create --post_type=wpuf_form --post_title='E2E Form' --post_status=publish --ID=123
+          docker exec $cid /usr/local/bin/wp post create --post_type=page --post_title='Submit Listing' --post_content='[wpuf_form id="123"]' --post_status=publish --post_name=submit-listing
           
           echo "Environment setup complete!"
 

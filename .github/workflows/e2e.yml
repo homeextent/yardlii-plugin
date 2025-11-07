@@ -14,7 +14,6 @@ jobs:
     name: Playwright E2E Tests
     runs-on: ubuntu-latest
     
-    # Define service containers
     services:
       mysql:
         image: mysql:8.0
@@ -30,23 +29,18 @@ jobs:
           --health-retries=20
 
       wordpress:
-        image: wordpress:latest
+        image: wordpress:latest # This image includes wp-cli
         ports:
           - 8888:80
+        # Mount our checked-out code into the container
+        volumes:
+          - ${{ github.workspace }}:/var/www/html/wp-content/plugins/yardlii-core-functions
         env:
+          # We only need the DB env vars for wp-cli to work
           WORDPRESS_DB_HOST: 'mysql:3306'
           WORDPRESS_DB_USER: 'root'
           WORDPRESS_DB_PASSWORD: 'password'
           WORDPRESS_DB_NAME: 'wordpress'
-          # Set up our admin and test user
-          WORDPRESS_ADMIN_USER: 'admin'
-          WORDPRESS_ADMIN_PASSWORD: 'password'
-          WORDPRESS_ADMIN_EMAIL: 'admin@example.com'
-          # This is a startup script to create our test user
-          WORDPRESS_INITIAL_USER: 'test_user'
-          WORDPRESS_INITIAL_USER_PASSWORD: 'test_password'
-          WORDPRESS_INITIAL_USER_EMAIL: 'test@example.com'
-          WORDPRESS_INITIAL_ROLE: 'subscriber'
 
     steps:
       - name: Checkout code
@@ -55,7 +49,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Use Node.js 20 LTS
+          node-version: '20'
 
       - name: Install npm dependencies
         run: npm install
@@ -63,20 +57,56 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
         
-      - name: Wait for WordPress to be ready
+      - name: Wait for WordPress container to be ready
         run: |
-          echo "Waiting for WordPress install to complete..."
-          timeout 120 bash -c 'until curl -s http://localhost:8888/wp-login.php | grep -q "user_login"; do echo -n "."; sleep 2; done'
-          echo "WordPress login form is ready!"
+          echo "Waiting for WordPress service..."
+          # Just wait for the port to be open, it will be the setup screen
+          timeout 60 bash -c 'until curl -s http://localhost:8888 > /dev/null; do echo -n "."; sleep 2; done'
+          echo "WordPress service is up!"
+
+      - name: Find WordPress Container ID
+        id: find-container
+        run: |
+          # Find the container ID of the 'wordpress:latest' image
+          cid=$(docker ps --filter "ancestor=wordpress:latest" --format "{{.ID}}")
+          echo "container_id=$cid" >> $GITHUB_OUTPUT
+
+      - name: Install WordPress and Plugins
+        run: |
+          cid=${{ steps.find-container.outputs.container_id }}
+          
+          echo "Installing WordPress core..."
+          docker exec $cid wp core install \
+            --url=http://localhost:8888 \
+            --title="E2E Test Site" \
+            --admin_user=admin \
+            --admin_password=password \
+            --admin_email=admin@example.com \
+            --skip-email
+            
+          echo "Activating our plugin..."
+          docker exec $cid wp plugin activate yardlii-core-functions
+          
+          echo "Creating test user..."
+          docker exec $cid wp user create test_user test@example.com \
+            --user_pass=test_password \
+            --role=subscriber
+            
+          echo "Installing WPUF..."
+          docker exec $cid wp plugin install wp-user-frontend --activate
+          
+          echo "Creating submit page..."
+          docker exec $cid wp post create --post_type=page --post_title='Submit Listing' --post_content='[wpuf_form id="123"]' --post_status=publish --post_name=submit-listing
+          
+          echo "Environment setup complete!"
 
       - name: Run Playwright Tests
         run: npm run test:e2e
         env:
-          # Tell Playwright to find the WP site at this URL
           WP_BASE_URL: 'http://localhost:8888'
 
       - name: Upload Playwright Test Report
-        if: always() # Run this even if tests fail
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report

@@ -1,0 +1,85 @@
+name: E2E Tests (Playwright)
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  e2e-tests:
+    name: Playwright E2E Tests
+    runs-on: ubuntu-latest
+    
+    # Define service containers
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: 'password'
+          MYSQL_DATABASE: 'wordpress'
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -ppassword"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+      wordpress:
+        image: wordpress:latest
+        depends-on: mysql
+        ports:
+          - 8888:80
+        env:
+          WORDPRESS_DB_HOST: 'mysql:3306'
+          WORDPRESS_DB_USER: 'root'
+          WORDPRESS_DB_PASSWORD: 'password'
+          WORDPRESS_DB_NAME: 'wordpress'
+          # Set up our admin and test user
+          WORDPRESS_ADMIN_USER: 'admin'
+          WORDPRESS_ADMIN_PASSWORD: 'password'
+          WORDPRESS_ADMIN_EMAIL: 'admin@example.com'
+          # This is a startup script to create our test user
+          WORDPRESS_INITIAL_USER: 'test_user'
+          WORDPRESS_INITIAL_USER_PASSWORD: 'test_password'
+          WORDPRESS_INITIAL_USER_EMAIL: 'test@example.com'
+          WORDPRESS_INITIAL_ROLE: 'subscriber'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Use Node.js 20 LTS
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+        
+      - name: Wait for WordPress to be ready
+        run: |
+          echo "Waiting for WordPress to be accessible at http://localhost:8888..."
+          timeout 60 bash -c 'until curl -s http://localhost:8888/wp-login.php > /dev/null; do echo -n "."; sleep 2; done'
+          echo "WordPress is up!"
+
+      - name: Run Playwright Tests
+        run: npm run test:e2e
+        env:
+          # Tell Playwright to find the WP site at this URL
+          WP_BASE_URL: 'http://localhost:8888'
+
+      - name: Upload Playwright Test Report
+        if: always() # Run this even if tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

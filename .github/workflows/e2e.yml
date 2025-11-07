@@ -72,8 +72,8 @@ jobs:
           cid=${{ steps.find-container.outputs.container_id }}
           
           echo "Installing WordPress core..."
-          # FIX: Use full path to wp-cli
-          docker exec $cid /usr/local/bin/wp core install \
+          # FIX: Run all commands as the 'www-data' user
+          docker exec --user www-data $cid wp core install \
             --url=http://localhost:8888 \
             --title="E2E Test Site" \
             --admin_user=admin \
@@ -82,21 +82,19 @@ jobs:
             --skip-email
             
           echo "Activating our plugin..."
-          docker exec $cid /usr/local/bin/wp plugin activate yardlii-core-functions
+          docker exec --user www-data $cid wp plugin activate yardlii-core-functions
           
           echo "Creating test user..."
-          docker exec $cid /usr/local/bin/wp user create test_user test@example.com \
+          docker exec --user www-data $cid wp user create test_user test@example.com \
             --user_pass=test_password \
             --role=subscriber
             
           echo "Installing WPUF..."
-          docker exec $cid /usr/local/bin/wp plugin install wp-user-frontend --activate
+          docker exec --user www-data $cid wp plugin install wp-user-frontend --activate
           
           echo "Creating submit page..."
-          # FIX: Use full path to wp-cli. 
-          # We also create a dummy WPUF form post (ID 123) so the shortcode doesn't fail
-          docker exec $cid /usr/local/bin/wp post create --post_type=wpuf_form --post_title='E2E Form' --post_status=publish --ID=123
-          docker exec $cid /usr/local/bin/wp post create --post_type=page --post_title='Submit Listing' --post_content='[wpuf_form id="123"]' --post_status=publish --post_name=submit-listing
+          docker exec --user www-data $cid wp post create --post_type=wpuf_form --post_title='E2E Form' --post_status=publish --ID=123
+          docker exec --user www-data $cid wp post create --post_type=page --post_title='Submit Listing' --post_content='[wpuf_form id="123"]' --post_status=publish --post_name=submit-listing
           
           echo "Environment setup complete!"
 

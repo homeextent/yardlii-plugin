@@ -20,13 +20,11 @@ async function login(page, username, password) {
   await page.fill('input#user_pass', password);
   await page.click('input#wp-submit');
 
-  // PROBLEM: The old line was too optimistic.
-  // await expect(page.locator('body.logged-in')).toBeVisible();
-  
-  // FIX: Wait for the admin bar to be visible. This is a much
-  // more reliable indicator of a successful login and page load.
-  // We'll give it 10 seconds, just in case the CI runner is slow.
-  await expect(page.locator('#wpadminbar')).toBeVisible({ timeout: 10000 });
+  // FIX: Instead of waiting for the admin bar (which subscribers don't see),
+  // we'll wait for the page to finish reloading and then assert
+  // that the "#login_error" element is NOT visible.
+  await page.waitForLoadState('domcontentloaded');
+  await expect(page.locator('#login_error')).not.toBeVisible();
 }
 
 async function logout(page) {

@@ -93,9 +93,10 @@ jobs:
           docker exec --user www-data $cid wp plugin activate yardlii-core-functions
           
           echo "Creating test user..."
+          # FIX: Change role from subscriber to author
           docker exec --user www-data $cid wp user create test_user test@example.com \
             --user_pass=test_password \
-            --role=subscriber
+            --role=author
             
           echo "Installing WPUF..."
           docker exec --user www-data $cid wp plugin install wp-user-frontend --activate

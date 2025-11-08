@@ -1,3 +1,5 @@
+
+
 jQuery(document).ready(function ($) {
 
   /* === YARDLII: User Sync Dynamic Rows & Preview === */
@@ -278,7 +280,90 @@ const panel = document.querySelector('#yardlii-tab-role-control');
   });
 })();
 
+/**
+ * YARDLII: Advanced Subtabs
+ * Handles switching sections on the Advanced tab.
+ */
+(function ($) {
+  'use strict';
 
+  function initAdvancedSubtabs() {
+    const $panel = $('#yardlii-tab-advanced');
+    if (!$panel.length) return;
+
+    const $tabs = $panel.find('.yardlii-advanced-subtabs .yardlii-tab');
+    const $sections = $panel.find('details.yardlii-section[data-asection]');
+    if (!$tabs.length || !$sections.length) return;
+
+    const KEY_ADV = 'yardlii_active_adv_section';
+
+    function activate(id) {
+      if (!id) return;
+      
+      // Update tabs
+      $tabs.removeClass('active').attr('aria-selected', 'false');
+      $tabs.filter('[data-asection="' + id + '"]').addClass('active').attr('aria-selected', 'true');
+
+      // Update <details> panels
+      $sections.each(function() {
+        const $sec = $(this);
+        if ($sec.data('asection') === id) {
+          $sec.attr('open', true).removeAttr('hidden');
+        } else {
+          $sec.removeAttr('open').attr('hidden', true);
+        }
+      });
+      
+      sessionStorage.setItem(KEY_ADV, id);
+    }
+
+    // Get active tab from URL or session storage
+    function getActiveId() {
+      try {
+        const urlId = (new URL(window.location.href)).searchParams.get('advsection');
+        if (urlId) return urlId;
+      } catch (e) {}
+      
+      const storageId = sessionStorage.getItem(KEY_ADV);
+      if (storageId) return storageId;
+
+      return $tabs.first().data('asection') || 'flags';
+    }
+
+    // Initial activation
+    activate(getActiveId());
+
+    // Click handler
+    $tabs.on('click', function (e) {
+      e.preventDefault();
+      const id = $(this).data('aseaction');
+      activate(id);
+
+      // Keep URL in sync
+      try {
+        const u = new URL(window.location.href);
+        u.searchParams.set('advsection', id);
+        history.replaceState({}, '', u.toString());
+      } catch (e) {}
+    });
+  }
+
+  $(function () {
+    // We must wait for the main "Advanced" tab to be clicked,
+    // so we re-initialize every time the main tabs are swapped.
+    // This assumes the main tab switcher (not shown here) is already working.
+    $(document).on('click', '.yardlii-tabs[data-scope="main"] .yardlii-tab[data-tab="advanced"]', function() {
+      // Use a small delay to ensure the panel is visible before init
+      setTimeout(initAdvancedSubtabs, 10);
+    });
+
+    // Also run on page load, in case the "Advanced" tab is already active
+    if ($('#yardlii-tab-advanced').is(':visible')) {
+      initAdvancedSubtabs();
+    }
+  });
+
+})(jQuery);
 
 
 

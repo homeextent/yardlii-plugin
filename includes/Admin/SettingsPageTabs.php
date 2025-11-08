@@ -612,130 +612,49 @@ body.settings_page_yardlii-core-settings .update-nag { display:none!important; }
         <?php endif; ?>
 
         <!-- Advanced Tab -->
-        <section id="yardlii-tab-advanced" class="yardlii-tabpanel hidden" data-panel="advanced">
-            <div class="form-config-block">
-                <h2><?php esc_html_e('Advanced', 'yardlii-core'); ?></h2>
-                <div class="form-config-content">
+        
+	<section id="yardlii-tab-advanced" class="yardlii-tabpanel hidden" data-panel="advanced">
+  <?php
+  // Render inline notices for the Advanced tab's groups
+  if (function_exists('settings_errors')) {
+      settings_errors(self::GROUP_DEBUG);
+      settings_errors(self::GROUP_FEATURE_FLAGS);
+  }
 
-                    <!-- Inline messages for Debug + Feature Flags -->
-                    <?php
-                    if (function_exists('settings_errors')) {
-                        settings_errors(self::GROUP_DEBUG);
-                        settings_errors(self::GROUP_FEATURE_FLAGS);
-                    }
-                    ?>
+  // Active subtab
+  $adv_section = isset($_GET['advsection']) ? sanitize_key($_GET['advsection']) : 'flags';
+  ?>
+  <nav classS="yardlii-tabs yardlii-advanced-subtabs" role="tablist" aria-label="<?php esc_attr_e('Advanced Sections', 'yardlii-core'); ?>">
+    <button type="button" class="yardlii-tab <?php echo $adv_section === 'flags' ? 'active' : ''; ?>" data-asection="flags" aria-selected="<?php echo $adv_section === 'flags' ? 'true' : 'false'; ?>">
+      <?php esc_html_e('Feature Flags & Debug', 'yardlii-core'); ?>
+    </button>
+    <button type="button" class="yardlii-tab <?php echo $adv_section === 'diagnostics' ? 'active' : ''; ?>" data-asection="diagnostics" aria-selected="<?php echo $adv_section === 'diagnostics' ? 'true' : 'false'; ?>">
+      <?php esc_html_e('Diagnostics', 'yardlii-core'); ?>
+    </button>
+  </nav>
 
-                    <!-- Debug Mode form -->
-                    <form method="post" action="options.php" style="margin-bottom:20px;">
-                        <?php
-                        settings_fields(self::GROUP_DEBUG);
-                        $debug_enabled = (bool) get_option('yardlii_debug_mode', false);
-                        ?>
-                        <label for="yardlii_debug_mode" style="font-weight:600;">
-                            <input type="hidden" name="yardlii_debug_mode" value="0" />
-                            <input type="checkbox" name="yardlii_debug_mode" id="yardlii_debug_mode" value="1" <?php checked($debug_enabled, true); ?> />
-                            <?php esc_html_e('Enable Debug Mode (logging to debug.log)', 'yardlii-core'); ?>
-                        </label>
-                        <?php submit_button(__('Save Debug Setting', 'yardlii-core')); ?>
-                    </form>
+  <details class="yardlii-section" id="asec-flags" data-asection="flags" <?php selected($adv_section, 'flags', true, 'open'); ?>>
+    <summary><?php esc_html_e('Feature Flags & Debug', 'yardlii-core'); ?></summary>
+    <div class="yardlii-section-content">
+      <?php
+      // Pass effective TV flag state to the partial
+      $tv_flag_value  = $tv_on; [cite_start]// $tv_on is defined earlier in this file [cite: 2741]
+      $tv_flag_locked = defined('YARDLII_ENABLE_TRUST_VERIFICATION'); [cite_start]// [cite: 2742]
 
-	            <hr style="margin: 2rem 0;">
-				<form method="post" action="options.php">
-					<?php
-					settings_fields(self::GROUP_DEBUG);
-					$purge_enabled = (bool) get_option('yardlii_remove_data_on_delete', false);
-					?>
-					<h3 style="color: #d63638; margin-bottom: 0.5rem;"><?php esc_html_e('Danger Zone', 'yardlii-core'); ?></h3>
-					<div class="yardlii-card" style="border-color: #d63638;">
-						<label for="yardlii_remove_data_on_delete" style="font-weight:600; display: block;">
-							<input type="hidden" name="yardlii_remove_data_on_delete" value="0" />
-							<input type="checkbox" name="yardlii_remove_data_on_delete"
-								id="yardlii_remove_data_on_delete" value="1" <?php checked($purge_enabled, true); ?> />
-							<?php esc_html_e('Enable Data Deletion on Uninstall', 'yardlii-core'); ?>
-						</label>
-						<p class="description" style="margin-top: 0.5rem;">
-							<?php esc_html_e('CAUTION: If this is checked, ALL YARDLII data (verification requests, settings, role configs, and user badges) will be permanently deleted from the database when you "Delete" the plugin from the Plugins page.', 'yardlii-core'); ?>
-						</p>
-						<?php submit_button(__('Save Deletion Setting', 'yardlii-core'), 'button-primary'); ?>
-					</div>
-				</form>
-				<hr style="margin: 2rem 0;">
+      include __DIR__ . '/views/partials/advanced/section-flags.php';
+      ?>
+    </div>
+  </details>
 
-                    <?php
-                    $flag_from_code = defined('YARDLII_ENABLE_ACF_USER_SYNC');
-                    $flag_value     = (bool) get_option('yardlii_enable_acf_user_sync', false);
-                    if ($flag_from_code) {
-                        $flag_value = (bool) YARDLII_ENABLE_ACF_USER_SYNC;
-                    }
+  <details class="yardlii-section" id="asec-diagnostics" data-asection="diagnostics" <?php selected($adv_section, 'diagnostics', true, 'open'); ?>>
+    <summary><?php esc_html_e('Diagnostics', 'yardlii-core'); ?></summary>
+    <div class="yardlii-section-content">
+      <?php include __DIR__ . '/views/partials/advanced/section-diagnostics.php'; ?>
+    </div>
+  </details>
 
-                    $tv_flag_from_code = defined('YARDLII_ENABLE_TRUST_VERIFICATION');
-                    $tv_flag_value     = $tv_flag_from_code
-                        ? (bool) YARDLII_ENABLE_TRUST_VERIFICATION
-                        : (bool) get_option('yardlii_enable_trust_verification', true);
-                    ?>
-                    <div class="yardlii-card">
-                        <h2 style="display:flex;align-items:center;gap:.5rem;margin-top:0;">
-                            <?php esc_html_e('Feature Flags', 'yardlii-core'); ?>
-                            <span title="<?php echo esc_attr__('Toggles for optional modules. If a flag is locked by code, the UI is disabled.', 'yardlii-core'); ?>">ℹ️</span>
-                        </h2>
+</section>
 
-                        <form method="post" action="options.php">
-                            <?php settings_fields(self::GROUP_FEATURE_FLAGS); ?>
-
-                            <label style="display:flex;align-items:center;gap:.5rem;">
-                                <input type="hidden" name="yardlii_enable_acf_user_sync" value="0" />
-                                <input
-                                    type="checkbox"
-                                    name="yardlii_enable_acf_user_sync"
-                                    value="1"
-                                    <?php checked($flag_value); ?>
-                                    <?php disabled($flag_from_code); ?>
-                                />
-                                <strong><?php esc_html_e('ACF → User Sync', 'yardlii-core'); ?></strong>
-                            </label>
-
-                            <div style="display:flex;align-items:center;gap:.5rem;margin:.5rem 0;">
-                                <input type="hidden" name="yardlii_enable_trust_verification" value="0" />
-                                <input
-                                    type="checkbox"
-                                    name="yardlii_enable_trust_verification"
-                                    value="1"
-                                    <?php checked($tv_flag_value); ?>
-                                    <?php disabled($tv_flag_from_code); ?>
-                                />
-                                <strong><?php esc_html_e('Trust & Verification', 'yardlii-core'); ?></strong>
-                                <?php if ($tv_flag_from_code): ?>
-                                    <em style="opacity:.8;margin-left:.5rem;"><?php esc_html_e('Locked by code', 'yardlii-core'); ?></em>
-                                <?php endif; ?>
-                            </div>
-
-                            <div style="display:flex;align-items:center;gap:.5rem;margin:.5rem 0;">
-                                <input type="hidden" name="yardlii_enable_role_control" value="0" />
-                                <input
-                                    type="checkbox"
-                                    name="yardlii_enable_role_control"
-                                    value="1"
-                                    <?php checked((bool) get_option('yardlii_enable_role_control', false)); ?>
-                                />
-                                <strong><?php esc_html_e('Role Control', 'yardlii-core'); ?></strong>
-                            </div>
-
-                            <p style="margin-top:1rem;">
-                                <button class="button button-primary" type="submit">
-                                    <?php esc_html_e('Save Feature Flags', 'yardlii-core'); ?>
-                                </button>
-                            </p>
-                        </form>
-                    </div>
-
-                    <ul class="yardlii-kv">
-                        <li><strong><?php esc_html_e('Plugin Version:', 'yardlii-core'); ?></strong> <?php echo esc_html(YARDLII_CORE_VERSION); ?></li>
-                        <li><strong><?php esc_html_e('PHP Version:', 'yardlii-core'); ?></strong> <?php echo esc_html(phpversion()); ?></li>
-                        <li><strong><?php esc_html_e('WP Version:', 'yardlii-core'); ?></strong> <?php echo esc_html(get_bloginfo('version')); ?></li>
-                    </ul>
-                </div>
-            </div>
-        </section>
 
         <footer class="yardlii-admin-footer">
             <?php

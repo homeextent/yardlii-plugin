@@ -61,7 +61,6 @@ if (is_readable($providers_doc_file)) {
     echo $btn('requests',      __('Requests', 'yardlii-core'),      '📥');
     echo $btn('configuration', __('Configuration', 'yardlii-core'), '⚙️');
     echo $btn('tools',         __('Tools', 'yardlii-core'),         '🛠️');
-    echo $btn('diagnostics',   __('Diagnostics', 'yardlii-core'),   '🔍');
   ?>
 
   <div class="yardlii-tv-help">
@@ -88,9 +87,7 @@ if (is_readable($providers_doc_file)) {
     <?php require __DIR__ . '/section-tools.php'; ?>
   </section>
 
-  <section class="<?php echo esc_attr($secClass('diagnostics')); ?>" data-tvsection="diagnostics">
-    <?php require __DIR__ . '/section-diagnostics.php'; ?>
-  </section>
+  
 </div>
 
 <!-- Shared Email Preview Modal (present once per TV panel) -->

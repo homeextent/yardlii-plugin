@@ -132,8 +132,8 @@ Location: Settings → YARDLII Core → Advanced → Feature Flags
 
 == Changelog ==
 = 3.7.3 =
-* Chore: Removed 'ACF User Sync' feature from the UI and admin panel [cite: 2773-2776, 2824-2825, 2828-2829].
-* Note: The feature is now considered deprecated and is only accessible if the `YARDLII_ENABLE_ACF_USER_SYNC` constant is defined [cite: 817-823].
+* Chore: Removed 'ACF User Sync' feature...
+* Note: The feature is now considered deprecated...
 
 = 3.7.2 =
 * Fix: Corrected JavaScript typo that prevented 'Advanced' tab sections from opening.

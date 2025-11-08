@@ -638,9 +638,11 @@ body.settings_page_yardlii-core-settings .update-nag { display:none!important; }
     <div class="yardlii-section-content">
       <?php
       // Pass effective TV flag state to the partial
-      $tv_flag_value  = $tv_on; [cite_start]// $tv_on is defined earlier in this file [cite: 2741]
-      $tv_flag_locked = defined('YARDLII_ENABLE_TRUST_VERIFICATION'); [cite_start]// [cite: 2742]
+      $tv_flag_value  = $tv_on; // $tv_on is defined earlier in this file
+      $tv_flag_locked = defined('YARDLII_ENABLE_TRUST_VERIFICATION'); // <-- ADDED SEMICOLON
 
+      // The included file will inherit the scope and can access
+      // $tv_flag_value, $tv_flag_locked, self::GROUP_DEBUG, etc.
       include __DIR__ . '/views/partials/advanced/section-flags.php';
       ?>
     </div>

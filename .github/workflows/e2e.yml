@@ -67,7 +67,8 @@ jobs:
           cid=$(docker ps --filter "ancestor=wordpress:latest" --format "{{.ID}}")
           echo "container_id=$cid" >> $GITHUB_OUTPUT
 
-      name: Install WordPress and Plugins (install wp-cli + configure site + debug)
+      # --- FIX: ADDED MISSING HYPHEN ---
+      - name: Install WordPress and Plugins (install wp-cli + configure site + debug)
         run: |
           set -euo pipefail
           cid=${{ steps.find-container.outputs.container_id }}
@@ -140,16 +141,13 @@ jobs:
           echo "Debug files created: submit-listing.html index.html plugins.json pages.json"
         shell: bash
           
-         
-          echo "Flushing permalinks..."
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp rewrite flush --hard"
-
-          echo "Environment setup complete!"
+        # --- FIX: REMOVED STRAY DUPLICATE CODE BLOCK ---
 
       - name: Run Playwright Tests
         run: npm run test:e2e
         env:
           WP_BASE_URL: 'http://localhost:8888'
+
       - name: Upload Playwright Test Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -158,7 +156,6 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
-      # --- ADD THIS NEW STEP ---
       - name: Upload debug artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -170,5 +167,3 @@ jobs:
             plugins.json
             pages.json
           retention-days: 7
-
-      

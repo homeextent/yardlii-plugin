@@ -30,6 +30,11 @@ It powers all major YARDLII components through a clean, extensible architecture 
 
 ## 📦 Changelog
 
+## 3.7.1
+* **Feat**: Restructured 'Advanced' tab with sub-tab navigation (Flags & Diagnostics).
+* **Feat**: Created new 'Diagnostics' panel and migrated Trust & Verification diagnostics to it.
+* **Refactor**: Removed diagnostics panel from the 'Trust & Verification' tab.
+
 ## 3.6.0 - 2025-11-07
 * **Feature**: Refactored the "Resync All Users" badge assignment to use Action Scheduler for reliable background processing. This prevents server timeouts on large sites by queuing individual user sync jobs.
 * **Dev**: Added `woocommerce/action-scheduler` as a Composer dependency.

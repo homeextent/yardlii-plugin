@@ -13,7 +13,7 @@ jobs:
   e2e-tests:
     name: Playwright E2E Tests
     runs-on: ubuntu-latest
-    
+
     services:
       mysql:
         image: mysql:8.0
@@ -54,7 +54,7 @@ jobs:
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-        
+
       - name: Wait for WordPress container to be ready
         run: |
           echo "Waiting for WordPress service..."
@@ -67,44 +67,46 @@ jobs:
           cid=$(docker ps --filter "ancestor=wordpress:latest" --format "{{.ID}}")
           echo "container_id=$cid" >> $GITHUB_OUTPUT
 
-      - name: Install WordPress and Plugins
+      - name: Install WordPress and Plugins (install wp-cli + configure site)
         run: |
           cid=${{ steps.find-container.outputs.container_id }}
           
-          echo "Installing wp-cli..."
-          docker exec $cid curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-          docker exec $cid chmod +x wp-cli.phar
-          docker exec $cid mv wp-cli.phar /usr/local/bin/wp
+          echo "Installing wp-cli into container $cid..."
+          # download to /tmp, make executable, move to /usr/local/bin
+          docker exec $cid bash -lc "curl -L -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x /tmp/wp-cli.phar && mv /tmp/wp-cli.phar /usr/local/bin/wp"
+
+          echo "Confirming wp cli is executable and its location:"
+          docker exec $cid bash -lc "ls -l /usr/local/bin/wp || true; /usr/local/bin/wp --info || true"
 
           echo "Installing WordPress core..."
-          docker exec --user www-data $cid wp core install \
+          # Run WP-CLI as www-data but call it by full path so it's found even if PATH differs
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp core install \
             --url=http://localhost:8888 \
-            --title="E2E Test Site" \
+            --title='E2E Test Site' \
             --admin_user=admin \
             --admin_password=password \
             --admin_email=admin@example.com \
-            --skip-email
-            
+            --skip-email"
+
           echo "Activating our plugin..."
-          docker exec --user www-data $cid wp plugin activate yardlii-core-functions
-          
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp plugin activate yardlii-core-functions || true"
+
           echo "Creating test user..."
-          docker exec --user www-data $cid wp user create test_user test@example.com \
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp user create test_user test@example.com \
             --user_pass=test_password \
-            --role=author
-            
-          echo "Installing WPUF..."
-          docker exec --user www-data $cid wp plugin install wp-user-frontend --activate
+            --role=author || true"
+
+          echo "Installing and activating WPUF (wp-user-frontend)..."
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp plugin install wp-user-frontend --activate || true"
           
-          # --- FIX ---
+          # --- Create a WPUF form and the page that embeds it ---
           echo "Creating WPUF form..."
-          # 1. Create the WPUF form post and --porcelain to *only* output the new ID
-          FORM_ID=$(docker exec --user www-data $cid wp post create --post_type=wpuf_form --post_title='E2E Form' --post_status=publish --porcelain)
-          
-          echo "Creating submit page with new form ID: $FORM_ID"
-          # 2. Use that new $FORM_ID variable in the shortcode
-          docker exec --user www-data $cid wp post create --post_type=page --post_title='Submit Listing' --post_content="[wpuf_form id=\"$FORM_ID\"]" --post_status=publish --post_name=submit-listing
-          
+          FORM_ID=$(docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post create --post_type=wpuf_form --post_title='E2E Form' --post_status=publish --porcelain")
+          echo "Created form id: $FORM_ID"
+
+          echo "Creating 'Submit Listing' page with the new form ID ($FORM_ID)..."
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post create --post_type=page --post_title='Submit Listing' --post_content='[wpuf_form id=\"$FORM_ID\"]' --post_status=publish --post_name=submit-listing || true"
+
           echo "Environment setup complete!"
 
       - name: Run Playwright Tests

@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Yardlii\Core\Features\TrustVerification\Requests;
 
-use Yardlii\Core\Features\TrustVerification\Caps; // NEW
+use Yardlii\Core\Features\TrustVerification\Caps;
+use WP_User;
 
 if ( ! class_exists('\WP_List_Table') ) {
     require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
@@ -11,6 +12,12 @@ if ( ! class_exists('\WP_List_Table') ) {
 
 final class ListTable extends \WP_List_Table
 {
+    /**
+     * Local cache for user data to prevent N+1 queries.
+     * @var array<int, \WP_User|null>
+     */
+    private array $user_cache = [];
+
     public function __construct()
     {
         parent::__construct([
@@ -25,18 +32,18 @@ final class ListTable extends \WP_List_Table
 
     /** @return array<string,string> */
     public function get_columns(): array
-{
-    return [
-        'cb'             => '<input type="checkbox" />',
-        'user'           => __('User', 'yardlii-core'),
-        'form'           => __('Form', 'yardlii-core'),
-        'submitted'      => __('Submitted', 'yardlii-core'),
-        'status'         => __('Status', 'yardlii-core'),
-        'current_role'   => __('Role', 'yardlii-core'), // ← NEW
-        'processed_by'   => __('Processed By', 'yardlii-core'),
-        'processed_date' => __('Processed Date', 'yardlii-core'),
-    ];
-}
+    {
+        return [
+            'cb'             => '<input type="checkbox" />',
+            'user'           => __('User', 'yardlii-core'),
+            'form'           => __('Form', 'yardlii-core'),
+            'submitted'      => __('Submitted', 'yardlii-core'),
+            'status'         => __('Status', 'yardlii-core'),
+            'current_role'   => __('Role', 'yardlii-core'),
+            'processed_by'   => __('Processed By', 'yardlii-core'),
+            'processed_date' => __('Processed Date', 'yardlii-core'),
+        ];
+    }
 
     /** @return array<string,array{0:string,1:bool}> */
     protected function get_sortable_columns(): array
@@ -59,19 +66,19 @@ final class ListTable extends \WP_List_Table
     }
 
     protected function extra_tablenav( $which ) {
-    // $which is 'top' or 'bottom'
-    echo '<div class="alignleft actions">';
-    printf(
-        '<label for="tv_send_copy_%1$s" class="tv-send-copy-label" title="%2$s">
-           <input type="checkbox" name="tv_send_copy" id="tv_send_copy_%1$s" value="1" />
-           %3$s
-         </label>',
-        esc_attr($which),
-        esc_attr__('Also send a copy to me (current admin).', 'yardlii-core'),
-        esc_html__('Send me a copy', 'yardlii-core')
-    );
-    echo '</div>';
-}
+        // $which is 'top' or 'bottom'
+        echo '<div class="alignleft actions">';
+        printf(
+            '<label for="tv_send_copy_%1$s" class="tv-send-copy-label" title="%2$s">
+               <input type="checkbox" name="tv_send_copy" id="tv_send_copy_%1$s" value="1" />
+               %3$s
+             </label>',
+            esc_attr($which),
+            esc_attr__('Also send a copy to me (current admin).', 'yardlii-core'),
+            esc_html__('Send me a copy', 'yardlii-core')
+        );
+        echo '</div>';
+    }
 
 
     /** Fallback when no rows exist */
@@ -88,7 +95,8 @@ final class ListTable extends \WP_List_Table
     {
         switch ($column_name) {
             case 'user': {
-                $u = get_userdata((int) $item['_vp_user_id']);
+                // Get user from our pre-fetched cache
+                $u = $this->get_cached_user((int) $item['_vp_user_id']);
                 if (! $u) {
                     return esc_html__('(deleted user)', 'yardlii-core');
                 }
@@ -114,27 +122,28 @@ final class ListTable extends \WP_List_Table
                 );
 
             case 'status': {
-    $st    = (string) $item['_post_status'];
-    $class = esc_attr(str_replace('vp_', '', $st));
-    $label = esc_html($this->labelForStatus($st));
-    return sprintf('<span class="status-badge status-badge--%s">%s</span>', $class, $label);
-}
+                $st    = (string) $item['_post_status'];
+                $class = esc_attr(str_replace('vp_', '', $st));
+                $label = esc_html($this->labelForStatus($st));
+                return sprintf('<span class="status-badge status-badge--%s">%s</span>', $class, $label);
+            }
 
 
-case 'current_role':
-    $label = (string) ($item['_vp_role_label'] ?? '');
-    $slug  = (string) ($item['_vp_role_slug'] ?? '');
-    if ($label === '' && $slug === '') return '—';
-    if ($label && $slug) {
-        return sprintf('%s <br><small>%s</small>', esc_html($label), esc_html($slug));
-    }
-    return esc_html($label ?: $slug);
+            case 'current_role':
+                $label = (string) ($item['_vp_role_label'] ?? '');
+                $slug  = (string) ($item['_vp_role_slug'] ?? '');
+                if ($label === '' && $slug === '') return '—';
+                if ($label && $slug) {
+                    return sprintf('%s <br><small>%s</small>', esc_html($label), esc_html($slug));
+                }
+                return esc_html($label ?: $slug);
 
 
             case 'processed_by': {
                 $by = (int) ($item['_vp_processed_by'] ?? 0);
                 if (! $by) return '—';
-                $u = get_userdata($by);
+                // Get admin from our pre-fetched cache
+                $u = $this->get_cached_user($by);
                 return $u ? esc_html($u->display_name ?: $u->user_login) : '—';
             }
 
@@ -152,7 +161,6 @@ case 'current_role':
 
     /**
      * Row actions (Approve/Reject/Re-open/Resend).
-     * Keep keys neutral so admin CSS can’t hide them.
      * @param array<string,mixed> $item
      */
     protected function handle_row_actions($item, $column_name, $primary): string
@@ -206,26 +214,19 @@ case 'current_role':
                 ], $base)),
                 esc_html__('Resend Email', 'yardlii-core')
             );
-
-            
-
-
-            
         }
-       
 
-// Add a per-row nonce for history
-$history_nonce = wp_create_nonce('yardlii_tv_history');
+        // Add a per-row nonce for history
+        $history_nonce = wp_create_nonce('yardlii_tv_history');
 
-$actions['tv_hist'] = sprintf(
-  '<a href="#" data-action="tv-row-history" data-post="%d" data-nonce="%s">%s</a>',
-  $post_id,
-  esc_attr($history_nonce),
-  esc_html__('History', 'yardlii-core')
-);
+        $actions['tv_hist'] = sprintf(
+          '<a href="#" data-action="tv-row-history" data-post="%d" data-nonce="%s">%s</a>',
+          $post_id,
+          esc_attr($history_nonce),
+          esc_html__('History', 'yardlii-core')
+        );
 
-return $this->row_actions($actions);
-
+        return $this->row_actions($actions);
     }
 
     /** @return array<string,string> */
@@ -241,47 +242,47 @@ return $this->row_actions($actions);
 
     /** Process bulk actions and redirect back with counts. */
     protected function process_bulk_action(): void
-{
-    if (empty($_POST['post']) || ! is_array($_POST['post'])) return;
+    {
+        if (empty($_POST['post']) || ! is_array($_POST['post'])) return;
 
-    if (! current_user_can(Caps::MANAGE)) return;
+        if (! current_user_can(Caps::MANAGE)) return;
 
-    // Verify WP_List_Table bulk nonce
-    check_admin_referer('bulk-' . $this->_args['plural']); // 'bulk-verification_requests'
+        // Verify WP_List_Table bulk nonce
+        check_admin_referer('bulk-' . $this->_args['plural']); // 'bulk-verification_requests'
 
-    $action = $this->current_action();
-    $ids    = array_map('intval', (array) $_POST['post']);
+        $action = $this->current_action();
+        $ids    = array_map('intval', (array) $_POST['post']);
 
-    $map = [
-        'yardlii_tv_bulk_approve' => 'approve',
-        'yardlii_tv_bulk_reject'  => 'reject',
-        'yardlii_tv_bulk_reopen'  => 'reopen',
-        'yardlii_tv_bulk_resend'  => 'resend',
-    ];
-    if (! isset($map[$action])) return;
+        $map = [
+            'yardlii_tv_bulk_approve' => 'approve',
+            'yardlii_tv_bulk_reject'  => 'reject',
+            'yardlii_tv_bulk_reopen'  => 'reopen',
+            'yardlii_tv_bulk_resend'  => 'resend',
+        ];
+        if (! isset($map[$action])) return;
 
-    $decision = new Decisions();
-    $done     = 0;
+        $decision = new Decisions();
+        $done     = 0;
 
-    // NEW: read the tools/toolbar toggle (default off)
-    $ccSelf = ! empty($_REQUEST['tv_send_copy']);
+        // NEW: read the tools/toolbar toggle (default off)
+        $ccSelf = ! empty($_REQUEST['tv_send_copy']);
 
-    foreach ($ids as $id) {
-        if ($decision->applyDecision($id, $map[$action], ['cc_self' => $ccSelf])) {
-            $done++;
+        foreach ($ids as $id) {
+            if ($decision->applyDecision($id, $map[$action], ['cc_self' => $ccSelf])) {
+                $done++;
+            }
         }
+
+        $ref = admin_url('admin.php?page=yardlii-core-settings&tab=trust-verification');
+        $ref = add_query_arg([
+            'tvsection' => 'requests',
+            'tv_notice' => 'bulk_' . $map[$action],
+            'tv_count'  => $done,
+        ], $ref);
+
+        wp_safe_redirect($ref);
+        exit;
     }
-
-    $ref = admin_url('admin.php?page=yardlii-core-settings&tab=trust-verification');
-    $ref = add_query_arg([
-        'tvsection' => 'requests',
-        'tv_notice' => 'bulk_' . $map[$action],
-        'tv_count'  => $done,
-    ], $ref);
-
-    wp_safe_redirect($ref);
-    exit;
-}
 
 
     /** Load rows, columns, and pagination. */
@@ -298,38 +299,81 @@ return $this->row_actions($actions);
         $statuses    = ['vp_pending','vp_approved','vp_rejected'];
         $post_status = in_array($status, $statuses, true) ? [$status] : $statuses;
 
+        // === OPTIMIZATION: STEP 1 ===
+        // Run the fast 'ids' query.
         $args = [
             'post_type'              => CPT::POST_TYPE,
             'post_status'            => $post_status,
             'posts_per_page'         => $per_page,
             'paged'                  => $paged,
             's'                      => $search ?: null,
-            'fields'                 => 'ids',
+            'fields'                 => 'ids', // Fast!
             'no_found_rows'          => false,
             'update_post_term_cache' => false,
-            'update_post_meta_cache' => true,
+            'update_post_meta_cache' => false, // We will handle this manually
         ];
 
         $q = new \WP_Query($args);
 
         $items = [];
-        foreach ($q->posts as $post_id) {
-            $post    = get_post($post_id);
-            $u = get_userdata((int) get_post_meta($post_id, '_vp_user_id', true));
-            $role_slug  = is_object($u) && !empty($u->roles) ? reset($u->roles) : '';
-            $role_label = $this->roleLabel($role_slug);
+        $user_ids_to_fetch = [];
 
-            $items[] = [
-                'ID'                 => (int) $post_id,
-                '_post_time'         => (int) get_post_time('U', true, $post),
-                '_post_status'       => (string) $post->post_status,
-                '_vp_user_id'        => (int) get_post_meta($post_id, '_vp_user_id', true),
-                '_vp_form_id'        => (string) get_post_meta($post_id, '_vp_form_id', true),
-                '_vp_processed_by'   => (int) get_post_meta($post_id, '_vp_processed_by', true),
-                '_vp_processed_date' => (string) get_post_meta($post_id, '_vp_processed_date', true),
-                '_vp_role_slug'      => (string) $role_slug,  
-                '_vp_role_label'     => (string) $role_label,  
-            ];
+        if ($q->posts) {
+            // === OPTIMIZATION: STEP 2 ===
+            // Prime the post and post_meta caches for all IDs in one go.
+            update_post_caches($q->posts, CPT::POST_TYPE);
+            update_meta_cache('post', $q->posts);
+
+            // === OPTIMIZATION: STEP 3 ===
+            // Loop through IDs, pull from cache, and gather user IDs
+            foreach ($q->posts as $post_id) {
+                $post    = get_post($post_id); // Pulls from cache
+                $user_id = (int) get_post_meta($post_id, '_vp_user_id', true); // Pulls from cache
+                $admin_id = (int) get_post_meta($post_id, '_vp_processed_by', true); // Pulls from cache
+
+                // Add user IDs to our list to fetch
+                if ($user_id > 0) $user_ids_to_fetch[] = $user_id;
+                if ($admin_id > 0) $user_ids_to_fetch[] = $admin_id;
+
+                $role_slug  = '—';
+                $role_label = '—';
+                $user_obj   = $user_id ? get_userdata($user_id) : null; // This is still N+1, but we'll fix it next
+
+                if ($user_obj && !empty($user_obj->roles)) {
+                    $role_slug  = reset($user_obj->roles);
+                    $role_label = $this->roleLabel($role_slug);
+                }
+
+                $items[] = [
+                    'ID'                 => (int) $post_id,
+                    '_post_time'         => (int) get_post_time('U', true, $post),
+                    '_post_status'       => (string) $post->post_status,
+                    '_vp_user_id'        => $user_id,
+                    '_vp_form_id'        => (string) get_post_meta($post_id, '_vp_form_id', true),
+                    '_vp_processed_by'   => $admin_id,
+                    '_vp_processed_date' => (string) get_post_meta($post_id, '_vp_processed_date', true),
+                    '_vp_role_slug'      => $role_slug,
+                    '_vp_role_label'     => $role_label,
+                ];
+            }
+
+            // === OPTIMIZATION: STEP 4 ===
+            // Pre-fetch all users in a single query
+            if (!empty($user_ids_to_fetch)) {
+                $this->cache_users(array_unique($user_ids_to_fetch));
+            }
+
+            // === OPTIMIZATION: STEP 5 ===
+            // Re-loop to fix user roles using the new cache
+            // This avoids the get_userdata() N+1 from Step 3
+            foreach ($items as $index => $item) {
+                $user_obj = $this->get_cached_user((int) $item['_vp_user_id']);
+                if ($user_obj && !empty($user_obj->roles)) {
+                    $role_slug = reset($user_obj->roles);
+                    $items[$index]['_vp_role_slug'] = $role_slug;
+                    $items[$index]['_vp_role_label'] = $this->roleLabel($role_slug);
+                }
+            }
         }
 
         $this->items = $items;
@@ -416,11 +460,41 @@ return $this->row_actions($actions);
     }
 
     private function roleLabel(string $slug): string
-{
-    if ($slug === '') return '—';
-    $roles = wp_roles();
-    $map   = is_object($roles) ? ($roles->role_names ?? []) : [];
-    return $map[$slug] ?? $slug;
-}
+    {
+        if ($slug === '') return '—';
+        $roles = wp_roles();
+        $map   = is_object($roles) ? ($roles->role_names ?? []) : [];
+        return $map[$slug] ?? $slug;
+    }
 
+    /**
+     * Eager-loads an array of user IDs into the local cache.
+     * @param int[] $user_ids
+     */
+    private function cache_users(array $user_ids): void
+    {
+        $ids_to_fetch = [];
+        foreach ($user_ids as $id) {
+            if ($id > 0 && ! isset($this->user_cache[$id])) {
+                $ids_to_fetch[] = $id;
+            }
+        }
+
+        if (empty($ids_to_fetch)) {
+            return;
+        }
+
+        $users = get_users(['include' => array_unique($ids_to_fetch)]);
+        foreach ($users as $user) {
+            $this->user_cache[$user->ID] = $user;
+        }
+    }
+
+    /**
+     * Gets a user from the local cache, or null if not found.
+     */
+    private function get_cached_user(int $user_id): ?\WP_User
+    {
+        return $this->user_cache[$user_id] ?? null;
+    }
 }

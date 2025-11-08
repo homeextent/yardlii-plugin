@@ -67,19 +67,18 @@ jobs:
           cid=$(docker ps --filter "ancestor=wordpress:latest" --format "{{.ID}}")
           echo "container_id=$cid" >> $GITHUB_OUTPUT
 
-      - name: Install WordPress and Plugins (install wp-cli + configure site)
+      name: Install WordPress and Plugins (install wp-cli + configure site + debug)
         run: |
+          set -euo pipefail
           cid=${{ steps.find-container.outputs.container_id }}
           
           echo "Installing wp-cli into container $cid..."
-          # download to /tmp, make executable, move to /usr/local/bin
           docker exec $cid bash -lc "curl -L -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x /tmp/wp-cli.phar && mv /tmp/wp-cli.phar /usr/local/bin/wp"
 
-          echo "Confirming wp cli is executable and its location:"
-          docker exec $cid bash -lc "ls -l /usr/local/bin/wp || true; /usr/local/bin/wp --info || true"
+          echo "WP-CLI info (inside container):"
+          docker exec $cid bash -lc "/usr/local/bin/wp --info || true"
 
           echo "Installing WordPress core..."
-          # Run WP-CLI as www-data but call it by full path so it's found even if PATH differs
           docker exec --user www-data $cid bash -lc "/usr/local/bin/wp core install \
             --url=http://localhost:8888 \
             --title='E2E Test Site' \
@@ -88,24 +87,58 @@ jobs:
             --admin_email=admin@example.com \
             --skip-email"
 
-          echo "Activating our plugin..."
+          echo "Activating our plugin (ignore errors if already active)..."
           docker exec --user www-data $cid bash -lc "/usr/local/bin/wp plugin activate yardlii-core-functions || true"
 
-          echo "Creating test user..."
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp user create test_user test@example.com \
-            --user_pass=test_password \
-            --role=author || true"
+          echo "Create test user (ignore errors if exists)..."
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp user create test_user test@example.com --user_pass=test_password --role=author || true"
 
           echo "Installing and activating WPUF (wp-user-frontend)..."
           docker exec --user www-data $cid bash -lc "/usr/local/bin/wp plugin install wp-user-frontend --activate || true"
-          
-          # --- Create a WPUF form and the page that embeds it ---
+
+          # Create the WPUF form and capture its ID
           echo "Creating WPUF form..."
           FORM_ID=$(docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post create --post_type=wpuf_form --post_title='E2E Form' --post_status=publish --porcelain")
-          echo "Created form id: $FORM_ID"
+          echo "FORM_ID=$FORM_ID"
 
-          echo "Creating 'Submit Listing' page with the new form ID ($FORM_ID)..."
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post create --post_type=page --post_title='Submit Listing' --post_content='[wpuf_form id=\"$FORM_ID\"]' --post_status=publish --post_name=submit-listing || true"
+          # Create the submit page and capture the page ID
+          echo "Creating 'Submit Listing' page that embeds the WPUF form..."
+          PAGE_ID=$(docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post create --post_type=page --post_title='Submit Listing' --post_content='[wpuf_form id=\"$FORM_ID\"]' --post_status=publish --post_name=submit-listing --porcelain")
+          echo "PAGE_ID=$PAGE_ID"
+
+          # Flush rewrite rules so pretty permalinks work and /submit-listing resolves
+          echo "Flushing rewrite rules..."
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp rewrite flush --hard || true"
+
+          # Print active plugins and the page/post content for debugging
+          echo "Plugin list (name, status):"
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp plugin list --format=table"
+
+          echo "Page list (type=page):"
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post list --post_type=page --fields=ID,post_name,post_title,post_status --format=table"
+
+          echo "Dumping the post_content for the created page (PAGE_ID=$PAGE_ID):"
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post get $PAGE_ID --field=post_content || true"
+
+          echo "CURL /submit-listing and save output to /tmp/submit-listing.html"
+          # Save the HTML we will inspect, and also print a short head snippet to the logs
+          docker exec $cid bash -lc "curl -s -L http://localhost:8888/submit-listing -o /tmp/submit-listing.html || true"
+          docker exec $cid bash -lc "head -n 200 /tmp/submit-listing.html || true"
+          docker exec $cid bash -lc "wc -c /tmp/submit-listing.html || true"
+
+          # Copy the file out of the container to the workflow runner workspace for artifact upload
+          docker cp "$cid":/tmp/submit-listing.html ./submit-listing.html || true
+
+          # Also capture the full page HTML of the home page for comparison
+          docker exec $cid bash -lc "curl -s -L http://localhost:8888 -o /tmp/index.html || true"
+          docker cp "$cid":/tmp/index.html ./index.html || true
+
+          # Save the post and plugin info to files
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp plugin list --format=json" > plugins.json || true
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post list --post_type=page --format=json" > pages.json || true
+
+          echo "Debug files created: submit-listing.html index.html plugins.json pages.json"
+        shell: bash
           
          
           echo "Flushing permalinks..."
@@ -117,7 +150,6 @@ jobs:
         run: npm run test:e2e
         env:
           WP_BASE_URL: 'http://localhost:8888'
-
       - name: Upload Playwright Test Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -125,3 +157,18 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+      # --- ADD THIS NEW STEP ---
+      - name: Upload debug artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-debug-files
+          path: |
+            submit-listing.html
+            index.html
+            plugins.json
+            pages.json
+          retention-days: 7
+
+      

@@ -50,12 +50,23 @@ test.describe('Trust & Verification Workflow', () => {
     await login(page, TEST_USER, TEST_PASS);
     
     // Go to the WPUF form page (this URL must exist in the test WP site)
-    await page.goto('/submit-listing'); 
-    
-    // Fill out the form
-    // Note: 'post_title' is the field name for the WPUF post title
-    await page.waitForSelector('input[name="post_title"]', { timeout: 15000 });
-    
+    await page.goto('/submit-listing');
+    // ensure network finished
+    await page.waitForLoadState('networkidle');
+
+    // DEBUG: save page HTML to the test output and take a screenshot
+    const html = await page.content();
+    console.log('--- PAGE HTML START ---');
+    console.log(html.slice(0, 8000)); // print the first 8k chars
+    console.log('--- PAGE HTML END ---');
+
+    // capture a screenshot to the test-results
+    await page.screenshot({ path: 'submit-listing-debug.png', fullPage: true });
+
+    // Wait for the expected input to appear (give it more time)
+    await page.waitForSelector('input[name="post_title"]', { timeout: 30000 });
+
+    // Then fill
     await page.fill('input[name="post_title"]', requestTitle);
     
     // Find and click the submit button

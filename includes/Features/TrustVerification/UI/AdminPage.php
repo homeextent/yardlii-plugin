@@ -61,7 +61,7 @@ if (class_exists('\Yardlii\Core\Features\TrustVerification\Caps')) {
         $baseDir = plugin_dir_path($this->pluginFile);
 
         $cssRel = 'assets/admin/css/trust-verification.css';
-        $jsRel  = 'assets/admin/js/trust-verification.js';
+        $jsRel  = 'assets/admin/js/admin-tv.js';
 
         $verCss = $this->assetVersion($baseDir . $cssRel);
         $verJs  = $this->assetVersion($baseDir . $jsRel);

@@ -69,43 +69,43 @@ jobs:
 
       - name: Install WordPress and Plugins
         run: |
-          cid=${{ steps.find-container.outputs.container_id }} [cite: 3477]
+          cid=${{ steps.find-container.outputs.container_id }}
           
           echo "Installing wp-cli..."
-          [cite_start]docker exec $cid curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar [cite: 3477]
-          [cite_start]docker exec $cid chmod +x wp-cli.phar [cite: 3477]
-          [cite_start]docker exec $cid mv wp-cli.phar /usr/local/bin/wp [cite: 3477]
+          docker exec $cid curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          docker exec $cid chmod +x wp-cli.phar
+          docker exec $cid mv wp-cli.phar /usr/local/bin/wp
 
           echo "Installing WordPress core..."
-          [cite_start]docker exec --user www-data $cid wp core install \ [cite: 3477]
-            [cite_start]--url=http://localhost:8888 \ [cite: 3478]
-            [cite_start]--title="E2E Test Site" \ [cite: 3478]
-            [cite_start]--admin_user=admin \ [cite: 3478]
-            [cite_start]--admin_password=password \ [cite: 3478]
-            [cite_start]--admin_email=admin@example.com \ [cite: 3478]
-            [cite_start]--skip-email [cite: 3478]
+          docker exec --user www-data $cid wp core install \
+            --url=http://localhost:8888 \
+            --title="E2E Test Site" \
+            --admin_user=admin \
+            --admin_password=password \
+            --admin_email=admin@example.com \
+            --skip-email
             
           echo "Activating our plugin..."
-          [cite_start]docker exec --user www-data $cid wp plugin activate yardlii-core-functions [cite: 3479]
+          docker exec --user www-data $cid wp plugin activate yardlii-core-functions
           
           echo "Creating test user..."
-          [cite_start]docker exec --user www-data $cid wp user create test_user test@example.com \ [cite: 3479]
-            [cite_start]--user_pass=test_password \ [cite: 3479]
-            [cite_start]--role=author [cite: 3479]
-          
+          docker exec --user www-data $cid wp user create test_user test@example.com \
+            --user_pass=test_password \
+            --role=author
+            
           echo "Installing WPUF..."
-          [cite_start]docker exec --user www-data $cid wp plugin install wp-user-frontend --activate [cite: 3480]
+          docker exec --user www-data $cid wp plugin install wp-user-frontend --activate
           
           # --- FIX ---
           echo "Creating WPUF form..."
           # 1. Create the WPUF form post and --porcelain to *only* output the new ID
-          [cite_start]FORM_ID=$(docker exec --user www-data $cid wp post create --post_type=wpuf_form --post_title='E2E Form' --post_status=publish --porcelain) [cite: 3481]
+          FORM_ID=$(docker exec --user www-data $cid wp post create --post_type=wpuf_form --post_title='E2E Form' --post_status=publish --porcelain)
           
           echo "Creating submit page with new form ID: $FORM_ID"
           # 2. Use that new $FORM_ID variable in the shortcode
-          [cite_start]docker exec --user www-data $cid wp post create --post_type=page --post_title='Submit Listing' --post_content="[wpuf_form id=\"$FORM_ID\"]" --post_status=publish --post_name=submit-listing [cite: 3481]
+          docker exec --user www-data $cid wp post create --post_type=page --post_title='Submit Listing' --post_content="[wpuf_form id=\"$FORM_ID\"]" --post_status=publish --post_name=submit-listing
           
-          [cite_start]echo "Environment setup complete!" [cite: 3482]
+          echo "Environment setup complete!"
 
       - name: Run Playwright Tests
         run: npm run test:e2e

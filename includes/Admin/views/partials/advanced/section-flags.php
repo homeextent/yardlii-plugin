@@ -2,41 +2,26 @@
 /**
  * YARDLII: Advanced -> Feature Flags & Debug
  *
- * @var array<string, mixed> $args {
- * @var string $group_debug     Settings group for debug.
- * @var string $group_flags     Settings group for feature flags.
- * @var bool   $tv_flag_value   Effective value of the TV flag.
- * @var bool   $tv_flag_locked  Whether the TV flag is locked by code.
- * }
+ * This partial is included from SettingsPageTabs.php and
+ * inherits the following variables from its scope:
+ *
+ * @var string $group_debug
+ * @var string $group_flags
+ * @var bool   $tv_flag_value
+ * @var bool   $tv_flag_locked
  */
 defined('ABSPATH') || exit;
-
-// Ensure variables are defined to avoid fatal errors if included directly
-$args = wp_parse_args(
-    $args ?? [],
-    [
-        'group_debug'     => 'yardlii_debug_group',
-        'group_flags'     => 'yardlii_feature_flags_group',
-        'tv_flag_value'   => false,
-        'tv_flag_locked'  => false,
-    ]
-);
-
-$group_debug    = $args['group_debug'];
-$group_flags    = $args['group_flags'];
-$tv_flag_value  = $args['tv_flag_value'];
-$tv_flag_locked = $args['tv_flag_locked'];
 
 $rc_flag_value  = (bool) get_option('yardlii_enable_role_control', false);
 $rc_flag_locked = defined('YARDLII_ENABLE_ROLE_CONTROL');
 if ($rc_flag_locked) {
-    $rc_flag_value = (bool) YARDLII_ENABLE_ROLE_CONTROL;
+    $rc_flag_value = (bool) constant('YARDLII_ENABLE_ROLE_CONTROL');
 }
 
 $acf_sync_value  = (bool) get_option('yardlii_enable_acf_user_sync', false);
 $acf_sync_locked = defined('YARDLII_ENABLE_ACF_USER_SYNC');
 if ($acf_sync_locked) {
-    $acf_sync_value = (bool) YARDLII_ENABLE_ACF_USER_SYNC;
+    $acf_sync_value = (bool) constant('YARDLII_ENABLE_ACF_USER_SYNC');
 }
 
 ?>

@@ -624,7 +624,7 @@ body.settings_page_yardlii-core-settings .update-nag { display:none!important; }
   // Active subtab
   $adv_section = isset($_GET['advsection']) ? sanitize_key($_GET['advsection']) : 'flags';
   ?>
-  <nav classS="yardlii-tabs yardlii-advanced-subtabs" role="tablist" aria-label="<?php esc_attr_e('Advanced Sections', 'yardlii-core'); ?>">
+  <nav class="yardlii-tabs yardlii-advanced-subtabs" role="tablist" aria-label="<?php esc_attr_e('Advanced Sections', 'yardlii-core'); ?>">
     <button type="button" class="yardlii-tab <?php echo $adv_section === 'flags' ? 'active' : ''; ?>" data-asection="flags" aria-selected="<?php echo $adv_section === 'flags' ? 'true' : 'false'; ?>">
       <?php esc_html_e('Feature Flags & Debug', 'yardlii-core'); ?>
     </button>
@@ -633,22 +633,22 @@ body.settings_page_yardlii-core-settings .update-nag { display:none!important; }
     </button>
   </nav>
 
-  <details class="yardlii-section" id="asec-flags" data-asection="flags" <?php selected($adv_section, 'flags', true, 'open'); ?>>
+  <details class="yardlii-section" id="asec-flags" data-asection="flags" <?php if ($adv_section === 'flags') echo 'open'; ?>>
     <summary><?php esc_html_e('Feature Flags & Debug', 'yardlii-core'); ?></summary>
     <div class="yardlii-section-content">
       <?php
-      // Pass effective TV flag state to the partial
+      // Define variables for the partial's scope
       $tv_flag_value  = $tv_on; // $tv_on is defined earlier in this file
-      $tv_flag_locked = defined('YARDLII_ENABLE_TRUST_VERIFICATION'); // <-- ADDED SEMICOLON
+      $tv_flag_locked = defined('YARDLII_ENABLE_TRUST_VERIFICATION');
+      $group_debug    = self::GROUP_DEBUG;
+      $group_flags    = self::GROUP_FEATURE_FLAGS;
 
-      // The included file will inherit the scope and can access
-      // $tv_flag_value, $tv_flag_locked, self::GROUP_DEBUG, etc.
       include __DIR__ . '/views/partials/advanced/section-flags.php';
       ?>
     </div>
   </details>
 
-  <details class="yardlii-section" id="asec-diagnostics" data-asection="diagnostics" <?php selected($adv_section, 'diagnostics', true, 'open'); ?>>
+  <details class="yardlii-section" id="asec-diagnostics" data-asection="diagnostics" <?php if ($adv_section === 'diagnostics') echo 'open'; ?>>
     <summary><?php esc_html_e('Diagnostics', 'yardlii-core'); ?></summary>
     <div class="yardlii-section-content">
       <?php include __DIR__ . '/views/partials/advanced/section-diagnostics.php'; ?>

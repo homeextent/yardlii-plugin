@@ -336,7 +336,7 @@ const panel = document.querySelector('#yardlii-tab-role-control');
     // Click handler
     $tabs.on('click', function (e) {
       e.preventDefault();
-      const id = $(this).data('aseaction');
+      const id = $(this).data('asection'); // <-- This line is corrected
       activate(id);
 
       // Keep URL in sync

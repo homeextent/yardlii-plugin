@@ -29,6 +29,8 @@ It powers all major YARDLII components through a clean, extensible architecture 
 ---
 
 ## 📦 Changelog
+= 3.7.2 =
+* Fix: Corrected JavaScript typo that prevented 'Advanced' tab sections from opening.
 
 ## 3.7.1
 * **Feat**: Restructured 'Advanced' tab with sub-tab navigation (Flags & Diagnostics).

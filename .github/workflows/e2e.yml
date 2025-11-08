@@ -71,8 +71,16 @@ jobs:
         run: |
           cid=${{ steps.find-container.outputs.container_id }}
           
+          echo "Installing wp-cli..."
+          # 1. Download wp-cli
+          docker exec $cid curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          # 2. Make it executable
+          docker exec $cid chmod +x wp-cli.phar
+          # 3. Move it into the $PATH
+          docker exec $cid mv wp-cli.phar /usr/local/bin/wp
+
           echo "Installing WordPress core..."
-          # FIX: Run all commands as the 'www-data' user
+          # Your existing commands will now work
           docker exec --user www-data $cid wp core install \
             --url=http://localhost:8888 \
             --title="E2E Test Site" \

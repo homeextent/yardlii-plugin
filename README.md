@@ -29,6 +29,11 @@ It powers all major YARDLII components through a clean, extensible architecture 
 ---
 
 ## 📦 Changelog
+
+## 3.7.4
+* **Docs**: Added new `EXTENSIBILITY.md` file to document hooks, filters, and providers.
+* **Perf**: Optimized `ListTable.php` to fix N+1 query problem and improve admin performance.
+
 ## 3.7.3
 * **Chore**: Removed 'ACF User Sync' feature...
 * **Note**: The feature is now considered deprecated...

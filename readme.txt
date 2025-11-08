@@ -7,7 +7,7 @@ Tags: acf, facetwp, wpuf, listings, maps, admin-tools, feature-flags, automation
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 3.7.3
+Stable tag: 3.7.4
 License: GPLv2 or later.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,11 @@ Location: Settings → YARDLII Core → Advanced → Feature Flags
 3.  Users list with Badge column & profile badge preview
 
 == Changelog ==
+
+= 3.7.4 =
+* Docs: Added new `EXTENSIBILITY.md` file to document hooks, filters, and providers.
+* Perf: Optimized `ListTable.php` to fix N+1 query problem and improve admin performance.
+
 = 3.7.3 =
 * Chore: Removed 'ACF User Sync' feature...
 * Note: The feature is now considered deprecated...

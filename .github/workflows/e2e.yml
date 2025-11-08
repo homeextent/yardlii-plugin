@@ -13,7 +13,7 @@ jobs:
   e2e-tests:
     name: Playwright E2E Tests
     runs-on: ubuntu-latest
-
+    
     services:
       mysql:
         image: mysql:8.0
@@ -54,7 +54,7 @@ jobs:
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-
+        
       - name: Wait for WordPress container to be ready
         run: |
           echo "Waiting for WordPress service..."
@@ -67,81 +67,66 @@ jobs:
           cid=$(docker ps --filter "ancestor=wordpress:latest" --format "{{.ID}}")
           echo "container_id=$cid" >> $GITHUB_OUTPUT
 
-      # --- FIX: ADDED MISSING HYPHEN ---
-      - name: Install WordPress and Plugins (install wp-cli + configure site + debug)
+      - name: Install WordPress and Plugins
         run: |
           set -euo pipefail
           cid=${{ steps.find-container.outputs.container_id }}
-          
+          WP_CLI="docker exec --user www-data $cid bash -lc /usr/local/bin/wp"
+
           echo "Installing wp-cli into container $cid..."
           docker exec $cid bash -lc "curl -L -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x /tmp/wp-cli.phar && mv /tmp/wp-cli.phar /usr/local/bin/wp"
 
-          echo "WP-CLI info (inside container):"
-          docker exec $cid bash -lc "/usr/local/bin/wp --info || true"
-
           echo "Installing WordPress core..."
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp core install \
+          $WP_CLI core install \
             --url=http://localhost:8888 \
             --title='E2E Test Site' \
             --admin_user=admin \
             --admin_password=password \
             --admin_email=admin@example.com \
-            --skip-email"
+            --skip-email
 
-          echo "Activating our plugin (ignore errors if already active)..."
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp plugin activate yardlii-core-functions || true"
+          echo "Activating our plugin..."
+          $WP_CLI plugin activate yardlii-core-functions || true
 
-          echo "Create test user (ignore errors if exists)..."
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp user create test_user test@example.com --user_pass=test_password --role=author || true"
+          echo "Creating test user..."
+          $WP_CLI user create test_user test@example.com \
+            --user_pass=test_password \
+            --role=author || true
 
-          echo "Installing and activating WPUF (wp-user-frontend)..."
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp plugin install wp-user-frontend --activate || true"
-
-          # Create the WPUF form and capture its ID
-          echo "Creating WPUF form..."
-          FORM_ID=$(docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post create --post_type=wpuf_form --post_title='E2E Form' --post_status=publish --porcelain")
-          echo "FORM_ID=$FORM_ID"
-
-          # Create the submit page and capture the page ID
-          echo "Creating 'Submit Listing' page that embeds the WPUF form..."
-          PAGE_ID=$(docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post create --post_type=page --post_title='Submit Listing' --post_content='[wpuf_form id=\"$FORM_ID\"]' --post_status=publish --post_name=submit-listing --porcelain")
-          echo "PAGE_ID=$PAGE_ID"
-
-          # Flush rewrite rules so pretty permalinks work and /submit-listing resolves
-          echo "Flushing rewrite rules..."
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp rewrite flush --hard || true"
-
-          # Print active plugins and the page/post content for debugging
-          echo "Plugin list (name, status):"
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp plugin list --format=table"
-
-          echo "Page list (type=page):"
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post list --post_type=page --fields=ID,post_name,post_title,post_status --format=table"
-
-          echo "Dumping the post_content for the created page (PAGE_ID=$PAGE_ID):"
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post get $PAGE_ID --field=post_content || true"
-
-          echo "CURL /submit-listing and save output to /tmp/submit-listing.html"
-          # Save the HTML we will inspect, and also print a short head snippet to the logs
-          docker exec $cid bash -lc "curl -s -L http://localhost:8888/submit-listing -o /tmp/submit-listing.html || true"
-          docker exec $cid bash -lc "head -n 200 /tmp/submit-listing.html || true"
-          docker exec $cid bash -lc "wc -c /tmp/submit-listing.html || true"
-
-          # Copy the file out of the container to the workflow runner workspace for artifact upload
-          docker cp "$cid":/tmp/submit-listing.html ./submit-listing.html || true
-
-          # Also capture the full page HTML of the home page for comparison
-          docker exec $cid bash -lc "curl -s -L http://localhost:8888 -o /tmp/index.html || true"
-          docker cp "$cid":/tmp/index.html ./index.html || true
-
-          # Save the post and plugin info to files
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp plugin list --format=json" > plugins.json || true
-          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post list --post_type=page --format=json" > pages.json || true
-
-          echo "Debug files created: submit-listing.html index.html plugins.json pages.json"
-        shell: bash
+          echo "Installing and activating WPUF..."
+          $WP_CLI plugin install wp-user-frontend --activate || true
           
-        # --- FIX: REMOVED STRAY DUPLICATE CODE BLOCK ---
+          echo "Creating a new WPUF form from the 'Post Form' template..."
+
+          # 1. Create the blank form post. We get the ID.
+          FORM_ID=$($WP_CLI post create --post_type=wpuf_form --post_title='E2E Post Form' --post_status=publish --porcelain)
+          echo "Created blank form with ID: $FORM_ID"
+
+          # 2. Define the default fields.
+          #    --- MODIFIED: Category, Post Description, and Featured Image are set to required=no ---
+          DEFAULT_FIELDS='a:6:{i:0;a:18:{s:11:"input_type";s:9:"post_title";s:8:"template";s:10:"post_title";s:4:"name";s:10:"post_title";s:2:"is";s:2:"yes";s:5:"label";s:10:"Post Title";s:5:"width";s:5:"large";s:4:"help";s:0:"";s:3:"css";s:0:"";s:11:"placeholder";s:0:"";s:7:"default";s:0:"";s:4:"size";s:2:"40";s:10:"is_meta";s:2:"no";s:6:"required";s:2:"yes";s:15:"show_in_excerpt";s:2:"no";s:10:"hide_field";s:2:"no";s:12:"word_restrict";s:0:"";s:19:"word_restrict_count";s:0:"";s:16:"word_restrict_type";s:4:"word";}i:1;a:16:{s:11:"input_type";s:8:"category";s:8:"template";s:8:"category";s:4:"name";s:8:"category";s:5:"label";s:8:"Category";s:4:"type";s:10:"multiselect";s:6:"select";s:13:"Select Labels";s:4:"help";s:0:"";s:3:"css";s:0:"";s:6:"is_meta";s:2:"no";s:10:"exclude_type";s:4:"none";s:7:"exclude";s:0:"";s:6:"order_by";s:4:"name";s:5:"order";s:3:"ASC";s:15:"show_in_excerpt";s:2:"no";s:10:"hide_field";s:2:"no";s:6:"required";s:2:"no";}i:2;a:19:{s:11:"input_type";s:8:"textarea";s:8:"template";s:14:"post_content";s:4:"name";s:14:"post_content";s:2:"is";s:2:"yes";s:5:"label";s:16:"Post Description";s:5:"width";s:5:"large";s:4:"rows";s:1:"5";s:4:"cols";s:2:"25";s:4:"help";s:0:"";s:3:"css";s:0:"";s:11:"placeholder";s:0:"";s:7:"default";s:0:"";s:4:"rich";s:4:"full";s:10:"is_meta";s:2:"no";s:6:"required";s:2:"no";s:15:"show_in_excerpt";s:2:"no";s:10:"hide_field";s:2:"no";s:19:"word_restrict_count";s:0:"";s:16:"word_restrict_type";s:4:"word";}i:3;a:15:{s:11:"input_type";s:5:"image";s:8:"template";s:16:"featured_image";s:4:"name";s:16:"featured_image";s:5:"label";s:15:"Featured Image";s:4:"help";s:0:"";s:3:"css";s:0:"";s:3:"max";s:1Y:"1";s:4:"size";s:5:"large";s:6:"is_meta";s:2:"no";s:6:"button";s:14:"Select Image";s:6:"required";s:2:"no";s:15:"show_in_excerpt";s:2:"no";s:10:"hide_field";s:2:"no";s:12:"count";s:1:"1";}i:4;a:19:{s:11:"input_type";s:8:"textarea";s:8:"template";s:12:"post_excerpt";s:4:"name";s:12:"post_excerpt";s:2:"is";s:2:"yes";s:5:"label";s:7:"Excerpt";s:5:"width";s:5:"large";s:4:"rows";s:1:"3";s:4:"cols";s:2:"25";s:4:"help";s:0:"";s:3:"css";s:0:"";s:11:"placeholder";s:0:"";s:7:"default";s:0:"";s:4:"rich";s:3:"yes";s:10:"is_meta";s:2:"no";s:6:"required";s:2:"no";s:15:"show_in_excerpt";s:2:"no";s:10:"hide_field";s:2:"no";s:19:"word_restrict_count";s:0:"";s:16:"word_restrict_type";s:4:"word";}i:5;a:16:{s:11:"input_type";s:8:"taxonomy";s:8:"template";s:9:"post_tags";s:4:"name";s:9:"post_tags";s:8:"taxonomy";s:8:"post_tag";s:5:"label";s:4:"Tags";s:4:"type";s:4:"text";s:6:"select";s:13:"Select Labels";s:4:"help";s:0:"";s:3:"css";s:0:"";s:10:"is_meta";s:2:"no";s:6:"required";s:2:"no";s:15:"show_in_excerpt";s:2:"no";s:10:"hide_field";s:2:"no";s:6:"render";s:10:"textfield";s:13:"orderby";s:4:"name";s:5:"order";s:3:"ASC";}}'
+
+          # 3. Add these fields to the new form's post meta.
+          $WP_CLI post meta add $FORM_ID wpuf_form_fields "$DEFAULT_FIELDS"
+          echo "Added default fields to form $FORM_ID"
+
+          # 4. Define the default settings
+          DEFAULT_SETTINGS='a:11:{s:9:"post_type";s:4:"post";s:11:"post_status";s:7:"publish";s:16:"default_category";s:0:"";s:10:"submit_text";s:11:"Submit Post";s:19:"draft_pending_text";s:15:"Save as Draft";s:14:"redirect_to";s:4:"post";s:15:"message";s:26:"Post submitted successfully";s:18:"update_post_status";s:7:"publish";s:17:"update_redirect_to";s:4:"same";s:14:"update_message";s:26:"Post updated successfully";s:14:"edit_page_url";s:0:"";}'
+          
+          # 5. Add these settings to the new form's post meta.
+          $WP_CLI post meta add $FORM_ID wpuf_settings "$DEFAULT_SETTINGS"
+          echo "Added default settings to form $FORM_ID"
+
+          # 6. Create the page that uses this *now valid* form.
+          echo "Creating 'Submit Listing' page with form ID $FORM_ID..."
+          $WP_CLI post create --post_type=page --post_title='Submit Listing' --post_content="[wpuf_form id=\"$FORM_ID\"]" --post_status=publish --post_name=submit-listing || true
+
+          # 7. Flush permalinks.
+          echo "Flushing rewrite rules..."
+          $WP_CLI rewrite flush --hard
+
+          echo "Environment setup complete!"
+        shell: bash
 
       - name: Run Playwright Tests
         run: npm run test:e2e
@@ -155,7 +140,7 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
-
+          
       - name: Upload debug artifacts
         if: always()
         uses: actions/upload-artifact@v4

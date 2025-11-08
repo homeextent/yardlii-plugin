@@ -72,15 +72,11 @@ jobs:
           cid=${{ steps.find-container.outputs.container_id }}
           
           echo "Installing wp-cli..."
-          # 1. Download wp-cli
           docker exec $cid curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-          # 2. Make it executable
           docker exec $cid chmod +x wp-cli.phar
-          # 3. Move it into the $PATH
           docker exec $cid mv wp-cli.phar /usr/local/bin/wp
 
           echo "Installing WordPress core..."
-          # Your existing commands will now work
           docker exec --user www-data $cid wp core install \
             --url=http://localhost:8888 \
             --title="E2E Test Site" \
@@ -93,7 +89,6 @@ jobs:
           docker exec --user www-data $cid wp plugin activate yardlii-core-functions
           
           echo "Creating test user..."
-          # FIX: Change role from subscriber to author
           docker exec --user www-data $cid wp user create test_user test@example.com \
             --user_pass=test_password \
             --role=author
@@ -102,8 +97,10 @@ jobs:
           docker exec --user www-data $cid wp plugin install wp-user-frontend --activate
           
           echo "Creating submit page..."
-          docker exec --user www-data $cid wp post create --post_type=wpuf_form --post_title='E2E Form' --post_status=publish --ID=123
-          docker exec --user www-data $cid wp post create --post_type=page --post_title='Submit Listing' --post_content='[wpuf_form id="123"]' --post_status=publish --post_name=submit-listing
+          # --- FIX ---
+          # 1. REMOVED the line creating the dummy post (ID 123)
+          # 2. CHANGED the shortcode to the generic [wpuf_post_form]
+          docker exec --user www-data $cid wp post create --post_type=page --post_title='Submit Listing' --post_content='[wpuf_post_form]' --post_status=publish --post_name=submit-listing
           
           echo "Environment setup complete!"
 

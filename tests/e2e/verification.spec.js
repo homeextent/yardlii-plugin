@@ -54,6 +54,8 @@ test.describe('Trust & Verification Workflow', () => {
     
     // Fill out the form
     // Note: 'post_title' is the field name for the WPUF post title
+    await page.waitForSelector('input[name="post_title"]', { timeout: 15000 });
+    
     await page.fill('input[name="post_title"]', requestTitle);
     
     // Find and click the submit button

@@ -106,6 +106,10 @@ jobs:
 
           echo "Creating 'Submit Listing' page with the new form ID ($FORM_ID)..."
           docker exec --user www-data $cid bash -lc "/usr/local/bin/wp post create --post_type=page --post_title='Submit Listing' --post_content='[wpuf_form id=\"$FORM_ID\"]' --post_status=publish --post_name=submit-listing || true"
+          
+         
+          echo "Flushing permalinks..."
+          docker exec --user www-data $cid bash -lc "/usr/local/bin/wp rewrite flush --hard"
 
           echo "Environment setup complete!"
 

@@ -30,6 +30,10 @@ It powers all major YARDLII components through a clean, extensible architecture 
 
 ## 📦 Changelog
 
+## 3.7.5
+* **Refactor**: Modernized `trust-verification.js` into ES6 classes for maintainability .
+* **Chore**: Renamed `trust-verification.js` to `admin-tv.js` and updated enqueue.
+
 ## 3.7.4
 * **Docs**: Added new `EXTENSIBILITY.md` file to document hooks, filters, and providers.
 * **Perf**: Optimized `ListTable.php` to fix N+1 query problem and improve admin performance.

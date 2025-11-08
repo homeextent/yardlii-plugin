@@ -98,22 +98,7 @@ if ($acf_sync_locked) {
         <?php endif; ?>
       </div>
 
-      <div style="display:flex;align-items:center;gap:.5rem;margin:.5rem 0;">
-        <input type="hidden" name="yardlii_enable_acf_user_sync" value="0" />
-        <input
-          type="checkbox"
-          id="yardlii_enable_acf_user_sync"
-          name="yardlii_enable_acf_user_sync"
-          value="1"
-          <?php checked($acf_sync_value); ?>
-          <?php disabled($acf_sync_locked); ?>
-        />
-        <strong><?php esc_html_e('ACF User Sync', 'yardlii-core'); ?></strong>
-        <?php if ($acf_sync_locked) : ?>
-          <em style="opacity:.8;margin-left:.5rem;"><?php esc_html_e('Locked by code', 'yardlii-core'); ?></em>
-        <?php endif; ?>
-      </div>
-
+      
       <p style="margin-top:1rem;">
         <button class="button button-primary" type="submit">
           <?php esc_html_e('Save Feature Flags', 'yardlii-core'); ?>

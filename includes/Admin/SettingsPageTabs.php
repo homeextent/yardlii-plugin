@@ -231,7 +231,7 @@ final class SettingsPageTabs
     private function register_feature_flags_settings(): void
     {
         $cb = self::success_notifier(self::GROUP_FEATURE_FLAGS);
-        register_setting(self::GROUP_FEATURE_FLAGS, 'yardlii_enable_acf_user_sync',      ['sanitize_callback' => self::success_notifier(self::GROUP_FEATURE_FLAGS, static fn($v)=>(bool)$v)]);
+        
         register_setting(self::GROUP_FEATURE_FLAGS, 'yardlii_enable_trust_verification', ['sanitize_callback' => self::success_notifier(self::GROUP_FEATURE_FLAGS, static fn($v)=>(bool)$v)]);
         register_setting(self::GROUP_FEATURE_FLAGS, 'yardlii_enable_role_control',       ['sanitize_callback' => self::success_notifier(self::GROUP_FEATURE_FLAGS, static fn($v)=>(bool)$v)]);
     }
@@ -441,9 +441,7 @@ $tv_visible = $tv_on && $tv_cap_ok;
             aria-selected="false">🤝 Trust & Verification</button>
 <?php endif; ?>
 
-            <?php if ($user_sync_enabled): ?>
-                <button type="button" class="yardlii-tab" data-tab="user-sync" aria-selected="false">👤 User Sync</button>
-            <?php endif; ?>
+            
             <button type="button" class="yardlii-tab" data-tab="advanced" aria-selected="false">⚙️ Advanced</button>
         </nav>
 
@@ -604,12 +602,7 @@ body.settings_page_yardlii-core-settings .update-nag { display:none!important; }
 <?php endif; ?>
 
 
-        <!-- User Sync Tab -->
-        <?php if ($user_sync_enabled): ?>
-            <section id="yardlii-tab-user-sync" class="yardlii-tabpanel hidden" data-panel="user-sync">
-                <?php include __DIR__ . '/views/partials/acf-user-sync.php'; ?>
-            </section>
-        <?php endif; ?>
+       
 
         <!-- Advanced Tab -->
         

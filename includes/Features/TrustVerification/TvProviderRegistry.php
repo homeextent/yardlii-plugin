@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Yardlii\Core\Features\TrustVerification;
 
-use Yardlii\Core\Features\TrustVerification\Providers\TvProviderInterface;
+use Yardlii\Core\Features\TrustVerification\Providers\ProviderInterface;
 use Throwable;
 
 /**
@@ -53,7 +53,7 @@ final class TvProviderRegistry
 
             // Ensure it implements the interface
             $implements = class_implements($fqcn);
-            if (!$implements || !isset($implements[TvProviderInterface::class])) {
+            if (!$implements || !isset($implements[ProviderInterface::class])) {
                 if (defined('YARDLII_DEBUG') && YARDLII_DEBUG) {
                     error_log("[YARDLII] Provider {$fqcn} does not implement TvProviderInterface.");
                 }

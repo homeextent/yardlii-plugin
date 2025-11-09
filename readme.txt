@@ -7,7 +7,7 @@ Tags: acf, facetwp, wpuf, listings, maps, admin-tools, feature-flags, automation
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 3.7.5
+Stable tag: 3.7.6
 License: GPLv2 or later.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,11 @@ Location: Settings → YARDLII Core → Advanced → Feature Flags
 3.  Users list with Badge column & profile badge preview
 
 == Changelog ==
+
+= 3.7.6 =
+* Fix: Corrected TvProviderRegistry to check for the correct interface (ProviderInterface), fixing a bug where WPUF and Elementor providers were not loading .
+* Fix: Patched a Fatal Error in the ElementorPro provider by replacing a non-existent function call (yardlii_debug_log) .
+* Fix: Removed the temporary WPUF workaround (yardlii_tv_enable_legacy_wpuf_hooks filter) as the ProviderRegistry is now functioning correctly .
 
 = 3.7.5 =
 * Refactor: Modernized `trust-verification.js` into ES6 classes for maintainability .

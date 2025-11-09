@@ -30,6 +30,11 @@ It powers all major YARDLII components through a clean, extensible architecture 
 
 ## 📦 Changelog
 
+## 3.7.6
+* **Fix**: Corrected TvProviderRegistry to check for the correct interface (ProviderInterface), fixing a bug where WPUF and Elementor providers were not loading .
+* **Fix**: Patched a Fatal Error in the ElementorPro provider by replacing a non-existent function call (yardlii_debug_log) .
+* **Fix**: Removed the temporary WPUF workaround (yardlii_tv_enable_legacy_wpuf_hooks filter) as the ProviderRegistry is now functioning correctly .
+
 ## 3.7.5
 * **Refactor**: Modernized `trust-verification.js` into ES6 classes for maintainability .
 * **Chore**: Renamed `trust-verification.js` to `admin-tv.js` and updated enqueue.

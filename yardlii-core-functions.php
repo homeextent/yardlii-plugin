@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  YARDLII: Core Functions
  * Description:  Centralized modular functionality for the YARDLII platform.
- * Version:      3.7.5
+ * Version:      3.7.6
  * Author:       The Innovative Group
  * Text Domain:  yardlii-core
  * License:      GPLv2 or later.
@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
 if (!defined('YARDLII_CORE_FILE'))    define('YARDLII_CORE_FILE', __FILE__);
 if (!defined('YARDLII_CORE_PATH'))    define('YARDLII_CORE_PATH', plugin_dir_path(__FILE__));
 if (!defined('YARDLII_CORE_URL'))     define('YARDLII_CORE_URL',  plugin_dir_url(__FILE__));
-if (!defined('YARDLII_CORE_VERSION')) define('YARDLII_CORE_VERSION', '3.7.5');
+if (!defined('YARDLII_CORE_VERSION')) define('YARDLII_CORE_VERSION', '3.7.6');
 
 /* =====================================================
  * i18n
@@ -72,7 +72,6 @@ add_action('plugins_loaded', static function () {
     }
 });
 
-add_filter('yardlii_tv_enable_legacy_wpuf_hooks', '__return_true');
 
 register_deactivation_hook(YARDLII_CORE_FILE, static function () {
     // Optional: revoke the cap; also clear seed flags

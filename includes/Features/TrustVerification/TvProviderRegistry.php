@@ -78,7 +78,7 @@ final class TvProviderRegistry
             $done[$fqcn] = true;
 
             try {
-                /** @var TvProviderInterface $instance */
+                /** @var ProviderInterface $instance */
                 $instance = new $fqcn();
                 $instance->registerHooks();
             } catch (Throwable $e) {

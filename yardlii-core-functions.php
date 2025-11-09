@@ -72,6 +72,8 @@ add_action('plugins_loaded', static function () {
     }
 });
 
+add_filter('yardlii_tv_enable_legacy_wpuf_hooks', '__return_true');
+
 register_deactivation_hook(YARDLII_CORE_FILE, static function () {
     // Optional: revoke the cap; also clear seed flags
     if (class_exists('\Yardlii\Core\Features\TrustVerification\Caps')) {

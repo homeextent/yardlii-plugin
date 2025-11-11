@@ -3,16 +3,23 @@
 jQuery(document).ready(function ($) {
 
   /**
-   * Helper to get a URL query parameter.
-   * @param {string} name The query parameter name.
-   * @returns {string} The value, or empty string.
+   * Helper to update the URL AND all form referrers.
+   * @param {URL} urlObject The URL object to set.
    */
-  function getUrlParam(name) {
+  function updateUrlAndReferrers(urlObject) {
     try {
-      const params = new URL(window.location.href).searchParams;
-      return params.get(name) || '';
+      const newUrlString = urlObject.toString();
+      // 1. Update the browser URL bar
+      history.replaceState({}, '', newUrlString);
+
+      // 2. Update all _wp_http_referer fields
+      // The referer value must be just the path, e.g., /wp-admin/admin.php?page=...
+      const newPath = urlObject.pathname + urlObject.search;
+      document.querySelectorAll('input[name="_wp_http_referer"]').forEach(input => {
+        input.value = newPath;
+      });
     } catch (e) {
-      return ''; // Fallback
+      // Fails in test suites or old browsers
     }
   }
 
@@ -178,7 +185,7 @@ const panel = document.querySelector('#yardlii-tab-role-control');
     const u = new URL(window.location.href);
     u.searchParams.set('tab', 'role-control'); // Force parent tab
     u.searchParams.set('rsection', id);
-    history.replaceState({}, '', u.toString());
+    updateUrlAndReferrers(u);
   } catch (e) {
     // Fails in test suites or old browsers
   }
@@ -251,7 +258,7 @@ const initialId =
         u.searchParams.delete('tvsection');
         u.searchParams.delete('advsection');
         u.searchParams.delete('rsection'); // <-- THIS IS THE FIX
-        history.replaceState({}, '', u.toString());
+        updateUrlAndReferrers(u);
       } catch (e) {
         // Fails in test suites or old browsers
     }
@@ -318,7 +325,7 @@ const initialId =
         const u = new URL(window.location.href);
         u.searchParams.set('tab', 'general'); // Force parent tab
         u.searchParams.set('gsection', id);
-        history.replaceState({}, '', u.toString());
+        updateUrlAndReferrers(u);
       } catch (e) {
         // Fails in test suites or old browsers
       }
@@ -438,7 +445,7 @@ const initialId =
       try {
         const u = new URL(window.location.href);
         u.searchParams.set('advsection', id);
-        history.replaceState({}, '', u.toString());
+        updateUrlAndReferrers(u);
       } catch (e) {}
     });
   }

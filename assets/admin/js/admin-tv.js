@@ -12,6 +12,26 @@
   'use strict';
 
   /**
+   * Helper to update the URL AND all form referrers.
+   * @param {URL} urlObject The URL object to set.
+   */
+  function updateUrlAndReferrers(urlObject) {
+    try {
+      const newUrlString = urlObject.toString();
+      // 1. Update the browser URL bar
+      history.replaceState({}, '', newUrlString);
+
+      // 2. Update all _wp_http_referer fields
+      const newPath = urlObject.pathname + urlObject.search;
+      document.querySelectorAll('input[name="_wp_http_referer"]').forEach(input => {
+        input.value = newPath;
+      });
+    } catch (e) {
+      // Fails in test suites or old browsers
+    }
+  }
+
+  /**
    * Manages all logic for the main Trust & Verification admin panel.
    */
   class TrustVerificationAdminPanel {
@@ -85,7 +105,7 @@
         try {
           const u = new URL(window.location.href);
           u.searchParams.set('tvsection', id);
-          history.replaceState({}, '', u.toString());
+          updateUrlAndReferrers(u);
         } catch (e) {}
       });
 

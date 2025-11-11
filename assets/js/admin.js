@@ -220,6 +220,20 @@ const panel = document.querySelector('#yardlii-tab-role-control');
       });
       mainPanels.forEach(p => p.classList.toggle('hidden', p.dataset.panel !== id));
       sessionStorage.setItem(KEY_MAIN, id);
+
+      // --- START: NEW CODE (Keeps URL in sync) ---
+      try {
+        const u = new URL(window.location.href);
+        u.searchParams.set('tab', id);
+        // Clean up sub-section params from other tabs
+        u.searchParams.delete('gsection');
+        u.searchParams.delete('tvsection');
+        u.searchParams.delete('advsection');
+        history.replaceState({}, '', u.toString());
+      } catch (e) {
+        // Fails in test suites or old browsers
+      }
+      // --- END: NEW CODE ---
     }
 
     // --- START: MODIFIED RESTORE LOGIC ---

@@ -214,38 +214,49 @@ final class Guards
     {
         $raw = (string) get_option(GlobalSettings::OPT_EMAILS, '');
         if ($raw === '') return;
-
         $to = array_values(array_filter(array_map(static function ($s) {
             $email = sanitize_email(trim((string) $s));
             return ($email && is_email($email)) ? $email : null;
         }, explode(',', $raw))));
-
         if (empty($to)) return;
 
         $user = get_userdata($user_id);
         $site = wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES);
 
-        $subject = sprintf('[%s] New Verification Request from %s',
+        // --- FIX 1: Subject format updated ---
+        // Changed from '[%s] ...' to '%s: ...'
+        $subject = sprintf('%s: New Verification Request from %s',
             $site,
-            $user ? ($user->display_name ?: $user->user_login) : ('User '.$user_id)
+            $user ? ($user->display_name ?: $user->user_login) : ('User ' . $user_id)
         );
 
-        $link = admin_url('admin.php?page=yardlii-core-settings&tab=trust-verification&tvsection=requests');
+        $link =
+            admin_url('admin.php?page=yardlii-core-settings&tab=trust-verification&tvsection=requests');
 
+        // --- FIX 2: Body content updated ---
+        // Prepare user details
+        $user_name = $user ? ($user->display_name ?: $user->user_login) : 'N/A';
+        $user_email = $user ? $user->user_email : 'N/A';
+
+        // Add new <li> lines for user name/email
         $message = sprintf(
             '<p>A new verification request is pending.</p>
-             <ul>
-               <li><strong>User ID:</strong> %d</li>
-               <li><strong>Form ID:</strong> %s</li>
-               <li><strong>Request ID:</strong> %d</li>
-             </ul>
-             <p><a href="%s">Open Requests</a></p>',
+            <ul>
+            <li><strong>User Name:</strong> %s</li>
+            <li><strong>User Email:</strong> %s</li>
+            <li><strong>User ID:</strong> %d</li>
+            <li><strong>Form ID:</strong> %s</li>
+            <li><strong>Request ID:</strong> %d</li>
+            </ul>
+            <p><a href="%s">Open Requests</a></p>',
+            esc_html($user_name),  // New
+            esc_html($user_email), // New
             $user_id,
             esc_html($form_id),
             $request_id,
             esc_url($link)
         );
-
+        
         $headers = ['Content-Type: text/html; charset=UTF-8'];
         foreach ($to as $addr) {
             wp_mail($addr, $subject, $message, $headers);

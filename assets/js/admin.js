@@ -250,6 +250,7 @@ const initialId =
         u.searchParams.delete('gsection');
         u.searchParams.delete('tvsection');
         u.searchParams.delete('advsection');
+        u.searchParams.delete('rsection'); // <-- THIS IS THE FIX
         history.replaceState({}, '', u.toString());
       } catch (e) {
         // Fails in test suites or old browsers

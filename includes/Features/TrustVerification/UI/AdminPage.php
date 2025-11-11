@@ -75,10 +75,8 @@ if (class_exists('\Yardlii\Core\Features\TrustVerification\Caps')) {
         );
 
         /* --- JS (with deps) --- */
-        $deps = ['jquery', 'jquery-ui-sortable'];
-        if (wp_script_is('wp-editor', 'registered') || wp_script_is('wp-editor', 'enqueued')) {
-            $deps[] = 'wp-editor';
-        }
+        // We must wait for the scripts loaded by wp_enqueue_editor()
+        $deps = ['jquery', 'jquery-ui-sortable', 'editor', 'quicktags'];
 
         wp_enqueue_script(
             self::SCRIPT_HANDLE,

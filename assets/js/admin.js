@@ -136,7 +136,7 @@ jQuery(document).ready(function ($) {
    
 
 /* === YARDLII: Role Control subtabs (Submit Access / Custom User Roles) === */
-(() => {
+function initRoleControlSubtabs() {
 const panel = document.querySelector('#yardlii-tab-role-control');
   if (!panel) return;
 
@@ -216,7 +216,7 @@ const initialId =
       }
     });
   });
-})();
+}
 
 
 /* === YARDLII: Persist active tabs across reloads === */
@@ -254,9 +254,16 @@ const initialId =
         history.replaceState({}, '', u.toString());
       } catch (e) {
         // Fails in test suites or old browsers
-      }
-      // --- END: NEW CODE ---
     }
+    // --- END: NEW CODE ---
+
+    // --- START: ADD THIS ---
+    // After activating the main tab, initialize sub-tabs IF we are on that tab.
+    if (id === 'role-control') {
+      initRoleControlSubtabs();
+    }
+    // --- END: ADD THIS ---
+  }
 
     // --- START: MODIFIED RESTORE LOGIC ---
     

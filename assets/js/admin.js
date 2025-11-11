@@ -2,6 +2,20 @@
 
 jQuery(document).ready(function ($) {
 
+  /**
+   * Helper to get a URL query parameter.
+   * @param {string} name The query parameter name.
+   * @returns {string} The value, or empty string.
+   */
+  function getUrlParam(name) {
+    try {
+      const params = new URL(window.location.href).searchParams;
+      return params.get(name) || '';
+    } catch (e) {
+      return ''; // Fallback
+    }
+  }
+
   /* === YARDLII: User Sync Dynamic Rows & Preview === */
 
   // Add new row
@@ -139,32 +153,51 @@ const panel = document.querySelector('#yardlii-tab-role-control');
   const panels  = document.querySelectorAll('#yardlii-tab-role-control .yardlii-section[data-rsection]');
 
   function activate(id) {
-    buttons.forEach(btn => {
-      const on = btn.dataset.rsection === id;
-      btn.classList.toggle('active', on);
-      btn.setAttribute('aria-selected', on ? 'true' : 'false');
-      btn.tabIndex = on ? 0 : -1;
-    });
+  buttons.forEach(btn => {
+    const on = btn.dataset.rsection === id;
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-selected', on ? 'true' : 'false');
+    btn.tabIndex = on ? 0 : -1;
+  });
 
-    panels.forEach(p => {
-      const show = p.dataset.rsection === id;
-      if ('open' in p) {
-        p.open = !!show;
-        if (show) { p.removeAttribute('hidden'); } else { p.setAttribute('hidden', 'hidden'); }
-      } else {
-        p.classList.toggle('hidden', !show);
-        p.setAttribute('aria-hidden', show ? 'false' : 'true');
-      }
-    });
+  panels.forEach(p => {
+    const show = p.dataset.rsection === id;
+    if ('open' in p) {
+      p.open = !!show;
+      if (show) { p.removeAttribute('hidden'); } else { p.setAttribute('hidden', 'hidden'); }
+    } else {
+      p.classList.toggle('hidden', !show);
+      p.setAttribute('aria-hidden', show ? 'false' : 'true');
+    }
+  });
 
-    try { localStorage.setItem('yardlii_active_rsection', id); } catch (e) {}
+  try { localStorage.setItem('yardlii_active_rsection', id); } catch (e) {}
+
+  // --- START: NEW CODE (Keeps URL in sync) ---
+  try {
+    const u = new URL(window.location.href);
+    u.searchParams.set('tab', 'role-control'); // Force parent tab
+    u.searchParams.set('rsection', id);
+    history.replaceState({}, '', u.toString());
+  } catch (e) {
+    // Fails in test suites or old browsers
   }
+  // --- END: NEW CODE ---
+}
 
-  const initialId =
-      localStorage.getItem('yardlii_active_rsection')
-      || wrap.querySelector('.yardlii-tab.active')?.dataset.rsection
+  // --- START: MODIFIED RESTORE LOGIC ---
+const urlRSection = getUrlParam('rsection');
+const localRSection = localStorage.getItem('yardlii_active_rsection');
+
+const initialId =
+    (urlRSection && [...buttons].some(b => b.dataset.rsection === urlRSection))
+    ? urlRSection // Priority 1: Use 'rsection' from URL
+    : (localRSection && [...buttons].some(b => b.dataset.rsection === localRSection))
+      ? localRSection // Priority 2: Use 'localStorage'
+      : wrap.querySelector('.yardlii-tab.active')?.dataset.rsection // Priority 3: HTML default
       || document.querySelector('#yardlii-tab-role-control .yardlii-section[open]')?.dataset.rsection
       || panels[0]?.dataset.rsection;
+// --- END: MODIFIED RESTORE LOGIC ---
 
   if (initialId) activate(initialId);
 
@@ -192,19 +225,7 @@ const panel = document.querySelector('#yardlii-tab-role-control');
   const KEY_GEN    = 'yardlii_active_gsection';
   const KEY_MAP_IN = 'yardlii_active_map_inner';
 
-  /**
-   * Helper to get a URL query parameter.
-   * @param {string} name The query parameter name.
-   * @returns {string} The value, or empty string.
-   */
-  function getUrlParam(name) {
-    try {
-      const params = new URL(window.location.href).searchParams;
-      return params.get(name) || '';
-    } catch (e) {
-      return ''; // Fallback
-    }
-  }
+  
 
   // 1) MAIN TABS (General / User Sync / Advanced)
   const mainNav = document.querySelector('nav.yardlii-tabs[data-scope="main"]');
@@ -283,6 +304,17 @@ const panel = document.querySelector('#yardlii-tab-role-control');
         else { p.setAttribute('hidden','hidden'); p.removeAttribute('open'); }
       });
       sessionStorage.setItem(KEY_GEN, id);
+
+      // --- START: NEW CODE (Keeps URL in sync) ---
+      try {
+        const u = new URL(window.location.href);
+        u.searchParams.set('tab', 'general'); // Force parent tab
+        u.searchParams.set('gsection', id);
+        history.replaceState({}, '', u.toString());
+      } catch (e) {
+        // Fails in test suites or old browsers
+      }
+      // --- END: NEW CODE ---
     }
     
     // --- MODIFIED: Use new getUrlParam helper ---

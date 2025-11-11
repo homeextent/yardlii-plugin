@@ -192,6 +192,20 @@ const panel = document.querySelector('#yardlii-tab-role-control');
   const KEY_GEN    = 'yardlii_active_gsection';
   const KEY_MAP_IN = 'yardlii_active_map_inner';
 
+  /**
+   * Helper to get a URL query parameter.
+   * @param {string} name The query parameter name.
+   * @returns {string} The value, or empty string.
+   */
+  function getUrlParam(name) {
+    try {
+      const params = new URL(window.location.href).searchParams;
+      return params.get(name) || '';
+    } catch (e) {
+      return ''; // Fallback
+    }
+  }
+
   // 1) MAIN TABS (General / User Sync / Advanced)
   const mainNav = document.querySelector('nav.yardlii-tabs[data-scope="main"]');
   if (mainNav) {
@@ -208,13 +222,30 @@ const panel = document.querySelector('#yardlii-tab-role-control');
       sessionStorage.setItem(KEY_MAIN, id);
     }
 
-    // restore
-    const savedMain = sessionStorage.getItem(KEY_MAIN);
-    if (savedMain && [...mainBtns].some(b => b.dataset.tab === savedMain)) {
-      activateMain(savedMain);
-    } else {
-      // keep whatever your current init does
+    // --- START: MODIFIED RESTORE LOGIC ---
+    
+    // Check URL first, then session storage, then default
+    const urlTab = getUrlParam('tab');
+    const sessionTab = sessionStorage.getItem(KEY_MAIN);
+    const firstActive = [...mainBtns].find(b => b.classList.contains('active')) || mainBtns[0];
+    let initialTab = 'general'; // Default tab
+
+    if (urlTab && [...mainBtns].some(b => b.dataset.tab === urlTab)) {
+      // Priority 1: Use the 'tab' from the URL
+      initialTab = urlTab;
+    } else if (sessionTab && [...mainBtns].some(b => b.dataset.tab === sessionTab)) {
+      // Priority 2: Use the last-clicked tab from session storage
+      initialTab = sessionTab;
+    } else if (firstActive) {
+      // Priority 3: Use the tab that is already active (from HTML)
+      initialTab = firstActive.dataset.tab;
     }
+    
+    if (initialTab) {
+      activateMain(initialTab);
+    }
+    
+    // --- END: MODIFIED RESTORE LOGIC ---
 
     // clicks
     mainBtns.forEach(b => b.addEventListener('click', () => activateMain(b.dataset.tab)));
@@ -239,10 +270,20 @@ const panel = document.querySelector('#yardlii-tab-role-control');
       });
       sessionStorage.setItem(KEY_GEN, id);
     }
-
+    
+    // --- MODIFIED: Use new getUrlParam helper ---
+    const urlGen = getUrlParam('gsection');
     const savedGen = sessionStorage.getItem(KEY_GEN);
-    if (savedGen && [...genBtns].some(b => b.dataset.gsection === savedGen)) {
-      activateGen(savedGen);
+    let initialGen = '';
+    
+    if (urlGen && [...genBtns].some(b => b.dataset.gsection === urlGen)) {
+      initialGen = urlGen;
+    } else if (savedGen && [...genBtns].some(b => b.dataset.gsection === savedGen)) {
+      initialGen = savedGen;
+    }
+
+    if (initialGen) {
+      activateGen(initialGen);
     }
 
     genBtns.forEach(b => b.addEventListener('click', () => activateGen(b.dataset.gsection)));

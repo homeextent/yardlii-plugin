@@ -96,7 +96,7 @@ $default_to  = ($wp_user && !empty($wp_user->user_email)) ? $wp_user->user_email
         <textarea
           id="tv_approve_body_<?php echo esc_attr($index); ?>"
           name="yardlii_tv_form_configs[<?php echo esc_attr($index); ?>][approve_body]"
-          class="widefat yardlii-tv-wysiwyg wp-editor-area"
+          class="widefat yardlii-tv-editor"
           rows="8"><?php echo esc_textarea($current['approve_body'] ?? ''); ?></textarea>
         <small class="description">
           <?php esc_html_e('Placeholders: {display_name}, {user_email}, {user_login}, {form_id}, {request_id}, {site_title}, {site_url}', 'yardlii-core'); ?>
@@ -121,7 +121,7 @@ $default_to  = ($wp_user && !empty($wp_user->user_email)) ? $wp_user->user_email
         <textarea
           id="tv_reject_body_<?php echo esc_attr($index); ?>"
           name="yardlii_tv_form_configs[<?php echo esc_attr($index); ?>][reject_body]"
-          class="widefat yardlii-tv-wysiwyg wp-editor-area"
+          class="widefat yardlii-tv-editor"
           rows="8"><?php echo esc_textarea($current['reject_body'] ?? ''); ?></textarea>
         <small class="description">
           <?php esc_html_e('Placeholders: {display_name}, {user_email}, {user_login}, {form_id}, {request_id}, {site_title}, {site_url}', 'yardlii-core'); ?>

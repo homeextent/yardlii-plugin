@@ -12,14 +12,6 @@ use Yardlii\Core\Features\TrustVerification\Settings\GlobalSettings;
  * Submission Guards:
  * - Exposes a unified static API: maybeCreateRequest($user_id, $form_id, $context = []) -> int post_id|0
  * - (Optional) legacy WPUF hooks can be enabled via filter 'yardlii_tv_enable_legacy_wpuf_hooks'
- *
- * Behavior retained from previous version:
- *  - Require matching per-form config for submitted form_id
- *  - Skip if user already has the configured Approved role
- *  - Skip if a duplicate Pending request for (user_id, form_id) exists
- *  - Otherwise, reopen/retarget the latest request for that user (any status) back to Pending
- *    and update form_id; if none exists, create a new Pending request
- *  - Log history and notify admins
  */
 final class Guards
 {
@@ -154,6 +146,19 @@ final class Guards
             'post_title' => sprintf('Request #%d — %s', $request_id, $user->display_name ?: $user->user_login),
         ]);
 
+        // NEW: Employer Vouch Trigger
+        // Removed redundant checks because $request_id is guaranteed valid here
+        if (!empty($context['employer_email'])) {
+            if (class_exists('\Yardlii\Core\Features\TrustVerification\Services\EmployerVouchService')) {
+                $mailer = new \Yardlii\Core\Features\TrustVerification\Emails\Mailer();
+                $service = new \Yardlii\Core\Features\TrustVerification\Services\EmployerVouchService($mailer);
+                $service->initiateVouch($request_id, $context['employer_email']);
+                
+                // Optional: Add a log entry explicitly stating we sent the email
+                Meta::appendLog($request_id, 'vouch_email_sent', 0, ['to' => $context['employer_email']]);
+            }
+        }
+
         self::notifyAdmins($request_id, $user_id, $form_id);
         return (int) $request_id;
     }
@@ -223,8 +228,6 @@ final class Guards
         $user = get_userdata($user_id);
         $site = wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES);
 
-        // --- FIX 1: Subject format updated ---
-        // Changed from '[%s] ...' to '%s: ...'
         $subject = sprintf('%s: New Verification Request from %s',
             $site,
             $user ? ($user->display_name ?: $user->user_login) : ('User ' . $user_id)
@@ -233,12 +236,9 @@ final class Guards
         $link =
             admin_url('admin.php?page=yardlii-core-settings&tab=trust-verification&tvsection=requests');
 
-        // --- FIX 2: Body content updated ---
-        // Prepare user details
         $user_name = $user ? ($user->display_name ?: $user->user_login) : 'N/A';
         $user_email = $user ? $user->user_email : 'N/A';
 
-        // Add new <li> lines for user name/email
         $message = sprintf(
             '<p>A new verification request is pending.</p>
             <ul>
@@ -249,8 +249,8 @@ final class Guards
             <li><strong>Request ID:</strong> %d</li>
             </ul>
             <p><a href="%s">Open Requests</a></p>',
-            esc_html($user_name),  // New
-            esc_html($user_email), // New
+            esc_html($user_name),
+            esc_html($user_email),
             $user_id,
             esc_html($form_id),
             $request_id,

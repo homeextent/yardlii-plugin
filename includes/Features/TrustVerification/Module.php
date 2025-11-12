@@ -65,6 +65,7 @@ final class Module
         $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\Guards::class);
         $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\Cleanup::class);
         $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\HistoryAjax::class);
+        $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Requests\EmployerVerificationHandler::class);
 
         // --- Emails ---
         $this->safeRegister(\Yardlii\Core\Features\TrustVerification\Emails\PreviewAjax::class);

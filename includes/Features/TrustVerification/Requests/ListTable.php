@@ -89,7 +89,7 @@ final class ListTable extends \WP_List_Table
 
     /**
      * Default column renderer.
-     * @param array<string,mixed> $item
+     * @param array<string, mixed> $item
      */
     public function column_default($item, $column_name)
     {
@@ -125,9 +125,25 @@ final class ListTable extends \WP_List_Table
                 $st    = (string) $item['_post_status'];
                 $class = esc_attr(str_replace('vp_', '', $st));
                 $label = esc_html($this->labelForStatus($st));
-                return sprintf('<span class="status-badge status-badge--%s">%s</span>', $class, $label);
-            }
+                
+                // 1. Create the base badge
+                $output = sprintf('<span class="status-badge status-badge--%s">%s</span>', $class, $label);
 
+                // 2. NEW: Check for employer wait state
+                // We use get_post_meta directly; WP's internal cache makes this efficient
+                // because update_meta_cache() was called in prepare_items().
+                $verif_type = get_post_meta((int) $item['ID'], '_vp_verification_type', true);
+
+                if ($st === 'vp_pending' && $verif_type === 'employer_vouch') {
+                    // Append the icon
+                    $output .= sprintf(
+                        ' <span class="dashicons dashicons-businessperson" title="%s" style="color:#888; vertical-align:middle; font-size:18px;"></span>',
+                        esc_attr__('Waiting for Employer Vouch', 'yardlii-core')
+                    );
+                }
+
+                return $output;
+            }
 
             case 'current_role':
                 $label = (string) ($item['_vp_role_label'] ?? '');
@@ -137,7 +153,6 @@ final class ListTable extends \WP_List_Table
                     return sprintf('%s <br><small>%s</small>', esc_html($label), esc_html($slug));
                 }
                 return esc_html($label ?: $slug);
-
 
             case 'processed_by': {
                 $by = (int) ($item['_vp_processed_by'] ?? 0);

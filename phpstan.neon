@@ -7,13 +7,10 @@ parameters:
     paths:
         - includes
         - tests/unit
-
     excludePaths:
         - vendor/*
         - assets/*
-        - tests/integration/*
-
+        - tests/integration  # <--- Changed from tests/integration/* to just tests/integration to be safer
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
-
     reportUnmatchedIgnoredErrors: false

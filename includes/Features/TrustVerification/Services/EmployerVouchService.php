@@ -14,7 +14,7 @@ final class EmployerVouchService
     private const ACTION_VERIFY = 'yardlii_tv_employer_verify';
     private const ACTION_REJECT = 'yardlii_tv_employer_reject';
 
-    // 5 Days in seconds (5 * 24 * 60 * 60)
+    // 5 Days in seconds
     private const EXPIRY_SECONDS = 432000; 
 
     public function __construct(private Mailer $mailer) {}
@@ -24,16 +24,14 @@ final class EmployerVouchService
      */
     public function initiateVouch(int $requestId, string $employerEmail, string $fName = '', string $lName = ''): bool
     {
-        // 1. Generate & Store Token + Timestamp
         $token = wp_generate_password(32, false);
         $hash = wp_hash($token . $requestId); 
         
         update_post_meta($requestId, self::META_TOKEN, $hash);
-        update_post_meta($requestId, self::META_TIMESTAMP, time()); // Store creation time
+        update_post_meta($requestId, self::META_TIMESTAMP, time());
         update_post_meta($requestId, self::META_EMPLOYER_EMAIL, sanitize_email($employerEmail));
         update_post_meta($requestId, '_vp_verification_type', 'employer_vouch');
 
-        // 2. Build Links (Approve & Reject)
         $baseLink = admin_url('admin-post.php');
         
         $verifyLink = add_query_arg([
@@ -48,16 +46,13 @@ final class EmployerVouchService
             'token'  => $token, 
         ], $baseLink);
 
-        // 3. Prepare Data for Email
         $employeeName = trim("$fName $lName");
         if (!$employeeName) {
             $employeeName = 'An applicant'; 
         }
 
-        // 4. Build Email Content (As requested)
         $subject = sprintf('Quick check: Does %s work for you?', $employeeName);
         
-        // Inline styling for buttons
         $btnStyleYes = 'background-color:#28a745;color:#ffffff;padding:12px 24px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block;margin-right:15px;';
         $btnStyleNo  = 'background-color:#dc3545;color:#ffffff;padding:12px 24px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block;';
 
@@ -72,7 +67,7 @@ final class EmployerVouchService
             </p>
             <p><em>Note: This link expires in 5 days.</em></p>
             <p>Thanks,<br>The Yardlii.com Team</p>',
-            esc_html($employerEmail), // Using email as name per request
+            esc_html($employerEmail), 
             esc_html($employeeName),
             esc_url($verifyLink), $btnStyleYes,
             esc_url($rejectLink), $btnStyleNo
@@ -83,11 +78,6 @@ final class EmployerVouchService
         ]);
     }
 
-    /**
-     * Validates the token and checks expiry.
-     * Returns: true (valid), false (invalid), or throws Exception for expiry? 
-     * To keep it simple, we return distinct strings or handle validation inside logic.
-     */
     public function validateToken(int $requestId, string $token): string
     {
         $storedHash = get_post_meta($requestId, self::META_TOKEN, true);
@@ -97,7 +87,6 @@ final class EmployerVouchService
             return 'invalid';
         }
 
-        // Check Expiry
         $generatedAt = (int) get_post_meta($requestId, self::META_TIMESTAMP, true);
         if (time() - $generatedAt > self::EXPIRY_SECONDS) {
             return 'expired';

@@ -22,10 +22,15 @@ final class WPUF implements ProviderInterface {
             'event'    => current_filter(),
         ];
 
-        // NEW: Conditional Request Logic
-        // Check for a specific field key.
         if (!empty($_POST['yardlii_employer_email'])) {
             $context['employer_email'] = sanitize_email($_POST['yardlii_employer_email']);
+        }
+
+        if (!empty($_POST['first_name'])) {
+            $context['first_name'] = sanitize_text_field($_POST['first_name']);
+        }
+        if (!empty($_POST['last_name'])) {
+            $context['last_name'] = sanitize_text_field($_POST['last_name']);
         }
 
         \Yardlii\Core\Features\TrustVerification\Requests\Guards::maybeCreateRequest(

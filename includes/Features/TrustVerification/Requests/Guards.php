@@ -67,9 +67,7 @@ final class Guards
                 'event'       => (string)($context['event'] ?? ''),
             ]);
             
-            // FIX: Ensure vouch logic runs for existing pending requests too
             self::handleVouching($existing, $context); 
-            
             self::notifyAdmins($existing, $user_id, $form_id);
             return $existing;
         }
@@ -104,9 +102,7 @@ final class Guards
                 'event'       => (string)($context['event'] ?? ''),
             ]);
 
-            // FIX: Ensure vouch logic runs for reused requests
             self::handleVouching($request_id, $context);
-
             self::notifyAdmins($request_id, $user_id, $form_id);
             return $request_id;
         }
@@ -133,15 +129,15 @@ final class Guards
             'event'    => (string)($context['event'] ?? ''),
         ]);
 
-        // FIX: Ensure vouch logic runs for new requests
         self::handleVouching((int)$request_id, $context);
-
         self::notifyAdmins($request_id, $user_id, $form_id);
         return (int) $request_id;
     }
 
     /**
      * Helper: Trigger Employer Vouch if context data is present.
+     * * @param int $request_id
+     * @param array<string, mixed> $context
      */
     private static function handleVouching(int $request_id, array $context): void
     {
@@ -150,10 +146,11 @@ final class Guards
                 $mailer = new \Yardlii\Core\Features\TrustVerification\Emails\Mailer();
                 $service = new \Yardlii\Core\Features\TrustVerification\Services\EmployerVouchService($mailer);
                 
-                // Generate token and send email
-                $service->initiateVouch($request_id, $context['employer_email']);
+                $fName = (string)($context['first_name'] ?? '');
+                $lName = (string)($context['last_name'] ?? '');
+
+                $service->initiateVouch($request_id, (string)$context['employer_email'], $fName, $lName);
                 
-                // Log it
                 Meta::appendLog($request_id, 'vouch_email_sent', 0, ['to' => $context['employer_email']]);
             }
         }

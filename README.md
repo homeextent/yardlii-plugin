@@ -30,6 +30,13 @@ It powers all major YARDLII components through a clean, extensible architecture 
 
 ## 📦 Changelog
 
+## 3.7.7
+* **Fix**: Resolved WYSIWYG editor loading issues in Trust & Verification configuration (added missing dependencies and classes).
+* **Fix**: Corrected admin tab navigation to properly respect URL parameters and deep linking (e.g., from email notifications).
+* **Fix**: Fixed "stuck URL" issues where saving settings would redirect to the wrong tab.
+* **Fix**: Resolved JavaScript reference error preventing main tabs from switching.
+* **Feat**: Improved Trust & Verification admin notification emails with clearer subject lines and user details.
+
 ## 3.7.6
 * **Fix**: Corrected TvProviderRegistry to check for the correct interface (ProviderInterface), fixing a bug where WPUF and Elementor providers were not loading .
 * **Fix**: Patched a Fatal Error in the ElementorPro provider by replacing a non-existent function call (yardlii_debug_log) .

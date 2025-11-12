@@ -11,11 +11,24 @@ final class WPUF implements ProviderInterface {
         add_action('wpuf_update_profile', [$this, 'handle'], 10, 2);
         add_action('wpuf_after_register', [$this, 'handle'], 10, 2);
     }
-    public function handle(int $user_id, $form_id): void {
-        \Yardlii\Core\Features\TrustVerification\Requests\Guards::maybeCreateRequest($user_id, (string) $form_id, [
-            'provider' => 'wpuf',
-            'event'    => current_filter(),
-        ]);
+    // In includes/Features/TrustVerification/Providers/WPUF.php
+
+public function handle(int $user_id, $form_id): void {
+    $context = [
+        'provider' => 'wpuf',
+        'event'    => current_filter(),
+    ];
+
+    // NEW: Conditional Request Logic
+    // Check for a specific field key. You might want to make this configurable later.
+    if (!empty($_POST['yardlii_employer_email'])) {
+        $context['employer_email'] = sanitize_email($_POST['yardlii_employer_email']);
     }
+
+    \Yardlii\Core\Features\TrustVerification\Requests\Guards::maybeCreateRequest(
+        $user_id, 
+        (string) $form_id, 
+        $context // Pass the expanded context
+    );
 }
 

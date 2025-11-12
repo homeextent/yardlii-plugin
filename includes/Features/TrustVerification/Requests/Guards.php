@@ -154,6 +154,22 @@ final class Guards
             'post_title' => sprintf('Request #%d — %s', $request_id, $user->display_name ?: $user->user_login),
         ]);
 
+
+
+// NEW: Employer Vouch Trigger
+if ($request_id && !empty($context['employer_email'])) {
+    if (class_exists('\Yardlii\Core\Features\TrustVerification\Services\EmployerVouchService')) {
+        $mailer = new \Yardlii\Core\Features\TrustVerification\Emails\Mailer();
+        $service = new \Yardlii\Core\Features\TrustVerification\Services\EmployerVouchService($mailer);
+        $service->initiateVouch($request_id, $context['employer_email']);
+        
+        // Optional: Add a log entry explicitly stating we sent the email
+        Meta::appendLog($request_id, 'vouch_email_sent', 0, ['to' => $context['employer_email']]);
+    }
+}
+
+
+
         self::notifyAdmins($request_id, $user_id, $form_id);
         return (int) $request_id;
     }

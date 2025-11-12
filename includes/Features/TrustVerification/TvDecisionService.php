@@ -45,11 +45,12 @@ final class TvDecisionService
             return false;
         }
 
-        $user_id = (int) get_post_meta($request_id, '_vp_user_id', true); // [cite: 1105]
-        $form_id = (string) get_post_meta($request_id, '_vp_form_id', true); // [cite: 1106]
-        $status = (string) $post->post_status; // [cite: 1107]
-        $by = get_current_user_id(); // [cite: 1111]
-        $now = gmdate('c'); // [cite: 1110]
+        $user_id = (int) get_post_meta($request_id, '_vp_user_id', true); // 
+        $form_id = (string) get_post_meta($request_id, '_vp_form_id', true); //
+        $status = (string) $post->post_status; // 
+        $by = get_current_user_id(); // 
+        $now = gmdate('c'); // 
+        $by = isset($opts['actor_id']) ? (int) $opts['actor_id'] : get_current_user_id();
 
         // Load config
         $cfg = $this->loadConfigForForm($form_id); // [cite: 1109]

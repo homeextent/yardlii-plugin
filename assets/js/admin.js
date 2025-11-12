@@ -23,6 +23,16 @@ jQuery(document).ready(function ($) {
     }
   }
 
+  function getUrlParam(name) {
+    try {
+      const params = new URL(window.location.href).searchParams;
+      return params.get(name) || '';
+    } catch (e) {
+      return ''; // Fallback
+    }
+  }
+  // -------------------------------
+
   /* === YARDLII: User Sync Dynamic Rows & Preview === */
 
   // Add new row

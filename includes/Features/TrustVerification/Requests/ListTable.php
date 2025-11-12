@@ -311,22 +311,36 @@ final class ListTable extends \WP_List_Table
         $status   = sanitize_key($_REQUEST['post_status'] ?? '');
         $search   = sanitize_text_field($_REQUEST['s'] ?? '');
 
-        $statuses    = ['vp_pending','vp_approved','vp_rejected'];
+        $statuses    = ['vp_pending', 'vp_approved', 'vp_rejected'];
         $post_status = in_array($status, $statuses, true) ? [$status] : $statuses;
 
         // === OPTIMIZATION: STEP 1 ===
         // Run the fast 'ids' query.
         $args = [
-            'post_type'              => CPT::POST_TYPE,
-            'post_status'            => $post_status,
-            'posts_per_page'         => $per_page,
-            'paged'                  => $paged,
-            's'                      => $search ?: null,
-            'fields'                 => 'ids', // Fast!
-            'no_found_rows'          => false,
+            'post_type'            => CPT::POST_TYPE,
+            'post_status'          => $post_status,
+            'posts_per_page'       => $per_page,
+            'paged'                => $paged,
+            's'                    => $search ?: null,
+            'fields'               => 'ids', // Fast!
+            'no_found_rows'        => false,
             'update_post_term_cache' => false,
             'update_post_meta_cache' => false, // We will handle this manually
         ];
+
+        // NEW: Handle the Employer Vouch filter
+        if (isset($_REQUEST['verification_type']) && $_REQUEST['verification_type'] === 'employer_vouch') {
+            $args['meta_query'] = [
+                [
+                    'key'     => '_vp_verification_type',
+                    'value'   => 'employer_vouch',
+                    'compare' => '='
+                ]
+            ];
+            // Reset status to 'any' if viewing this specific filter
+            // to show approved/rejected vouch requests as well.
+            $args['post_status'] = 'any'; 
+        }
 
         $q = new \WP_Query($args);
 
@@ -342,8 +356,8 @@ final class ListTable extends \WP_List_Table
             // === OPTIMIZATION: STEP 3 ===
             // Loop through IDs, pull from cache, and gather user IDs
             foreach ($q->posts as $post_id) {
-                $post    = get_post($post_id); // Pulls from cache
-                $user_id = (int) get_post_meta($post_id, '_vp_user_id', true); // Pulls from cache
+                $post     = get_post($post_id); // Pulls from cache
+                $user_id  = (int) get_post_meta($post_id, '_vp_user_id', true); // Pulls from cache
                 $admin_id = (int) get_post_meta($post_id, '_vp_processed_by', true); // Pulls from cache
 
                 // Add user IDs to our list to fetch
@@ -352,7 +366,7 @@ final class ListTable extends \WP_List_Table
 
                 $role_slug  = '—';
                 $role_label = '—';
-                $user_obj   = $user_id ? get_userdata($user_id) : null; // This is still N+1, but we'll fix it next
+                $user_obj   = $user_id ? get_userdata($user_id) : null; 
 
                 if ($user_obj && !empty($user_obj->roles)) {
                     $role_slug  = reset($user_obj->roles);
@@ -380,7 +394,6 @@ final class ListTable extends \WP_List_Table
 
             // === OPTIMIZATION: STEP 5 ===
             // Re-loop to fix user roles using the new cache
-            // This avoids the get_userdata() N+1 from Step 3
             foreach ($items as $index => $item) {
                 $user_obj = $this->get_cached_user((int) $item['_vp_user_id']);
                 if ($user_obj && !empty($user_obj->roles)) {
@@ -407,13 +420,13 @@ final class ListTable extends \WP_List_Table
         ]);
     }
 
-    /** Filter links (All / Pending / Approved / Rejected). */
+    /** Filter links (All / Pending / Approved / Rejected / Employer Vouch). */
     protected function get_views(): array
     {
-        $base  = remove_query_arg(['post_status','paged']);
+        $base  = remove_query_arg(['post_status', 'paged', 'verification_type']);
         $views = [];
 
-        $all_count    = $this->countByStatus(['vp_pending','vp_approved','vp_rejected']);
+        $all_count    = $this->countByStatus(['vp_pending', 'vp_approved', 'vp_rejected']);
         $views['all'] = $this->viewLink($base, '', __('All', 'yardlii-core'), $all_count);
 
         foreach ([
@@ -423,6 +436,24 @@ final class ListTable extends \WP_List_Table
         ] as $st => $label) {
             $views[$st] = $this->viewLink($base, $st, $label, $this->countByStatus([$st]));
         }
+
+        // NEW: Employer Filter
+        // We check if the current view is 'employer_vouch'
+        $current_type = $_REQUEST['verification_type'] ?? '';
+        $class        = ($current_type === 'employer_vouch') ? 'current' : '';
+        
+        // Construct link
+        $url = add_query_arg('verification_type', 'employer_vouch', $base);
+        $url = remove_query_arg('post_status', $url); // Clear status constraint for this view
+
+        // (Optional) Count query for this view - usually expensive, simplified here:
+        // You can leave count blank or run a meta query if needed.
+        $views['employer'] = sprintf(
+            '<a href="%s" class="%s">%s</a>',
+            esc_url($url),
+            $class,
+            esc_html__('Employer Vouch', 'yardlii-core')
+        );
 
         return $views;
     }

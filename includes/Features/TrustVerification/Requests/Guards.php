@@ -11,24 +11,17 @@ use Yardlii\Core\Features\TrustVerification\Settings\GlobalSettings;
 /**
  * Submission Guards:
  * - Exposes a unified static API: maybeCreateRequest($user_id, $form_id, $context = []) -> int post_id|0
- * - (Optional) legacy WPUF hooks can be enabled via filter 'yardlii_tv_enable_legacy_wpuf_hooks'
  */
 final class Guards
 {
-    /**
-     * Register legacy direct hooks (disabled by default).
-     * Providers should call maybeCreateRequest() directly.
-     */
     public function register(): void
     {
         if (apply_filters('yardlii_tv_enable_legacy_wpuf_hooks', false)) {
-            // WPUF profile + register flows: ($user_id, $form_id)
             add_action('wpuf_update_profile', [self::class, 'legacyWPUFHandler'], 10, 2);
             add_action('wpuf_after_register', [self::class, 'legacyWPUFHandler'], 10, 2);
         }
     }
 
-    /** Legacy adapter for direct WPUF hooks */
     public static function legacyWPUFHandler(int $user_id, $form_id): void
     {
         $form_id = (string) $form_id;
@@ -38,14 +31,6 @@ final class Guards
         ]);
     }
 
-    /**
-     * Create or reuse a verification request for a given user+form.
-     * Returns request post ID, or 0 on no-op/failure.
-     *
-     * @param int    $user_id
-     * @param string $form_id
-     * @param array  $context  e.g. ['provider'=>'wpuf','event'=>'post_insert','extra'=>[]]
-     */
     public static function maybeCreateRequest(int $user_id, string $form_id, array $context = []): int
     {
         $user_id = absint($user_id);
@@ -68,7 +53,7 @@ final class Guards
 
         $approved_role = sanitize_key($cfg['approved_role'] ?? '');
         if ($approved_role && in_array($approved_role, (array) $user->roles, true)) {
-            return 0; // already at the target role for this step
+            return 0; // already at the target role
         }
 
         // 3a) de-dupe: existing pending for (user_id, form_id)?
@@ -81,6 +66,10 @@ final class Guards
                 'provider'    => (string)($context['provider'] ?? ''),
                 'event'       => (string)($context['event'] ?? ''),
             ]);
+            
+            // FIX: Ensure vouch logic runs for existing pending requests too
+            self::handleVouching($existing, $context); 
+            
             self::notifyAdmins($existing, $user_id, $form_id);
             return $existing;
         }
@@ -115,6 +104,9 @@ final class Guards
                 'event'       => (string)($context['event'] ?? ''),
             ]);
 
+            // FIX: Ensure vouch logic runs for reused requests
+            self::handleVouching($request_id, $context);
+
             self::notifyAdmins($request_id, $user_id, $form_id);
             return $request_id;
         }
@@ -141,33 +133,40 @@ final class Guards
             'event'    => (string)($context['event'] ?? ''),
         ]);
 
-        wp_update_post([
-            'ID'         => $request_id,
-            'post_title' => sprintf('Request #%d — %s', $request_id, $user->display_name ?: $user->user_login),
-        ]);
+        // FIX: Ensure vouch logic runs for new requests
+        self::handleVouching((int)$request_id, $context);
 
-        // NEW: Employer Vouch Trigger
-        // Removed redundant checks because $request_id is guaranteed valid here
+        self::notifyAdmins($request_id, $user_id, $form_id);
+        return (int) $request_id;
+    }
+
+    /**
+     * Helper: Trigger Employer Vouch if context data is present.
+     */
+    private static function handleVouching(int $request_id, array $context): void
+    {
         if (!empty($context['employer_email'])) {
             if (class_exists('\Yardlii\Core\Features\TrustVerification\Services\EmployerVouchService')) {
                 $mailer = new \Yardlii\Core\Features\TrustVerification\Emails\Mailer();
                 $service = new \Yardlii\Core\Features\TrustVerification\Services\EmployerVouchService($mailer);
-                $service->initiateVouch($request_id, $context['employer_email']);
                 
-                // Optional: Add a log entry explicitly stating we sent the email
+                // Prepare names (fallback to "An applicant" if missing)
+                $fName = $context['first_name'] ?? '';
+                $lName = $context['last_name'] ?? '';
+
+                // Generate token and send email
+                $service->initiateVouch($request_id, $context['employer_email'], $fName, $lName);
+                
+                // Log it
                 Meta::appendLog($request_id, 'vouch_email_sent', 0, ['to' => $context['employer_email']]);
             }
         }
-
-        self::notifyAdmins($request_id, $user_id, $form_id);
-        return (int) $request_id;
     }
 
     /* =========================
      * Helpers (static)
      * =======================*/
 
-    /** Find existing pending for (user_id, form_id). */
     private static function findPendingByUserAndForm(int $user_id, string $form_id): int
     {
         $q = new WP_Query([
@@ -185,7 +184,6 @@ final class Guards
         return $q->have_posts() ? (int) $q->posts[0] : 0;
     }
 
-    /** Find most recent request for a user (any status). */
     private static function findLatestByUser(int $user_id): int
     {
         $posts = get_posts([
@@ -202,7 +200,6 @@ final class Guards
         return !empty($posts) ? (int) $posts[0] : 0;
     }
 
-    /** Find saved config row for a given form_id. */
     private static function loadConfigForForm(string $form_id): ?array
     {
         $configs = (array) get_option(TVFormConfigs::OPT_KEY, []);
@@ -214,7 +211,6 @@ final class Guards
         return null;
     }
 
-    /** Notify admins when a request is created/reused/reopened. */
     private static function notifyAdmins(int $request_id, int $user_id, string $form_id): void
     {
         $raw = (string) get_option(GlobalSettings::OPT_EMAILS, '');

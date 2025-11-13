@@ -12,8 +12,48 @@ final class WPUF implements ProviderInterface {
     }
 
     public function registerHooks(): void {
+        // Process submission (Success)
         add_action('wpuf_update_profile', [$this, 'handle'], 10, 2);
         add_action('wpuf_after_register', [$this, 'handle'], 10, 2);
+
+        // Validate submission (Prevent Errors)
+        add_filter('wpuf_form_validation_error', [$this, 'validateSubmission'], 10, 3);
+    }
+
+    /**
+     * Stops form submission if the employer email matches the applicant's email.
+     *
+     * @param array<mixed> $errors
+     * @param array<mixed> $config
+     * @param int|string   $form_id
+     * @return array<mixed>
+     */
+    public function validateSubmission(array $errors, array $config, $form_id): array {
+        // Check if the specific field exists in this submission
+        if (empty($_POST['yardlii_employer_email'])) {
+            return $errors;
+        }
+
+        $employer_email = sanitize_email($_POST['yardlii_employer_email']);
+        $applicant_email = '';
+
+        // Scenario A: Logged-in User (Profile Edit)
+        if (is_user_logged_in()) {
+            $u = wp_get_current_user();
+            $applicant_email = $u->user_email;
+        } 
+        // Scenario B: New User (Registration) - email is in $_POST
+        elseif (isset($_POST['user_email'])) {
+            $applicant_email = sanitize_email($_POST['user_email']);
+        }
+
+        // Compare emails (Case-insensitive)
+        if ($applicant_email && strcasecmp($applicant_email, $employer_email) === 0) {
+            // Add error message to WPUF error stack
+            $errors[] = __('You cannot use your own email address for employer verification. Please provide a different email.', 'yardlii-core');
+        }
+
+        return $errors;
     }
 
     public function handle(int $user_id, $form_id): void {
@@ -25,11 +65,9 @@ final class WPUF implements ProviderInterface {
         if (!empty($_POST['yardlii_employer_email'])) {
             $submitted_email = sanitize_email($_POST['yardlii_employer_email']);
             
-            // SECURITY: Prevent Self-Vouching
-            // Get the applicant's registered email address
+            // Failsafe: Double-check even if validation passed
             $applicant = get_userdata($user_id);
             
-            // Only proceed if the emails do NOT match (case-insensitive)
             if ($applicant && strcasecmp($applicant->user_email, $submitted_email) !== 0) {
                 $context['employer_email'] = $submitted_email;
             }

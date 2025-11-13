@@ -22,8 +22,12 @@ final class WPUF implements ProviderInterface {
 
     /**
      * Stops form submission if the employer email matches the applicant's email.
+     * * @param array<mixed> $errors
+     * @param array<mixed> $config
+     * @param int|string   $form_id
+     * @return array<mixed>
      */
-    public function validateSubmission($errors, $config, $form_id) {
+    public function validateSubmission(array $errors, array $config, $form_id): array {
         // Check if the specific field exists in this submission
         if (empty($_POST['yardlii_employer_email'])) {
             return $errors;

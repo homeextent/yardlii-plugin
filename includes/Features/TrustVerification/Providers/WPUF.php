@@ -23,7 +23,16 @@ final class WPUF implements ProviderInterface {
         ];
 
         if (!empty($_POST['yardlii_employer_email'])) {
-            $context['employer_email'] = sanitize_email($_POST['yardlii_employer_email']);
+            $submitted_email = sanitize_email($_POST['yardlii_employer_email']);
+            
+            // SECURITY: Prevent Self-Vouching
+            // Get the applicant's registered email address
+            $applicant = get_userdata($user_id);
+            
+            // Only proceed if the emails do NOT match (case-insensitive)
+            if ($applicant && strcasecmp($applicant->user_email, $submitted_email) !== 0) {
+                $context['employer_email'] = $submitted_email;
+            }
         }
 
         if (!empty($_POST['first_name'])) {

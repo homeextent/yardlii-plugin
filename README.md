@@ -130,6 +130,14 @@ The Role Control tab remains visible but is locked (read-only). No Submit Access
 
 ## **📦 Changelog**
 
+### 3.8.0
+* **Feat**: Introduced "Employer Vouch" workflow: Applicants can now verify via an external employer email field in WPUF forms.
+* **Feat**: Added secure public verification portal for employers to Approve/Reject requests without logging in (token-based, 5-day expiry).
+* **UI**: Enhanced Requests table with a dedicated "Employer Vouch" filter (with counts) and specific status icons.
+* **UI**: Updated "Processed By" column to indicate when a request was auto-approved by an Employer/System.
+* **Logic**: Suppressed standard Admin notification emails when the Employer Vouch flow is triggered to reduce inbox clutter.
+* **Dev**: Added `EmployerVouchService` and `EmployerVerificationHandler` classes.
+
 ### **3.7.7**
 
 * **Fix**: Resolved WYSIWYG editor loading issues in Trust & Verification configuration (added missing dependencies and classes).  

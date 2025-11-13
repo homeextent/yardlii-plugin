@@ -22,7 +22,8 @@ final class WPUF implements ProviderInterface {
 
     /**
      * Stops form submission if the employer email matches the applicant's email.
-     * * @param array<mixed> $errors
+     *
+     * @param array<mixed> $errors
      * @param array<mixed> $config
      * @param int|string   $form_id
      * @return array<mixed>

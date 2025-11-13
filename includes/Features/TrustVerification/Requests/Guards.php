@@ -67,8 +67,12 @@ final class Guards
                 'event'       => (string)($context['event'] ?? ''),
             ]);
             
-            self::handleVouching($existing, $context); 
-            self::notifyAdmins($existing, $user_id, $form_id);
+            // CHANGE: Capture result and conditionally notify
+            $vouched = self::handleVouching($existing, $context); 
+            
+            if (!$vouched) {
+                self::notifyAdmins($existing, $user_id, $form_id);
+            }
             return $existing;
         }
 
@@ -102,8 +106,12 @@ final class Guards
                 'event'       => (string)($context['event'] ?? ''),
             ]);
 
-            self::handleVouching($request_id, $context);
-            self::notifyAdmins($request_id, $user_id, $form_id);
+            // CHANGE: Capture result and conditionally notify
+            $vouched = self::handleVouching($request_id, $context);
+
+            if (!$vouched) {
+                self::notifyAdmins($request_id, $user_id, $form_id);
+            }
             return $request_id;
         }
 
@@ -129,17 +137,27 @@ final class Guards
             'event'    => (string)($context['event'] ?? ''),
         ]);
 
-        self::handleVouching((int)$request_id, $context);
-        self::notifyAdmins($request_id, $user_id, $form_id);
+        wp_update_post([
+            'ID'         => $request_id,
+            'post_title' => sprintf('Request #%d — %s', $request_id, $user->display_name ?: $user->user_login),
+        ]);
+
+        // CHANGE: Capture result and conditionally notify
+        $vouched = self::handleVouching((int)$request_id, $context);
+
+        if (!$vouched) {
+            self::notifyAdmins($request_id, $user_id, $form_id);
+        }
         return (int) $request_id;
     }
 
     /**
      * Helper: Trigger Employer Vouch if context data is present.
+     * Returns true if vouching was initiated.
      * * @param int $request_id
      * @param array<string, mixed> $context
      */
-    private static function handleVouching(int $request_id, array $context): void
+    private static function handleVouching(int $request_id, array $context): bool
     {
         if (!empty($context['employer_email'])) {
             if (class_exists('\Yardlii\Core\Features\TrustVerification\Services\EmployerVouchService')) {
@@ -152,8 +170,12 @@ final class Guards
                 $service->initiateVouch($request_id, (string)$context['employer_email'], $fName, $lName);
                 
                 Meta::appendLog($request_id, 'vouch_email_sent', 0, ['to' => $context['employer_email']]);
+                
+                // Return true to indicate we handled the notification flow via vouching
+                return true; 
             }
         }
+        return false;
     }
 
     /* =========================

@@ -156,10 +156,26 @@ final class ListTable extends \WP_List_Table
 
             case 'processed_by': {
                 $by = (int) ($item['_vp_processed_by'] ?? 0);
-                if (! $by) return '—';
-                // Get admin from our pre-fetched cache
-                $u = $this->get_cached_user($by);
-                return $u ? esc_html($u->display_name ?: $u->user_login) : '—';
+                
+                // 1. If a specific admin ID is stored (Manual Admin Action), show them
+                if ($by > 0) {
+                    $u = $this->get_cached_user($by);
+                    return $u ? esc_html($u->display_name ?: $u->user_login) : '—';
+                }
+
+                // 2. NEW: If processed by System (ID 0) via Employer Vouch
+                // We check if the type is employer_vouch AND status is not pending
+                $verif_type = get_post_meta((int) $item['ID'], '_vp_verification_type', true);
+                $st = (string) $item['_post_status'];
+
+                if ($verif_type === 'employer_vouch' && $st !== 'vp_pending') {
+                    return sprintf(
+                        '<span style="color:#555; font-style:italic;">%s</span>', 
+                        esc_html__('Employer', 'yardlii-core')
+                    );
+                }
+
+                return '—';
             }
 
             case 'processed_date': {
@@ -437,22 +453,22 @@ final class ListTable extends \WP_List_Table
             $views[$st] = $this->viewLink($base, $st, $label, $this->countByStatus([$st]));
         }
 
-        // NEW: Employer Filter
-        // We check if the current view is 'employer_vouch'
+        // NEW: Employer Filter with Count
         $current_type = $_REQUEST['verification_type'] ?? '';
         $class        = ($current_type === 'employer_vouch') ? 'current' : '';
         
-        // Construct link
         $url = add_query_arg('verification_type', 'employer_vouch', $base);
-        $url = remove_query_arg('post_status', $url); // Clear status constraint for this view
+        $url = remove_query_arg('post_status', $url); 
 
-        // (Optional) Count query for this view - usually expensive, simplified here:
-        // You can leave count blank or run a meta query if needed.
+        // Calculate Count for Employer Vouch (Any Status)
+        $emp_count = $this->countByMeta('_vp_verification_type', 'employer_vouch');
+
         $views['employer'] = sprintf(
-            '<a href="%s" class="%s">%s</a>',
+            '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
             esc_url($url),
             $class,
-            esc_html__('Employer Vouch', 'yardlii-core')
+            esc_html__('Employer Vouch', 'yardlii-core'),
+            $emp_count
         );
 
         return $views;
@@ -534,6 +550,25 @@ final class ListTable extends \WP_List_Table
         foreach ($users as $user) {
             $this->user_cache[$user->ID] = $user;
         }
+    }
+    /** Count requests by meta key/value (ignoring status). */
+    private function countByMeta(string $key, string $value): int
+    {
+        $q = new \WP_Query([
+            'post_type'      => CPT::POST_TYPE,
+            'post_status'    => 'any',
+            'fields'         => 'ids',
+            'posts_per_page' => 1,
+            'no_found_rows'  => false, // Ensure found_posts is calculated
+            'meta_query'     => [
+                [
+                    'key'     => $key,
+                    'value'   => $value,
+                    'compare' => '='
+                ]
+            ]
+        ]);
+        return (int) $q->found_posts;
     }
 
     /**

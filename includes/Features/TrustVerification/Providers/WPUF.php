@@ -22,10 +22,10 @@ final class WPUF implements ProviderInterface
 
         // Validation Hooks (New)
         
-        // Scenario B: Registration (WP_Error is valid here)
+        // Scenario B: Registration (Filter: returns WP_Error)
         add_filter('wpuf_process_registration_errors', [$this, 'validateRegistration'], 10, 3);
         
-        // Scenario A: Profile Update (Must use Action + JSON response to avoid fatal error)
+        // Scenario A: Profile Update (Action: exits with JSON error)
         add_action('wpuf_before_user_update', [$this, 'validateProfileUpdate'], 10, 3);
     }
 
@@ -104,4 +104,18 @@ final class WPUF implements ProviderInterface
             $context['employer_email'] = sanitize_email(wp_unslash($_POST['yardlii_employer_email']));
         }
 
-        if (!empty($_POST['first_name']))
+        if (!empty($_POST['first_name'])) {
+            $context['first_name'] = sanitize_text_field(wp_unslash($_POST['first_name']));
+        }
+
+        if (!empty($_POST['last_name'])) {
+            $context['last_name'] = sanitize_text_field(wp_unslash($_POST['last_name']));
+        }
+
+        Guards::maybeCreateRequest(
+            $user_id,
+            (string) $form_id,
+            $context
+        );
+    }
+}

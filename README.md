@@ -130,6 +130,9 @@ The Role Control tab remains visible but is locked (read-only). No Submit Access
 
 ## **📦 Changelog**
 
+### **3.9.1**
+* **Fix**: Updated CSS selectors for "Card Layout" and "Modern Uploader" to support WPUF Pro's Multistep forms and dynamic ID structures.
+
 ### **3.9.0**
 * **Feat**: Introduced "Card-Style Layout" for WPUF forms. Fields are visually grouped into modern cards based on "Section Break" fields.
 * **Feat**: Added "Modern Uploader" skin. Transforms standard upload buttons into a professional "Dropzone" style with drag-and-drop visual cues.

@@ -210,6 +210,11 @@ final class SettingsPageTabs
             'sanitize_callback' => 'rest_sanitize_boolean',
             'default'           => false,
         ]);
+        // WPUF: Modern Uploader Skin
+        register_setting(self::GROUP_GENERAL, 'yardlii_wpuf_modern_uploader', [
+            'sanitize_callback' => 'rest_sanitize_boolean',
+            'default'           => false,
+        ]);
 
         // Role Control (main group)
         $this->register_role_control_settings();

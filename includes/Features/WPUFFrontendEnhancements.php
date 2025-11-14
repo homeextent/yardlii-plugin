@@ -72,6 +72,16 @@ class WPUFFrontendEnhancements {
                 '1.0.0'
             );
 
+         // 4. Feature: Modern Uploader Skin
+        if (get_option('yardlii_wpuf_modern_uploader', false)) {
+            wp_enqueue_style(
+                'yardlii-wpuf-uploader',
+                plugins_url('/assets/css/yardlii-wpuf-uploader.css', YARDLII_CORE_FILE),
+                ['dashicons'], // Dependency: We use Dashicons for the cloud icon
+                '1.0.0'
+            );
+        }
+
             wp_enqueue_script(
                 'yardlii-wpuf-cards',
                 plugins_url('/assets/js/yardlii-wpuf-cards.js', YARDLII_CORE_FILE),

@@ -1,0 +1,77 @@
+/**
+ * Yardlii Modern Uploader Skin for WPUF
+ * Transforms the standard button into a drag-and-drop zone.
+ */
+
+/* Container Styling */
+.wpuf-form-add .wpuf-fields .wpuf-image-upload-container,
+.wpuf-form-add .wpuf-fields .wpuf-file-upload-container {
+    border: 2px dashed #cbd5e1; /* Slate 300 */
+    background: #f8fafc;        /* Slate 50 */
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: all 0.2s ease;
+    position: relative;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hover State */
+.wpuf-form-add .wpuf-fields .wpuf-image-upload-container:hover,
+.wpuf-form-add .wpuf-fields .wpuf-file-upload-container:hover {
+    border-color: #0A2240; /* Yardlii Blue */
+    background: #f1f5f9;   /* Slate 100 */
+    cursor: pointer;
+}
+
+/* Cloud Icon (Dashicons) */
+.wpuf-form-add .wpuf-fields .wpuf-image-upload-container::before,
+.wpuf-form-add .wpuf-fields .wpuf-file-upload-container::before {
+    content: '\f176'; /* dashicons-cloud-upload */
+    font-family: dashicons;
+    font-size: 48px;
+    height: 48px;
+    color: #94a3b8; /* Slate 400 */
+    display: block;
+    margin: 0 auto 15px;
+    line-height: 1;
+}
+
+/* Hover Icon Color */
+.wpuf-form-add .wpuf-fields .wpuf-image-upload-container:hover::before,
+.wpuf-form-add .wpuf-fields .wpuf-file-upload-container:hover::before {
+    color: #FF7A00; /* Action Orange */
+}
+
+/* The Actual Button/Link Text */
+.wpuf-form-add .wpuf-fields .wpuf-image-upload-container .wpuf-image-upload-btn,
+.wpuf-form-add .wpuf-fields .wpuf-file-upload-container .wpuf-file-upload-btn {
+    background: transparent !important;
+    color: #0A2240 !important;
+    box-shadow: none !important;
+    border: none !important;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    text-decoration: none;
+}
+
+/* Additional Helper Text */
+.wpuf-form-add .wpuf-fields .wpuf-image-upload-container .wpuf-image-upload-btn::after {
+    content: ' or drag photos here';
+    font-weight: 400;
+    color: #64748b;
+}
+
+/* Existing Image Preview Grid (Ensure it flows nicely below/inside) */
+.wpuf-form-add .wpuf-fields ul.wpuf-attachment-list {
+    margin-top: 20px;
+    width: 100%;
+    text-align: left;
+}

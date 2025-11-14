@@ -36,6 +36,12 @@
           Transforms long WPUF forms into grouped <strong>"Cards"</strong>.
           <br><em>(Requires "Section Break" fields in your form to define the groups).</em>
         </p>
+          <input type="checkbox" name="yardlii_wpuf_modern_uploader" value="1" <?php checked((bool)get_option('yardlii_wpuf_modern_uploader'), true); ?> />
+          <span class="yardlii-toggle-slider"></span>
+        </label>
+        <p class="description">
+          Reskins the standard upload button into a modern, dashed-border <strong>"Dropzone"</strong> area with a cloud icon.
+        </p>
           <input type="checkbox" name="yardlii_enable_wpuf_dropdown" value="1" <?php checked($dropdown_enabled, true); ?> />
           <span class="yardlii-toggle-slider"></span>
         </label>

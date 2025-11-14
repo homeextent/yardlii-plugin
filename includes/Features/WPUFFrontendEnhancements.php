@@ -23,14 +23,19 @@ class WPUFFrontendEnhancements {
     /**
      * Register the feature with WordPress hooks
      */
-    public function register() {
+    public function register(): void {
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
     }
 
     /**
      * Conditionally enqueue assets based on active features and target pages
      */
-    public function enqueue_assets() {
+    public function enqueue_assets(): void {
+
+        // PHPStan Guard: Ensure core constant is defined before using it in plugins_url
+        if (!defined('YARDLII_CORE_FILE')) {
+            return;
+        }
 
         // 1. Check Target Pages
         $raw_targets = get_option('yardlii_wpuf_target_pages', 'submit-a-post');
@@ -60,7 +65,6 @@ class WPUFFrontendEnhancements {
 
         // 3. Feature: Card-Style Layout
         if (get_option('yardlii_wpuf_card_layout', false)) {
-            // We will create these files in the next steps
             wp_enqueue_style(
                 'yardlii-wpuf-cards',
                 plugins_url('/assets/css/yardlii-wpuf-cards.css', YARDLII_CORE_FILE),

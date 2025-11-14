@@ -20,18 +20,17 @@ final class WPUF implements ProviderInterface
         add_action('wpuf_update_profile', [$this, 'handle'], 10, 2);
         add_action('wpuf_after_register', [$this, 'handle'], 10, 2);
 
-        // Validation Hooks (New)
+        // Validation Hooks
         
-        // Scenario B: Registration (Filter: returns WP_Error)
+        // Scenario B: Registration (Standard WP_Error return works here)
         add_filter('wpuf_process_registration_errors', [$this, 'validateRegistration'], 10, 3);
         
-        // Scenario A: Profile Update (Action: exits with JSON error)
-        add_action('wpuf_before_user_update', [$this, 'validateProfileUpdate'], 10, 3);
+        // Scenario A: Profile Update (We use the vars filter as a gateway check)
+        add_filter('wpuf_update_profile_vars', [$this, 'validateProfileUpdate'], 10, 3);
     }
 
     /**
      * Scenario B: Registration Validation
-     * Compares employer email to the submitted registration email.
      *
      * @param WP_Error             $errors
      * @param int                  $form_id
@@ -44,7 +43,6 @@ final class WPUF implements ProviderInterface
             return $errors;
         }
 
-        // Retrieve Applicant's email from POST (Registration scenario)
         $applicantEmail = isset($_POST['user_email']) ? sanitize_email(wp_unslash($_POST['user_email'])) : '';
         $employerEmail  = sanitize_email(wp_unslash($_POST['yardlii_employer_email']));
 
@@ -56,37 +54,39 @@ final class WPUF implements ProviderInterface
     }
 
     /**
-     * Scenario A: Profile Update Validation
-     * Compares employer email to the currently logged-in user's email.
+     * Scenario A: Profile Update Validation "Kill Switch"
+     * * We intercept the data preparation. If the user tries to self-vouch,
+     * we immediately kill the process and send a JSON error.
      *
-     * NOTE: We use wp_send_json_error() and exit because this runs inside WPUF's
-     * Ajax handler. Returning a WP_Error here would cause a type mismatch crash.
-     *
-     * @param int                  $user_id
+     * @param array<string, mixed> $userdata
      * @param int                  $form_id
      * @param array<string, mixed> $form_settings
-     * @return void
+     * @return array<string, mixed>
      */
-    public function validateProfileUpdate($user_id, $form_id, $form_settings)
+    public function validateProfileUpdate($userdata, $form_id, $form_settings)
     {
+        // 1. Check if our field is present
         if (empty($_POST['yardlii_employer_email'])) {
-            return;
+            return $userdata;
         }
 
-        // Retrieve Applicant's email from Current User (Logged-in scenario)
+        // 2. Compare Emails
         $currentUser   = wp_get_current_user();
         $employerEmail = sanitize_email(wp_unslash($_POST['yardlii_employer_email']));
 
-        // wp_get_current_user() always returns an object. Check user_email directly.
         if (!empty($currentUser->user_email) && strcasecmp($employerEmail, $currentUser->user_email) === 0) {
             $message = __('You cannot verify yourself. Please enter a valid employer email.', 'yardlii-core');
             
-            // Send JSON error compatible with WPUF frontend and stop execution
+            // 3. THE KILL SWITCH: Send JSON error and exit script immediately.
+            // This prevents WPUF from proceeding to wp_update_user().
             wp_send_json_error([
                 'success' => false,
                 'error'   => $message
             ]);
+            // wp_send_json_error() calls die(), so code execution stops here.
         }
+
+        return $userdata;
     }
 
     /**
@@ -99,7 +99,6 @@ final class WPUF implements ProviderInterface
             'event'    => current_filter(),
         ];
 
-        // Check if the employer email field exists in the submission
         if (!empty($_POST['yardlii_employer_email'])) {
             $context['employer_email'] = sanitize_email(wp_unslash($_POST['yardlii_employer_email']));
         }

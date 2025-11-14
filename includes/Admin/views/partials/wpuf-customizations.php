@@ -2,7 +2,8 @@
 /**
  * Yardlii Admin Settings → General Tab → WPUF Customisations
  * -----------------------------------------------------------
- * Adds a toggle for enabling/disabling the WPUF Enhanced Dropdown feature.
+ * Adds a toggle for enabling/disabling the WPUF Enhanced Dropdown feature
+ * and a configuration field for targeting specific pages.
  *
  * @since 1.0.0
  */
@@ -33,8 +34,25 @@
         </label>
         <p class="description">
           When enabled, replaces the default WPUF taxonomy select field (Group) with the
-          custom Yardlii Enhanced Dropdown interface on the <strong>Submit a Post</strong> form.
+          custom Yardlii Enhanced Dropdown interface.
         </p>
+
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+            <label for="yardlii_wpuf_target_pages" style="display:block; margin-bottom:5px;">
+                <strong><?php esc_html_e('Target Pages', 'yardlii-core'); ?></strong>
+            </label>
+            <input 
+                type="text" 
+                id="yardlii_wpuf_target_pages" 
+                name="yardlii_wpuf_target_pages" 
+                value="<?php echo esc_attr(get_option('yardlii_wpuf_target_pages', 'submit-a-post')); ?>" 
+                class="regular-text"
+                placeholder="e.g. submit-a-post, edit-listing, 123"
+            />
+            <p class="description" style="margin-top: 5px;">
+                <?php esc_html_e('Enter the Page Slugs or IDs where the Enhanced Dropdown should load (comma-separated).', 'yardlii-core'); ?>
+            </p>
+        </div>
       </td>
     </tr>
   </table>

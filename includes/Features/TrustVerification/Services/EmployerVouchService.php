@@ -51,6 +51,16 @@ final class EmployerVouchService
             $employeeName = 'An applicant'; 
         }
 
+        // 1. Construct the "Revoke" mailto link
+        $revokeSubject = rawurlencode(sprintf('Revoke Verification: %s', $employeeName));
+        $revokeBody    = rawurlencode(sprintf(
+            "Hello Yardlii Support,\n\nPlease revoke the verification for %s (Request #%d).\nThey are no longer employed by us.\n\nVerifier: %s",
+            $employeeName,
+            $requestId,
+            $employerEmail
+        ));
+        $revokeLink = sprintf('mailto:support@yardlii.com?subject=%s&body=%s', $revokeSubject, $revokeBody);
+
         $subject = sprintf('Quick check: Does %s work for you?', $employeeName);
         
         $btnStyleYes = 'background-color:#28a745;color:#ffffff;padding:12px 24px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block;margin-right:15px;';
@@ -65,12 +75,22 @@ final class EmployerVouchService
                 <a href="%s" style="%s">[ YES - Verify Them ]</a>
                 <a href="%s" style="%s">[ NO - I don\'t know them ]</a>
             </p>
-            <p><em>Note: This link expires in 5 days.</em></p>
+            <p><em>Note: This verification link expires in 5 days.</em></p>
+            
+            <hr style="border:0; border-top:1px solid #eee; margin: 20px 0;">
+            
+            <p style="font-size:12px; color:#666;">
+                <strong>Future Management:</strong><br>
+                If this employee leaves your company in the future, please 
+                <a href="%s" style="color:#666; text-decoration:underline;">email us to revoke their access</a>.
+            </p>
+            
             <p>Thanks,<br>The Yardlii.com Team</p>',
             esc_html($employerEmail), 
             esc_html($employeeName),
             esc_url($verifyLink), $btnStyleYes,
-            esc_url($rejectLink), $btnStyleNo
+            esc_url($rejectLink), $btnStyleNo,
+            esc_url($revokeLink) // New 7th argument
         );
 
         return $this->mailer->send($employerEmail, $subject, $body, [

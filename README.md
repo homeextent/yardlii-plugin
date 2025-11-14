@@ -130,6 +130,9 @@ The Role Control tab remains visible but is locked (read-only). No Submit Access
 
 ## **📦 Changelog**
 
+### **3.9.2**
+* **Fix**: Resolved an issue where "Card-Style Layout" was not applying to Single-Step WPUF forms due to DOM nesting structure.
+
 ### **3.9.1**
 * **Fix**: Updated CSS selectors for "Card Layout" and "Modern Uploader" to support WPUF Pro's Multistep forms and dynamic ID structures.
 

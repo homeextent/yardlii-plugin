@@ -130,6 +130,10 @@ The Role Control tab remains visible but is locked (read-only). No Submit Access
 
 ## **📦 Changelog**
 
+### **3.8.2**
+* **Feat**: Added configuration field to "WPUF Customisations" to target specific pages (by slug or ID) for the Enhanced Dropdown, replacing the hardcoded check.
+* **UI**: Integrated the new target page setting directly into the WPUF toggle row for better UX.
+
 ### **3.8.1**
 * **Security**: Implemented "Kill Switch" in WPUF provider to strictly prevent users from self-verifying using their own email address.
 * **Feat**: Added a "Revocation/Lifecycle" footer to Employer Vouch emails, allowing employers to request access removal via a pre-filled support email.

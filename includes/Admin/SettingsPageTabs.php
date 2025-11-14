@@ -205,6 +205,11 @@ final class SettingsPageTabs
             'sanitize_callback' => 'sanitize_text_field',
             'default'           => 'submit-a-post', // Keep current behavior as default
         ]);
+        // WPUF: Card Layout Toggle
+        register_setting(self::GROUP_GENERAL, 'yardlii_wpuf_card_layout', [
+            'sanitize_callback' => 'rest_sanitize_boolean',
+            'default'           => false,
+        ]);
 
         // Role Control (main group)
         $this->register_role_control_settings();

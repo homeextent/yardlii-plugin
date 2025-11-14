@@ -130,6 +130,12 @@ The Role Control tab remains visible but is locked (read-only). No Submit Access
 
 ## **📦 Changelog**
 
+### **3.9.0**
+* **Feat**: Introduced "Card-Style Layout" for WPUF forms. Fields are visually grouped into modern cards based on "Section Break" fields.
+* **Feat**: Added "Modern Uploader" skin. Transforms standard upload buttons into a professional "Dropzone" style with drag-and-drop visual cues.
+* **Refactor**: Renamed `WPUFEnhancedDropdown` to `WPUFFrontendEnhancements` to serve as a central controller for all WPUF visual improvements.
+* **UI**: Added toggles for Card Layout and Modern Uploader to the WPUF Customisations panel.
+
 ### **3.8.2**
 * **Feat**: Added configuration field to "WPUF Customisations" to target specific pages (by slug or ID) for the Enhanced Dropdown, replacing the hardcoded check.
 * **UI**: Integrated the new target page setting directly into the WPUF toggle row for better UX.

@@ -14,20 +14,31 @@ jQuery(document).ready(function($) {
             return; // EXIT SCRIPT
         }
 
-        // 2. STANDARD FORM LOGIC (For single-step forms)
-        var $allFields = $form.find('> li');
+        // 2. LOCATE FIELD LIST (Single Step)
+        // Fields are usually inside <ul class="wpuf-form">
+        var $mainList = $form.find('ul.wpuf-form');
         
-        // If no fields or no section breaks, don't run
+        // Fallback: If no UL found, try direct children (unlikely in standard WPUF but possible in custom themes)
+        var $allFields = $mainList.length ? $mainList.find('> li') : $form.find('> li');
+        
+        // If no fields found, don't run
         if ($allFields.length === 0) return;
 
         // Only run if there is at least one section break to define groups
-        if ($form.find('li.section_break').length === 0) {
-            // Optional: If you want single-step forms WITHOUT breaks to still be one big card:
-            $form.wrapInner('<div class="yardlii-form-cards-wrapper"><div class="yardlii-card"><ul class="wpuf-form"></ul></div></div>');
+        // OR if we want to wrap the whole form in one card for consistency
+        var hasSectionBreak = $form.find('li.section_break').length > 0 || $form.find('.wpuf-section-wrap').length > 0;
+        
+        if (!hasSectionBreak) {
+            // Optional: Wrap single-step forms WITHOUT breaks in one big card for consistency
+            if ($mainList.length) {
+                $mainList.wrap('<div class="yardlii-form-cards-wrapper"><div class="yardlii-card"></div></div>');
+            } else {
+                $form.wrapInner('<div class="yardlii-form-cards-wrapper"><div class="yardlii-card"><ul class="wpuf-form"></ul></div></div>');
+            }
             return;
         }
 
-        // Create a container
+        // 3. BUILD CARDS
         var $wrapper = $('<div class="yardlii-form-cards-wrapper"></div>');
         
         var $currentCard = null;
@@ -35,7 +46,7 @@ jQuery(document).ready(function($) {
 
         function createCard() {
             var $card = $('<div class="yardlii-card"></div>');
-            var $ul = $('<ul class="wpuf-form"></ul>'); 
+            var $ul = $('<ul class="wpuf-form form-label-above"></ul>'); 
             $card.append($ul);
             return { card: $card, list: $ul };
         }
@@ -49,24 +60,40 @@ jQuery(document).ready(function($) {
         $allFields.each(function() {
             var $field = $(this);
 
+            // Handle Submit Button (keep in flow or last card)
             if ($field.hasClass('wpuf-submit')) {
                 $currentList.append($field);
                 return;
             }
 
-            if ($field.hasClass('section_break')) {
+            // Check for Section Break (Class or internal structure)
+            var isBreak = $field.hasClass('section_break') || $field.find('.wpuf-section-title').length > 0;
+
+            if (isBreak) {
+                // Start new card
                 current = createCard();
                 $currentCard = current.card;
                 $currentList = current.list;
                 $wrapper.append($currentCard);
+                
+                // Add the header to the new card
                 $currentList.append($field);
+                // Ensure it has the class for CSS styling (fix for some WPUF versions using dynamic classes)
+                $field.addClass('section_break'); 
             } else {
                 $currentList.append($field);
             }
         });
 
-        $form.html($wrapper);
+        // 4. APPLY DOM CHANGES
+        // We replace the <ul> with our card wrapper, preserving surrounding form elements
+        if ($mainList.length) {
+            $mainList.replaceWith($wrapper);
+        } else {
+            $form.html($wrapper);
+        }
         
+        // Cleanup empty cards
         $wrapper.find('.yardlii-card').each(function() {
             if ($(this).find('li').length === 0) $(this).remove();
         });

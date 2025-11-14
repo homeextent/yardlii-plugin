@@ -100,9 +100,10 @@ final class Loader
             (new ACFUserSync())->register();
         }
 
-        // === WPUF Enhanced Dropdown (bold parent terms) ===
-        if ((bool) get_option('yardlii_enable_wpuf_dropdown', true) && class_exists(__NAMESPACE__ . '\\WPUFEnhancedDropdown')) {
-            (new WPUFEnhancedDropdown())->register();
+        // === WPUF Frontend Enhancements (Dropdown, Cards, etc.) ===
+        // We load the class unconditionally if it exists; the class itself checks flags.
+        if (class_exists(__NAMESPACE__ . '\\WPUFFrontendEnhancements')) {
+            (new WPUFFrontendEnhancements())->register();
         }
 
         // === Role Control (master + subfeatures) ===

@@ -12,7 +12,7 @@
  * - Smart resettable "Select Group" button
  * - Brand-aligned color palette (Trust Blue & Action Orange)
  * - Fully mobile responsive
- * - Clean integration into WPUF form #339 ("Submit a Post")
+ * - Configurable target pages via Admin Settings
  *
  * Location:
  * /includes/Features/WPUFEnhancedDropdown.php
@@ -41,8 +41,20 @@ class WPUFEnhancedDropdown {
      */
     public function enqueue_assets() {
 
-        // Load only on the "Submit a Post" page (WPUF form #339)
-        if (!is_page('submit-a-post')) {
+        // 1. Get configured pages (comma-separated slugs or IDs)
+        // Default to 'submit-a-post' to maintain backward compatibility
+        $raw_targets = get_option('yardlii_wpuf_target_pages', 'submit-a-post');
+
+        // 2. Parse into an array
+        $targets = array_filter(array_map('trim', explode(',', (string)$raw_targets)));
+
+        // 3. Safety check: If no pages configured, do not load
+        if (empty($targets)) {
+            return;
+        }
+
+        // 4. Check if current page matches any target
+        if (!is_page($targets)) {
             return;
         }
 

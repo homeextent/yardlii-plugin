@@ -200,6 +200,11 @@ final class SettingsPageTabs
         register_setting(self::GROUP_GENERAL, 'yardlii_enable_wpuf_dropdown', [
             'sanitize_callback' => self::success_notifier(self::GROUP_GENERAL, static fn($v)=>(bool) $v),
         ]);
+	// WPUF: Target Pages Configuration
+        register_setting(self::GROUP_GENERAL, 'yardlii_wpuf_target_pages', [
+            'sanitize_callback' => 'sanitize_text_field',
+            'default'           => 'submit-a-post', // Keep current behavior as default
+        ]);
 
         // Role Control (main group)
         $this->register_role_control_settings();

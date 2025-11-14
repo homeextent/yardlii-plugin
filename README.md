@@ -130,6 +130,11 @@ The Role Control tab remains visible but is locked (read-only). No Submit Access
 
 ## **📦 Changelog**
 
+### **3.8.1**
+* **Security**: Implemented "Kill Switch" in WPUF provider to strictly prevent users from self-verifying using their own email address.
+* **Feat**: Added a "Revocation/Lifecycle" footer to Employer Vouch emails, allowing employers to request access removal via a pre-filled support email.
+* **Fix**: Resolved PHPStan array type errors in Trust & Verification providers.
+
 ### 3.8.0
 * **Feat**: Introduced "Employer Vouch" workflow: Applicants can now verify via an external employer email field in WPUF forms.
 * **Feat**: Added secure public verification portal for employers to Approve/Reject requests without logging in (token-based, 5-day expiry).
@@ -227,3 +232,14 @@ The Role Control tab remains visible but is locked (read-only). No Submit Access
 * Added AJAX test \+ reset tools for Featured Image Automation.  
 * Improved Homepage Search with FacetWP binding.  
 * Added YARDLII-branded UI styling.
+
+## **🔮 Future Roadmap (Lifecycle Verification)**
+
+* **Automated Re-verification**: 
+  * Integration with Action Scheduler to query employers every 6 months to confirm the employee is still active.
+  * Logic to automatically demote users if the employer clicks "No" during re-verification.
+* **Employer Opt-Out**:
+  * Mechanism to store suppressed/blocked emails.
+  * "Unsubscribe" link in vouch emails to prevent future requests to that employer.
+* **Permanent Revocation UI**:
+  * A permanent interface for employers to revoke a previous approval without contacting support.

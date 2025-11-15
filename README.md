@@ -130,6 +130,16 @@ The Role Control tab remains visible but is locked (read-only). No Submit Access
 
 ## **📦 Changelog**
 
+### **3.10.0**
+* **Feat**: Added **Featured Listings Logic**.
+    * Synchronizes `is_featured_item` (ACF/Meta) with native WordPress Sticky status.
+    * Adds "Show Featured Only" filter to the Admin Listings table.
+    * Adds "Sticky" label visual indicator to the Admin Listings table.
+    * Adds `[yardlii_featured_badge]` shortcode for frontend display.
+    * Adds `featured_listings` Query ID for Elementor Loop Grids.
+* **UI**: Reorganized the **WPUF Customisations** panel into clear "Frontend Styling" and "Listing Logic" sections.
+* **Fix**: Resolved recursion memory leak in Featured Listings admin filter logic.
+
 ### **3.9.5**
 * **Fix**: Resolved layout issues in Multistep forms where buttons overlapped content. Added proper footer spacing and mobile stacking for navigation buttons.
 

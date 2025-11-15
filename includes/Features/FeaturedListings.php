@@ -47,16 +47,14 @@ class FeaturedListings {
 
         // 1. Try to get value from $_POST (most reliable during manual Update)
         if (isset($_POST['acf'])) {
-             // If ACF is present, we can't easily guess the key hash, 
-             // so we fall through to get_post_meta unless we want to parse $_POST recursively.
-             // Ideally, we rely on priority 20 (after ACF saves).
+             // If ACF is present, we rely on the meta falling through or being saved by priority 20.
         }
 
         // 2. Check the direct meta key in $_POST (WPUF usually sends this directly)
         if (isset($_POST[self::META_KEY])) {
             $val = $_POST[self::META_KEY];
         } else {
-            // 3. Fallback: Read from DB (ACF should have saved by priority 20)
+            // 3. Fallback: Read from DB
             $val = get_post_meta($post_id, self::META_KEY, true);
         }
 
@@ -75,6 +73,7 @@ class FeaturedListings {
      * WordPress usually only does this for standard 'post' types.
      *
      * @param array<string, string> $states
+     * @return array<string, string>
      */
     public function add_sticky_state(array $states, WP_Post $post): array {
         // Only affect our CPT
@@ -134,7 +133,7 @@ class FeaturedListings {
                 if (!empty($sticky_ids)) {
                     $query->set('post__in', $sticky_ids);
                 } else {
-                    $query->set('post__in', [0]); 
+                    $query->set('post__in', [0]); // Force empty result
                 }
             } elseif ($filter === 'no') {
                 if (!empty($sticky_ids)) {

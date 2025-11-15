@@ -192,3 +192,49 @@
         flex-basis: 100%;
     }
 }
+
+/* YARDLII Featured Badge - Option 1 (Action Orange) 
+  -------------------------------------------------
+  Brand Color: #FF7A00 (Action Orange)
+  Text Color: #FFFFFF (White)
+  Font: Inter (Semi-Bold, Uppercase)
+*/
+.yardlii-featured-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    
+    /* Visuals */
+    background-color: #FF7A00;
+    color: #FFFFFF;
+    border-radius: 4px;
+    
+    /* Typography */
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    
+    /* Spacing */
+    padding: 6px 10px;
+    vertical-align: middle;
+    
+    /* Subtle shadow to pop off image backgrounds */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* Icon Sizing */
+.yardlii-featured-badge svg.yardlii-badge-icon {
+    width: 12px;
+    height: auto;
+    display: block;
+    fill: currentColor; /* Inherits White from parent */
+}
+
+/* Optional: Hover State */
+.yardlii-featured-badge:hover {
+    background-color: #e66e00; /* Slightly darker orange */
+    cursor: default;
+}

@@ -10,7 +10,7 @@ use WP_Query;
  * Feature: Featured Listings Logic
  * --------------------------------
  * Unifies "Native Sticky" posts (WPUF) and "Meta Featured" posts (ACF).
- * Includes recursion guards to prevent memory exhaustion.
+ * Uses direct SQL for ID retrieval to prevent hook recursion and memory exhaustion.
  */
 class FeaturedListings {
 
@@ -50,31 +50,35 @@ class FeaturedListings {
 
     /**
      * Helper: Get ALL featured IDs (Sticky + Meta) for queries.
-     * Optimized to prevent memory bloat and recursion.
+     * Uses direct SQL to completely bypass WP_Query hooks and recursion risks.
      *
      * @return int[]
      */
     private function get_all_featured_ids(): array {
+        global $wpdb;
+
         // 1. Native Sticky IDs
         $sticky_ids = get_option('sticky_posts');
         if (!is_array($sticky_ids)) {
             $sticky_ids = [];
         }
 
-        // 2. Meta Featured IDs
-        // Optimization: Lightweight query, no cache, no filters to prevent recursion
-        $meta_ids = get_posts([
-            'post_type'              => 'listings',
-            'numberposts'            => -1,
-            'fields'                 => 'ids',
-            'meta_key'               => self::META_KEY,
-            'meta_value'             => '1',
-            'suppress_filters'       => true, // Stop external modification
-            'no_found_rows'          => true, // Performance
-            'update_post_meta_cache' => false, // Performance
-            'update_post_term_cache' => false, // Performance
-            'ignore_sticky_posts'    => true,
-        ]);
+        // 2. Meta Featured IDs (Direct SQL)
+        // We join posts table to ensure we only get IDs for our specific CPT that are published
+        $sql = $wpdb->prepare(
+            "SELECT p.ID 
+             FROM $wpdb->posts p
+             INNER JOIN $wpdb->postmeta pm ON p.ID = pm.post_id
+             WHERE p.post_type = %s 
+               AND p.post_status = 'publish'
+               AND pm.meta_key = %s 
+               AND pm.meta_value = '1'",
+            'listings',
+            self::META_KEY
+        );
+
+        // get_col returns array of strings, we map to int later
+        $meta_ids = $wpdb->get_col($sql); 
 
         if (!is_array($meta_ids)) {
             $meta_ids = [];
@@ -98,7 +102,6 @@ class FeaturedListings {
             return;
         }
 
-        // Check $_POST first for immediate responsiveness
         if (isset($_POST[self::META_KEY])) {
             $val = $_POST[self::META_KEY];
         } else {
@@ -115,7 +118,7 @@ class FeaturedListings {
     }
 
     /**
-     * Visual Fix: Add "Sticky" label if Sticky OR Meta is true.
+     * Visual Fix: Add "Sticky" label to the Admin List table for CPTs.
      *
      * @param array<string, string> $states
      * @return array<string, string>
@@ -156,12 +159,6 @@ class FeaturedListings {
      * Modify Admin Query based on filter
      */
     public function filter_admin_query(WP_Query $query): void {
-        // Recursion Guard: Stop infinite loop if get_posts triggers this hook again
-        static $is_running = false;
-        if ($is_running) {
-            return;
-        }
-
         global $pagenow;
         if ($pagenow !== 'edit.php' || !$query->is_main_query()) {
             return;
@@ -172,8 +169,7 @@ class FeaturedListings {
         }
 
         if (isset($_GET['yardlii_filter_featured']) && $_GET['yardlii_filter_featured'] !== '') {
-            $is_running = true; // Lock
-
+            // Now using safe SQL method
             $featured_ids = $this->get_all_featured_ids();
             $filter = sanitize_text_field((string) $_GET['yardlii_filter_featured']);
 
@@ -181,15 +177,13 @@ class FeaturedListings {
                 if (!empty($featured_ids)) {
                     $query->set('post__in', $featured_ids);
                 } else {
-                    $query->set('post__in', [0]); // Force empty result
+                    $query->set('post__in', [0]); 
                 }
             } elseif ($filter === 'no') {
                 if (!empty($featured_ids)) {
                     $query->set('post__not_in', $featured_ids);
                 }
             }
-
-            $is_running = false; // Unlock
         }
     }
 
@@ -198,7 +192,7 @@ class FeaturedListings {
      * ID: featured_listings
      */
     public function filter_elementor_query(WP_Query $query): void {
-        // Elementor loops can be nested, but get_all_featured_ids is safe now.
+        // Now using safe SQL method
         $featured_ids = $this->get_all_featured_ids();
 
         if (!empty($featured_ids)) {
@@ -207,13 +201,11 @@ class FeaturedListings {
             $query->set('post__in', [0]); 
         }
         
-        // Ensure strict inclusion logic by ignoring standard sticky injection
         $query->set('ignore_sticky_posts', true);
     }
 
     /**
      * Shortcode: [yardlii_featured_badge text="Featured" class="custom-class"]
-     * Only renders if the post is truly Sticky (Featured).
      *
      * @param array<string, mixed>|string $atts
      */

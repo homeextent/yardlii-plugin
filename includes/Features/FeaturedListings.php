@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace Yardlii\Core\Features;
+
+use WP_Post;
+use WP_Query;
 
 /**
  * Feature: Featured Listings Logic
@@ -29,16 +34,20 @@ class FeaturedListings {
     /**
      * Sync Logic: If meta is '1', make post Sticky. If '0', unstick.
      */
-    public function sync_sticky_status($post_id, $post, $update) {
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-        if (wp_is_post_revision($post_id)) return;
+    public function sync_sticky_status(int $post_id, WP_Post $post, bool $update): void {
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+        if (wp_is_post_revision($post_id)) {
+            return;
+        }
 
         // Check both $_POST (for form submission) and current meta state
         // We use get_post_meta to catch updates from WPUF, ACF, or Quick Edit
         $is_featured = get_post_meta($post_id, self::META_KEY, true);
 
         // If the meta is "1", force sticky. Otherwise unstick.
-        if ($is_featured == '1') {
+        if ($is_featured == '1') { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
             stick_post($post_id);
         } else {
             unstick_post($post_id);
@@ -48,10 +57,12 @@ class FeaturedListings {
     /**
      * Add dropdown filter to Admin List
      */
-    public function add_admin_filter($post_type) {
-        if ($post_type !== 'listings') return; 
+    public function add_admin_filter(string $post_type): void {
+        if ($post_type !== 'listings') {
+            return;
+        }
 
-        $current = isset($_GET['yardlii_filter_featured']) ? $_GET['yardlii_filter_featured'] : '';
+        $current = isset($_GET['yardlii_filter_featured']) ? sanitize_text_field((string) $_GET['yardlii_filter_featured']) : '';
         ?>
         <select name="yardlii_filter_featured">
             <option value=""><?php _e('All Listings', 'yardlii-core'); ?></option>
@@ -64,23 +75,32 @@ class FeaturedListings {
     /**
      * Modify Admin Query based on filter
      */
-    public function filter_admin_query($query) {
+    public function filter_admin_query(WP_Query $query): void {
         global $pagenow;
-        if ($pagenow !== 'edit.php' || !$query->is_main_query()) return;
-        if ($query->get('post_type') !== 'listings') return;
+        if ($pagenow !== 'edit.php' || !$query->is_main_query()) {
+            return;
+        }
+        
+        if ($query->get('post_type') !== 'listings') {
+            return;
+        }
 
         if (isset($_GET['yardlii_filter_featured']) && $_GET['yardlii_filter_featured'] !== '') {
             $sticky_posts = get_option('sticky_posts');
+            $filter = sanitize_text_field((string) $_GET['yardlii_filter_featured']);
             
-            if ($_GET['yardlii_filter_featured'] === 'yes') {
-                if (!empty($sticky_posts)) {
-                    $query->set('post__in', $sticky_posts);
+            // Ensure sticky_posts is an array before usage
+            $sticky_ids = is_array($sticky_posts) ? $sticky_posts : [];
+
+            if ($filter === 'yes') {
+                if (!empty($sticky_ids)) {
+                    $query->set('post__in', $sticky_ids);
                 } else {
                     $query->set('post__in', [0]); // Force empty result
                 }
-            } elseif ($_GET['yardlii_filter_featured'] === 'no') {
-                if (!empty($sticky_posts)) {
-                    $query->set('post__not_in', $sticky_posts);
+            } elseif ($filter === 'no') {
+                if (!empty($sticky_ids)) {
+                    $query->set('post__not_in', $sticky_ids);
                 }
             }
         }
@@ -90,10 +110,12 @@ class FeaturedListings {
      * Elementor Query Filter
      * ID: featured_listings
      */
-    public function filter_elementor_query($query) {
+    public function filter_elementor_query(WP_Query $query): void {
         $sticky_posts = get_option('sticky_posts');
-        if (!empty($sticky_posts)) {
-            $query->set('post__in', $sticky_posts);
+        $sticky_ids = is_array($sticky_posts) ? $sticky_posts : [];
+
+        if (!empty($sticky_ids)) {
+            $query->set('post__in', $sticky_ids);
         } else {
             $query->set('post__in', [0]); 
         }
@@ -102,18 +124,20 @@ class FeaturedListings {
     /**
      * Shortcode: [yardlii_featured_badge text="Featured" class="custom-class"]
      * Only renders if the post is truly Sticky (Featured).
+     *
+     * @param array|string $atts
      */
-    public function render_badge_shortcode($atts) {
+    public function render_badge_shortcode($atts): string {
         $a = shortcode_atts([
             'text'  => 'Featured',
             'class' => '',
             'style' => 'default' // options: default, plain
-        ], $atts);
+        ], (array) $atts);
 
         $post_id = get_the_ID();
         
-        if (is_sticky($post_id)) {
-            $classes = 'yardlii-featured-badge ' . esc_attr($a['class']);
+        if ($post_id && is_sticky($post_id)) {
+            $classes = 'yardlii-featured-badge ' . esc_attr((string) $a['class']);
             $styles  = '';
 
             // Default styling (Gold Badge)
@@ -125,7 +149,7 @@ class FeaturedListings {
                 '<span class="%s" %s>%s</span>',
                 $classes,
                 $styles,
-                esc_html($a['text'])
+                esc_html((string) $a['text'])
             );
         }
         return '';

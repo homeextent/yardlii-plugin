@@ -29,6 +29,9 @@ class FeaturedListings {
 
         // 4. Shortcode for Badge
         add_shortcode('yardlii_featured_badge', [$this, 'render_badge_shortcode']);
+
+        // 5. Force "Sticky" label on CPT Admin List (Fixes missing visual feedback)
+        add_filter('display_post_states', [$this, 'add_sticky_state'], 10, 2);
     }
 
     /**
@@ -42,18 +45,52 @@ class FeaturedListings {
             return;
         }
 
-        // Check current meta state. 
-        // We allow '1' (string), 1 (int), or true (bool) to trigger the sticky status.
-        $val = get_post_meta($post_id, self::META_KEY, true);
-        
-        // Normalize to bool
-        $is_featured = ($val === '1' || $val === 1 || $val === true);
+        // 1. Try to get value from $_POST (most reliable during manual Update)
+        if (isset($_POST['acf'])) {
+             // If ACF is present, we can't easily guess the key hash, 
+             // so we fall through to get_post_meta unless we want to parse $_POST recursively.
+             // Ideally, we rely on priority 20 (after ACF saves).
+        }
+
+        // 2. Check the direct meta key in $_POST (WPUF usually sends this directly)
+        if (isset($_POST[self::META_KEY])) {
+            $val = $_POST[self::META_KEY];
+        } else {
+            // 3. Fallback: Read from DB (ACF should have saved by priority 20)
+            $val = get_post_meta($post_id, self::META_KEY, true);
+        }
+
+        // Normalize: '1', 1, 'true', true
+        $is_featured = ($val === '1' || $val === 1 || $val === true || $val === 'true');
 
         if ($is_featured) {
             stick_post($post_id);
         } else {
             unstick_post($post_id);
         }
+    }
+
+    /**
+     * Visual Fix: Add "Sticky" label to the Admin List table for CPTs.
+     * WordPress usually only does this for standard 'post' types.
+     *
+     * @param array<string, string> $states
+     */
+    public function add_sticky_state(array $states, WP_Post $post): array {
+        // Only affect our CPT
+        if ($post->post_type !== 'listings') {
+            return $states;
+        }
+
+        // Check the native source of truth
+        if (is_sticky($post->ID)) {
+            // Add the label if not already present
+            if (!isset($states['sticky'])) {
+                $states['sticky'] = __('Sticky', 'yardlii-core');
+            }
+        }
+
+        return $states;
     }
 
     /**
@@ -97,7 +134,7 @@ class FeaturedListings {
                 if (!empty($sticky_ids)) {
                     $query->set('post__in', $sticky_ids);
                 } else {
-                    $query->set('post__in', [0]); // Force empty result
+                    $query->set('post__in', [0]); 
                 }
             } elseif ($filter === 'no') {
                 if (!empty($sticky_ids)) {

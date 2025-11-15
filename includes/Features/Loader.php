@@ -106,6 +106,11 @@ final class Loader
             (new WPUFFrontendEnhancements())->register();
         }
 
+        // <=== Unified Featured Listings Logic
+        if (class_exists(__NAMESPACE__ . '\\Listings\\FeaturedManager')) {
+            (new Listings\FeaturedManager())->register();
+        }
+
         // === Role Control (master + subfeatures) ===
         $rc_master = (bool) get_option('yardlii_enable_role_control', false);
         if (defined('YARDLII_ENABLE_ROLE_CONTROL')) {

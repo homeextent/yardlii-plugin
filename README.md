@@ -130,6 +130,10 @@ The Role Control tab remains visible but is locked (read-only). No Submit Access
 
 ## **📦 Changelog**
 
+### **3.9.3**
+* **Fix**: Resolved CSS specificity issues for "Card-Style Layout" on Single-Step forms.
+* **UI**: Improved card contrast and padding to ensure visibility on white backgrounds and fix header alignment.
+
 ### **3.9.2**
 * **Fix**: Resolved an issue where "Card-Style Layout" was not applying to Single-Step WPUF forms due to DOM nesting structure.
 

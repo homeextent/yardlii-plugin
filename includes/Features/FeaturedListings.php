@@ -42,11 +42,14 @@ class FeaturedListings {
             return;
         }
 
-        // Check current meta state. Cast to string for strict comparison.
+        // Check current meta state. 
+        // We allow '1' (string), 1 (int), or true (bool) to trigger the sticky status.
         $val = get_post_meta($post_id, self::META_KEY, true);
-        $is_featured = is_scalar($val) ? (string) $val : '';
+        
+        // Normalize to bool
+        $is_featured = ($val === '1' || $val === 1 || $val === true);
 
-        if ($is_featured === '1') {
+        if ($is_featured) {
             stick_post($post_id);
         } else {
             unstick_post($post_id);

@@ -44,7 +44,7 @@
         </p>
         <div class="yardlii-setting-row" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
             <label class="yardlii-toggle">
-                <input type="checkbox" name="yardlii_enable_featured_listings" value="1" <?php checked((bool)get_option('yardlii_enable_featured_listings'), false); ?> />
+                <input type="checkbox" name="yardlii_enable_featured_listings" value="1" <?php checked((bool)get_option('yardlii_enable_featured_listings'), true); ?> />
                 <span class="yardlii-toggle-slider"></span>
             </label>
             <div style="display:inline-block; vertical-align:top; margin-left: 10px;">

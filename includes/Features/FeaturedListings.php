@@ -10,14 +10,14 @@ use WP_Query;
  * Feature: Featured Listings Logic
  * --------------------------------
  * Unifies "Native Sticky" posts (WPUF) and "Meta Featured" posts (ACF).
- * treats them identically for Badges, Admin Labels, and Queries.
+ * Includes recursion guards to prevent memory exhaustion.
  */
 class FeaturedListings {
 
     const META_KEY = 'is_featured_item';
 
     public function register(): void {
-        // 1. Sync Meta to Native Sticky on Save (Best effort sync)
+        // 1. Sync Meta to Native Sticky on Save
         add_action('save_post', [$this, 'sync_sticky_status'], 20, 3);
 
         // 2. Admin List Filtering
@@ -44,13 +44,13 @@ class FeaturedListings {
         }
 
         // 2. Check Meta (ACF/WPUF)
-        // We check for '1' (string), 1 (int), or 'true' (string)
         $val = get_post_meta($post_id, self::META_KEY, true);
         return ($val === '1' || $val === 1 || $val === 'true' || $val === true);
     }
 
     /**
      * Helper: Get ALL featured IDs (Sticky + Meta) for queries.
+     * Optimized to prevent memory bloat and recursion.
      *
      * @return int[]
      */
@@ -62,12 +62,18 @@ class FeaturedListings {
         }
 
         // 2. Meta Featured IDs
+        // Optimization: Lightweight query, no cache, no filters to prevent recursion
         $meta_ids = get_posts([
-            'post_type'   => 'listings',
-            'numberposts' => -1,
-            'fields'      => 'ids',
-            'meta_key'    => self::META_KEY,
-            'meta_value'  => '1',
+            'post_type'              => 'listings',
+            'numberposts'            => -1,
+            'fields'                 => 'ids',
+            'meta_key'               => self::META_KEY,
+            'meta_value'             => '1',
+            'suppress_filters'       => true, // Stop external modification
+            'no_found_rows'          => true, // Performance
+            'update_post_meta_cache' => false, // Performance
+            'update_post_term_cache' => false, // Performance
+            'ignore_sticky_posts'    => true,
         ]);
 
         if (!is_array($meta_ids)) {
@@ -150,6 +156,12 @@ class FeaturedListings {
      * Modify Admin Query based on filter
      */
     public function filter_admin_query(WP_Query $query): void {
+        // Recursion Guard: Stop infinite loop if get_posts triggers this hook again
+        static $is_running = false;
+        if ($is_running) {
+            return;
+        }
+
         global $pagenow;
         if ($pagenow !== 'edit.php' || !$query->is_main_query()) {
             return;
@@ -160,6 +172,8 @@ class FeaturedListings {
         }
 
         if (isset($_GET['yardlii_filter_featured']) && $_GET['yardlii_filter_featured'] !== '') {
+            $is_running = true; // Lock
+
             $featured_ids = $this->get_all_featured_ids();
             $filter = sanitize_text_field((string) $_GET['yardlii_filter_featured']);
 
@@ -174,6 +188,8 @@ class FeaturedListings {
                     $query->set('post__not_in', $featured_ids);
                 }
             }
+
+            $is_running = false; // Unlock
         }
     }
 
@@ -182,6 +198,7 @@ class FeaturedListings {
      * ID: featured_listings
      */
     public function filter_elementor_query(WP_Query $query): void {
+        // Elementor loops can be nested, but get_all_featured_ids is safe now.
         $featured_ids = $this->get_all_featured_ids();
 
         if (!empty($featured_ids)) {

@@ -22,7 +22,8 @@ final class FeaturedManager
 
         // 2. Admin: Filter Dropdown
         add_action('restrict_manage_posts', [$this, 'addAdminFilterDropdown']);
-        add_filter('parse_query', [$this, 'handleAdminFilter']);
+        // FIX: parse_query is an action, not a filter, because we modify the object by reference.
+        add_action('parse_query', [$this, 'handleAdminFilter']);
 
         // 3. Frontend: CSS Class Injection (The "No-Shortcode" solution)
         add_filter('post_class', [$this, 'injectPostClass'], 10, 3);
@@ -49,6 +50,9 @@ final class FeaturedManager
 
     /**
      * 1. Admin: Add "- Featured" label to the post list
+     *
+     * @param array<string, string> $states
+     * @return array<string, string>
      */
     public function addAdminStateLabel(array $states, \WP_Post $post): array
     {
@@ -155,6 +159,10 @@ final class FeaturedManager
     /**
      * 3. Frontend: Inject CSS Class
      * Allows styling via .yardlii-is-featured { ... }
+     *
+     * @param string[] $classes Existing classes
+     * @param string[] $class   Classes requested by the user
+     * @return string[]
      */
     public function injectPostClass(array $classes, array $class, int $post_id): array
     {

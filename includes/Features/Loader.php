@@ -91,6 +91,12 @@ final class Loader
             (new HomepageSearch())->register();
         }
 
+        // === User Metadata Sync (Member Since) ===
+        // Always load if class exists to ensure data consistency for new registrations
+        if (class_exists(__NAMESPACE__ . '\\UserMetadataSync')) {
+            (new UserMetadataSync())->register();
+        }
+
         // === ACF User Sync ===
         $acf_sync_enabled = (bool) get_option('yardlii_enable_acf_user_sync', false);
         if (defined('YARDLII_ENABLE_ACF_USER_SYNC')) {

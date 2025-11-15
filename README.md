@@ -130,6 +130,9 @@ The Role Control tab remains visible but is locked (read-only). No Submit Access
 
 ## **📦 Changelog**
 
+### **3.9.5**
+* **Fix**: Resolved layout issues in Multistep forms where buttons overlapped content. Added proper footer spacing and mobile stacking for navigation buttons.
+
 ### **3.9.3**
 * **Fix**: Resolved CSS specificity issues for "Card-Style Layout" on Single-Step forms.
 * **UI**: Improved card contrast and padding to ensure visibility on white backgrounds and fix header alignment.

@@ -1,118 +1,142 @@
-/* Yardlii WPUF Card Layout System */
+/* Yardlii WPUF Card Layout System - v3.9.5 */
 
-/* 1. Support for Standard Forms (via JS Wrapper) */
+/* 1. Main Wrapper */
 .yardlii-form-cards-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 30px;
     margin-bottom: 40px;
 }
 
-/* 2. Support for Multistep Forms (Native Fieldsets) */
+/* 2. Multistep Forms (Native Fieldsets) */
 .wpuf-form-add .wpuf-multistep-fieldset {
     background: #ffffff;
-    border: 1px solid #cbd5e1 !important; /* Darker border for visibility on white */
+    border: 1px solid #cbd5e1 !important;
     border-radius: 12px;
-    padding: 0 !important; /* Remove padding from container so header bleeds */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Permanent shadow */
+    padding: 0 !important; /* Reset native padding */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     margin-bottom: 30px;
-    overflow: hidden; /* Clips the header to the rounded corners */
+    overflow: hidden;
+    position: relative; /* For button positioning context */
 }
 
-/* Common Card Styling (Applied to both JS-cards and Fieldsets) */
+/* 3. Common Card Styling */
 .yardlii-card {
     background: #ffffff;
-    border: 1px solid #cbd5e1; /* Darker border for visibility on white */
+    border: 1px solid #cbd5e1 !important;
     border-radius: 12px;
-    padding: 0; /* We apply padding to the inner UL instead */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Permanent shadow */
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
-    overflow: hidden; /* Clips the header to the rounded corners */
+    padding: 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease;
+    overflow: hidden;
+    margin-bottom: 5px;
 }
 
 .yardlii-card:hover,
 .wpuf-form-add .wpuf-multistep-fieldset:hover {
-    border-color: #94a3b8;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 
-                0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    border-color: #64748b !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* Inner List Styling - CRITICAL for alignment */
-.yardlii-card ul.wpuf-form {
-    margin: 0;
-    padding: 24px 30px; /* Move padding here */
-    list-style: none;
+/* 4. Inner Content Padding (The "Body") */
+/* Apply to Single Step List AND Multistep container */
+.yardlii-card ul.wpuf-form,
+.wpuf-form-add .wpuf-multistep-fieldset > ul.wpuf-form, /* Multistep specific */
+.wpuf-form-add .wpuf-multistep-fieldset > .wpuf-fields {
+    margin: 0 !important;
+    padding: 30px 40px 10px 40px !important; /* Bottom padding reduced to account for buttons */
+    list-style: none !important;
 }
 
-/* Fieldset Legend (The "Header" for Multistep) */
-.wpuf-form-add .wpuf-multistep-fieldset legend {
-    float: none;
-    width: 100%; /* Full width */
-    display: block;
-    font-size: 18px;
-    font-weight: 600;
-    color: #0f172a;
-    padding: 20px 30px;
-    margin: 0;
-    background: #f8fafc;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-/* Section Breaks (Headers for Single Step JS Cards) */
+/* 5. Header Styling (Section Breaks / Legends) */
 .yardlii-card li.section_break,
 .yardlii-card li[class*="section_break"] {
-    /* Negative margins to pull header to the edge of the UL padding */
-    margin: -24px -30px 24px -30px !important; 
-    padding: 20px 30px !important;
-    background: #f8fafc;
-    border-bottom: 1px solid #e2e8f0;
-    list-style: none;
+    margin: -30px -40px 30px -40px !important;
+    padding: 20px 40px !important;
+    background: #f1f5f9 !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+    list-style: none !important;
 }
 
 .yardlii-card li.section_break .wpuf-section-title,
 .yardlii-card li[class*="section_break"] .wpuf-section-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #0f172a;
-    margin: 0;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
 }
 
 .yardlii-card li.section_break .wpuf-section-details,
 .yardlii-card li[class*="section_break"] .wpuf-section-details {
-    font-size: 13px;
-    color: #64748b;
-    margin-top: 4px;
+    font-size: 14px !important;
+    color: #64748b !important;
+    margin-top: 5px !important;
+}
+
+/* Multistep Legend (Header) */
+.wpuf-form-add .wpuf-multistep-fieldset legend {
+    float: none;
+    width: 100%;
+    display: block;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+    padding: 20px 40px !important;
+    margin: 0 !important;
+    background: #f1f5f9 !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+}
+
+/* 6. BUTTON AREA FIX (The Footer) */
+/* This targets the container holding Next/Prev buttons */
+.wpuf-multistep-fieldset .multistep-button-area,
+.wpuf-form-add .wpuf-multistep-fieldset .wpuf-multistep-footer { 
+    padding: 20px 40px !important;
+    margin-top: 20px !important;
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9; /* Visual separation */
+    display: flex;
+    justify-content: space-between; /* Spread buttons apart */
+    align-items: center;
+    clear: both;
+}
+
+/* Ensure buttons don't touch the very bottom edge of the card */
+.wpuf-form-add .wpuf-multistep-fieldset {
+    padding-bottom: 0 !important; /* Let footer handle the spacing */
 }
 
 /* Field Spacing */
-.yardlii-card li.wpuf-el {
-    margin-bottom: 20px;
+.yardlii-card li.wpuf-el,
+.wpuf-multistep-fieldset li.wpuf-el {
+    margin-bottom: 24px !important;
 }
 
-/* Fix Multistep Buttons */
-.multistep-button-area {
-    padding: 20px 30px;
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    background: #fff;
-}
-
-/* Mobile */
+/* Mobile Responsiveness */
 @media (max-width: 600px) {
     .yardlii-card ul.wpuf-form,
-    .wpuf-form-add .wpuf-multistep-fieldset {
-        padding: 0 !important;
-    }
-    
-    .yardlii-card ul.wpuf-form {
-        padding: 16px 16px 24px 16px !important;
+    .wpuf-form-add .wpuf-multistep-fieldset > ul.wpuf-form {
+        padding: 20px 20px !important;
     }
 
-    .wpuf-form-add .wpuf-multistep-fieldset legend,
     .yardlii-card li.section_break,
     .yardlii-card li[class*="section_break"] {
-        padding: 16px !important;
-        margin: -16px -16px 16px -16px !important;
+        margin: -20px -20px 20px -20px !important;
+        padding: 16px 20px !important;
+    }
+    
+    .wpuf-form-add .wpuf-multistep-fieldset legend {
+        padding: 16px 20px !important;
+    }
+
+    .wpuf-multistep-fieldset .multistep-button-area {
+        padding: 16px 20px !important;
+        flex-direction: column-reverse; /* Stack buttons on mobile */
+        gap: 10px;
+    }
+    
+    .wpuf-multistep-fieldset .multistep-button-area button {
+        width: 100%;
     }
 }

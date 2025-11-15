@@ -42,12 +42,11 @@ class FeaturedListings {
             return;
         }
 
-        // Check both $_POST (for form submission) and current meta state
-        // We use get_post_meta to catch updates from WPUF, ACF, or Quick Edit
-        $is_featured = get_post_meta($post_id, self::META_KEY, true);
+        // Check current meta state. Cast to string for strict comparison.
+        $val = get_post_meta($post_id, self::META_KEY, true);
+        $is_featured = is_scalar($val) ? (string) $val : '';
 
-        // If the meta is "1", force sticky. Otherwise unstick.
-        if ($is_featured == '1') { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+        if ($is_featured === '1') {
             stick_post($post_id);
         } else {
             unstick_post($post_id);
@@ -89,7 +88,6 @@ class FeaturedListings {
             $sticky_posts = get_option('sticky_posts');
             $filter = sanitize_text_field((string) $_GET['yardlii_filter_featured']);
             
-            // Ensure sticky_posts is an array before usage
             $sticky_ids = is_array($sticky_posts) ? $sticky_posts : [];
 
             if ($filter === 'yes') {
@@ -125,13 +123,13 @@ class FeaturedListings {
      * Shortcode: [yardlii_featured_badge text="Featured" class="custom-class"]
      * Only renders if the post is truly Sticky (Featured).
      *
-     * @param array|string $atts
+     * @param array<string, mixed>|string $atts
      */
     public function render_badge_shortcode($atts): string {
         $a = shortcode_atts([
             'text'  => 'Featured',
             'class' => '',
-            'style' => 'default' // options: default, plain
+            'style' => 'default'
         ], (array) $atts);
 
         $post_id = get_the_ID();
@@ -140,7 +138,6 @@ class FeaturedListings {
             $classes = 'yardlii-featured-badge ' . esc_attr((string) $a['class']);
             $styles  = '';
 
-            // Default styling (Gold Badge)
             if ($a['style'] === 'default') {
                 $styles = 'style="display:inline-block; background:#ffd700; color:#000; padding:4px 8px; border-radius:4px; font-weight:bold; font-size:12px; text-transform:uppercase; line-height:1;"';
             }

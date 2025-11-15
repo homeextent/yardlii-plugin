@@ -215,6 +215,11 @@ final class SettingsPageTabs
             'sanitize_callback' => 'rest_sanitize_boolean',
             'default'           => false,
         ]);
+        // WPUF: Featured Listings Logic
+        register_setting(self::GROUP_GENERAL, 'yardlii_enable_featured_listings', [
+            'sanitize_callback' => 'rest_sanitize_boolean',
+            'default'           => false,
+        ]);
 
         // Role Control (main group)
         $this->register_role_control_settings();

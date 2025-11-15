@@ -106,6 +106,13 @@ final class Loader
             (new WPUFFrontendEnhancements())->register();
         }
 
+        // === Featured Listings Logic (New) ===
+        if (get_option('yardlii_enable_featured_listings', false)) {
+            if (class_exists(__NAMESPACE__ . '\\FeaturedListings')) {
+                (new FeaturedListings())->register();
+            }
+        }
+
         // === Role Control (master + subfeatures) ===
         $rc_master = (bool) get_option('yardlii_enable_role_control', false);
         if (defined('YARDLII_ENABLE_ROLE_CONTROL')) {

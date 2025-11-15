@@ -130,6 +130,11 @@ The Role Control tab remains visible but is locked (read-only). No Submit Access
 
 ## **📦 Changelog**
 
+### **3.10.1**
+* **Fix**: Resolved styling conflicts for the Featured Badge by properly enqueuing a dedicated `frontend.css` file.
+* **Refactor**: Removed inline CSS from the `[yardlii_featured_badge]` shortcode to allow global styling control.
+* **UI**: Validated badge colors against Brand Identity Guidelines (Action Orange).
+
 ### **3.10.0**
 * **Feat**: Added **Featured Listings Logic**.
     * Synchronizes `is_featured_item` (ACF/Meta) with native WordPress Sticky status.

@@ -42,6 +42,20 @@
         <p class="description">
           Reskins the standard upload button into a modern, dashed-border <strong>"Dropzone"</strong> area with a cloud icon.
         </p>
+        <div class="yardlii-setting-row" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+            <label class="yardlii-toggle">
+                <input type="checkbox" name="yardlii_enable_featured_listings" value="1" <?php checked((bool)get_option('yardlii_enable_featured_listings'), false); ?> />
+                <span class="yardlii-toggle-slider"></span>
+            </label>
+            <div style="display:inline-block; vertical-align:top; margin-left: 10px;">
+                <strong>Enable Featured Listing Logic</strong>
+                <p class="description">
+                    Synchronizes the "is_featured_item" meta field with WordPress Native Sticky posts.<br>
+                    Adds "Featured" filter to Admin List and enables <code>[yardlii_featured_badge]</code>.
+                </p>
+            </div>
+        </div>
+
           <input type="checkbox" name="yardlii_enable_wpuf_dropdown" value="1" <?php checked($dropdown_enabled, true); ?> />
           <span class="yardlii-toggle-slider"></span>
         </label>

@@ -33,7 +33,7 @@ class FeaturedListings {
         // 5. Force "Sticky" label on CPT Admin List
         add_filter('display_post_states', [$this, 'add_sticky_state'], 10, 2);
 
-        // 6. Enqueue Frontend Styles (New)
+        // 6. Enqueue Frontend Styles
         add_action('wp_enqueue_scripts', [$this, 'enqueue_styles']);
     }
 
@@ -69,22 +69,32 @@ class FeaturedListings {
     private function get_all_featured_ids(): array {
         global $wpdb;
         $sticky_ids = get_option('sticky_posts');
-        if (!is_array($sticky_ids)) $sticky_ids = [];
+        if (!is_array($sticky_ids)) {
+            $sticky_ids = [];
+        }
 
         $sql = $wpdb->prepare(
             "SELECT p.ID FROM $wpdb->posts p INNER JOIN $wpdb->postmeta pm ON p.ID = pm.post_id WHERE p.post_type = %s AND p.post_status = 'publish' AND pm.meta_key = %s AND pm.meta_value = '1'",
-            'listings', self::META_KEY
+            'listings',
+            self::META_KEY
         );
+        
         $meta_ids = $wpdb->get_col($sql);
-        if (!is_array($meta_ids)) $meta_ids = [];
+        if (!is_array($meta_ids)) {
+            $meta_ids = [];
+        }
 
         $merged = array_unique(array_merge($sticky_ids, $meta_ids));
         return array_map('intval', $merged);
     }
 
     public function sync_sticky_status(int $post_id, WP_Post $post, bool $update): void {
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-        if (wp_is_post_revision($post_id)) return;
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+        if (wp_is_post_revision($post_id)) {
+            return;
+        }
 
         if (isset($_POST[self::META_KEY])) {
             $val = $_POST[self::META_KEY];
@@ -101,16 +111,30 @@ class FeaturedListings {
         }
     }
 
+    /**
+     * Visual Fix: Add "Sticky" label if Sticky OR Meta is true.
+     *
+     * @param array<string, string> $states
+     * @return array<string, string>
+     */
     public function add_sticky_state(array $states, WP_Post $post): array {
-        if ($post->post_type !== 'listings') return $states;
-        if ($this->is_featured($post->ID)) {
-            if (!isset($states['sticky'])) $states['sticky'] = __('Sticky', 'yardlii-core');
+        if ($post->post_type !== 'listings') {
+            return $states;
         }
+
+        if ($this->is_featured($post->ID)) {
+            if (!isset($states['sticky'])) {
+                $states['sticky'] = __('Sticky', 'yardlii-core');
+            }
+        }
+
         return $states;
     }
 
     public function add_admin_filter(string $post_type): void {
-        if ($post_type !== 'listings') return;
+        if ($post_type !== 'listings') {
+            return;
+        }
         $current = isset($_GET['yardlii_filter_featured']) ? sanitize_text_field((string) $_GET['yardlii_filter_featured']) : '';
         ?>
         <select name="yardlii_filter_featured">
@@ -123,26 +147,38 @@ class FeaturedListings {
 
     public function filter_admin_query(WP_Query $query): void {
         global $pagenow;
-        if ($pagenow !== 'edit.php' || !$query->is_main_query()) return;
-        if ($query->get('post_type') !== 'listings') return;
+        if ($pagenow !== 'edit.php' || !$query->is_main_query()) {
+            return;
+        }
+        if ($query->get('post_type') !== 'listings') {
+            return;
+        }
 
         if (isset($_GET['yardlii_filter_featured']) && $_GET['yardlii_filter_featured'] !== '') {
             $featured_ids = $this->get_all_featured_ids();
             $filter = sanitize_text_field((string) $_GET['yardlii_filter_featured']);
 
             if ($filter === 'yes') {
-                if (!empty($featured_ids)) $query->set('post__in', $featured_ids);
-                else $query->set('post__in', [0]);
+                if (!empty($featured_ids)) {
+                    $query->set('post__in', $featured_ids);
+                } else {
+                    $query->set('post__in', [0]);
+                }
             } elseif ($filter === 'no') {
-                if (!empty($featured_ids)) $query->set('post__not_in', $featured_ids);
+                if (!empty($featured_ids)) {
+                    $query->set('post__not_in', $featured_ids);
+                }
             }
         }
     }
 
     public function filter_elementor_query(WP_Query $query): void {
         $featured_ids = $this->get_all_featured_ids();
-        if (!empty($featured_ids)) $query->set('post__in', $featured_ids);
-        else $query->set('post__in', [0]);
+        if (!empty($featured_ids)) {
+            $query->set('post__in', $featured_ids);
+        } else {
+            $query->set('post__in', [0]);
+        }
         $query->set('ignore_sticky_posts', true);
     }
 

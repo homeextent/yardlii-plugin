@@ -9,71 +9,110 @@
 }
 
 /* 2. Support for Multistep Forms (Native Fieldsets) */
-/* We style the fieldset to look exactly like our cards */
 .wpuf-form-add .wpuf-multistep-fieldset {
     background: #ffffff;
-    border: 1px solid #e2e8f0 !important; /* Override WPUF default border */
+    border: 1px solid #cbd5e1 !important; /* Darker border for visibility on white */
     border-radius: 12px;
-    padding: 30px !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 
-                0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    padding: 0 !important; /* Remove padding from container so header bleeds */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Permanent shadow */
     margin-bottom: 30px;
+    overflow: hidden; /* Clips the header to the rounded corners */
 }
 
 /* Common Card Styling (Applied to both JS-cards and Fieldsets) */
-.yardlii-card,
-.wpuf-form-add .wpuf-multistep-fieldset {
-    transition: box-shadow 0.2s ease;
+.yardlii-card {
+    background: #ffffff;
+    border: 1px solid #cbd5e1; /* Darker border for visibility on white */
+    border-radius: 12px;
+    padding: 0; /* We apply padding to the inner UL instead */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Permanent shadow */
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    overflow: hidden; /* Clips the header to the rounded corners */
 }
 
 .yardlii-card:hover,
 .wpuf-form-add .wpuf-multistep-fieldset:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 
-                0 4px 6px -2px rgba(0, 0, 0, 0.025);
+    border-color: #94a3b8;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 
+                0 4px 6px -2px rgba(0, 0, 0, 0.04);
+}
+
+/* Inner List Styling - CRITICAL for alignment */
+.yardlii-card ul.wpuf-form {
+    margin: 0;
+    padding: 24px 30px; /* Move padding here */
+    list-style: none;
 }
 
 /* Fieldset Legend (The "Header" for Multistep) */
 .wpuf-form-add .wpuf-multistep-fieldset legend {
-    float: none; /* Fix WPUF floating */
-    width: auto;
+    float: none;
+    width: 100%; /* Full width */
+    display: block;
     font-size: 18px;
     font-weight: 600;
     color: #0f172a;
-    padding: 0 10px;
-    margin-bottom: 20px;
-    border-bottom: none;
+    padding: 20px 30px;
+    margin: 0;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 /* Section Breaks (Headers for Single Step JS Cards) */
-.yardlii-card li.section_break {
-    margin: -24px -30px 20px -30px !important;
+.yardlii-card li.section_break,
+.yardlii-card li[class*="section_break"] {
+    /* Negative margins to pull header to the edge of the UL padding */
+    margin: -24px -30px 24px -30px !important; 
     padding: 20px 30px !important;
     background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+    list-style: none;
 }
 
-.yardlii-card li.section_break .wpuf-section-title {
+.yardlii-card li.section_break .wpuf-section-title,
+.yardlii-card li[class*="section_break"] .wpuf-section-title {
     font-size: 18px;
     font-weight: 600;
     color: #0f172a;
     margin: 0;
 }
 
+.yardlii-card li.section_break .wpuf-section-details,
+.yardlii-card li[class*="section_break"] .wpuf-section-details {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+/* Field Spacing */
+.yardlii-card li.wpuf-el {
+    margin-bottom: 20px;
+}
+
 /* Fix Multistep Buttons */
 .multistep-button-area {
-    padding: 20px 0;
+    padding: 20px 30px;
     display: flex;
     gap: 10px;
     justify-content: flex-end;
+    background: #fff;
 }
 
 /* Mobile */
 @media (max-width: 600px) {
-    .yardlii-card,
+    .yardlii-card ul.wpuf-form,
     .wpuf-form-add .wpuf-multistep-fieldset {
+        padding: 0 !important;
+    }
+    
+    .yardlii-card ul.wpuf-form {
+        padding: 16px 16px 24px 16px !important;
+    }
+
+    .wpuf-form-add .wpuf-multistep-fieldset legend,
+    .yardlii-card li.section_break,
+    .yardlii-card li[class*="section_break"] {
         padding: 16px !important;
-        border-radius: 8px;
+        margin: -16px -16px 16px -16px !important;
     }
 }

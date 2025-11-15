@@ -9,15 +9,15 @@ use WP_Query;
 /**
  * Feature: Featured Listings Logic
  * --------------------------------
- * Synchronizes the 'is_featured_item' meta key with native Sticky posts.
- * Adds Admin Filters, Elementor Queries, and a Badge Shortcode.
+ * Unifies "Native Sticky" posts (WPUF) and "Meta Featured" posts (ACF).
+ * treats them identically for Badges, Admin Labels, and Queries.
  */
 class FeaturedListings {
 
     const META_KEY = 'is_featured_item';
 
     public function register(): void {
-        // 1. Sync Meta to Native Sticky on Save
+        // 1. Sync Meta to Native Sticky on Save (Best effort sync)
         add_action('save_post', [$this, 'sync_sticky_status'], 20, 3);
 
         // 2. Admin List Filtering
@@ -30,12 +30,59 @@ class FeaturedListings {
         // 4. Shortcode for Badge
         add_shortcode('yardlii_featured_badge', [$this, 'render_badge_shortcode']);
 
-        // 5. Force "Sticky" label on CPT Admin List (Fixes missing visual feedback)
+        // 5. Force "Sticky" label on CPT Admin List
         add_filter('display_post_states', [$this, 'add_sticky_state'], 10, 2);
     }
 
     /**
-     * Sync Logic: If meta is '1', make post Sticky. If '0', unstick.
+     * Helper: Check if a post is effectively featured (Sticky OR Meta).
+     */
+    private function is_featured(int $post_id): bool {
+        // 1. Check Native
+        if (is_sticky($post_id)) {
+            return true;
+        }
+
+        // 2. Check Meta (ACF/WPUF)
+        // We check for '1' (string), 1 (int), or 'true' (string)
+        $val = get_post_meta($post_id, self::META_KEY, true);
+        return ($val === '1' || $val === 1 || $val === 'true' || $val === true);
+    }
+
+    /**
+     * Helper: Get ALL featured IDs (Sticky + Meta) for queries.
+     *
+     * @return int[]
+     */
+    private function get_all_featured_ids(): array {
+        // 1. Native Sticky IDs
+        $sticky_ids = get_option('sticky_posts');
+        if (!is_array($sticky_ids)) {
+            $sticky_ids = [];
+        }
+
+        // 2. Meta Featured IDs
+        $meta_ids = get_posts([
+            'post_type'   => 'listings',
+            'numberposts' => -1,
+            'fields'      => 'ids',
+            'meta_key'    => self::META_KEY,
+            'meta_value'  => '1',
+        ]);
+
+        if (!is_array($meta_ids)) {
+            $meta_ids = [];
+        }
+
+        // 3. Merge and Unique
+        /** @var int[] $merged */
+        $merged = array_unique(array_merge($sticky_ids, $meta_ids));
+        
+        return array_map('intval', $merged);
+    }
+
+    /**
+     * Sync Logic: Attempt to keep Native Sticky status in sync with Meta.
      */
     public function sync_sticky_status(int $post_id, WP_Post $post, bool $update): void {
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
@@ -45,20 +92,13 @@ class FeaturedListings {
             return;
         }
 
-        // 1. Try to get value from $_POST (most reliable during manual Update)
-        if (isset($_POST['acf'])) {
-             // If ACF is present, we rely on the meta falling through or being saved by priority 20.
-        }
-
-        // 2. Check the direct meta key in $_POST (WPUF usually sends this directly)
+        // Check $_POST first for immediate responsiveness
         if (isset($_POST[self::META_KEY])) {
             $val = $_POST[self::META_KEY];
         } else {
-            // 3. Fallback: Read from DB
             $val = get_post_meta($post_id, self::META_KEY, true);
         }
 
-        // Normalize: '1', 1, 'true', true
         $is_featured = ($val === '1' || $val === 1 || $val === true || $val === 'true');
 
         if ($is_featured) {
@@ -69,21 +109,17 @@ class FeaturedListings {
     }
 
     /**
-     * Visual Fix: Add "Sticky" label to the Admin List table for CPTs.
-     * WordPress usually only does this for standard 'post' types.
+     * Visual Fix: Add "Sticky" label if Sticky OR Meta is true.
      *
      * @param array<string, string> $states
      * @return array<string, string>
      */
     public function add_sticky_state(array $states, WP_Post $post): array {
-        // Only affect our CPT
         if ($post->post_type !== 'listings') {
             return $states;
         }
 
-        // Check the native source of truth
-        if (is_sticky($post->ID)) {
-            // Add the label if not already present
+        if ($this->is_featured($post->ID)) {
             if (!isset($states['sticky'])) {
                 $states['sticky'] = __('Sticky', 'yardlii-core');
             }
@@ -124,20 +160,18 @@ class FeaturedListings {
         }
 
         if (isset($_GET['yardlii_filter_featured']) && $_GET['yardlii_filter_featured'] !== '') {
-            $sticky_posts = get_option('sticky_posts');
+            $featured_ids = $this->get_all_featured_ids();
             $filter = sanitize_text_field((string) $_GET['yardlii_filter_featured']);
-            
-            $sticky_ids = is_array($sticky_posts) ? $sticky_posts : [];
 
             if ($filter === 'yes') {
-                if (!empty($sticky_ids)) {
-                    $query->set('post__in', $sticky_ids);
+                if (!empty($featured_ids)) {
+                    $query->set('post__in', $featured_ids);
                 } else {
                     $query->set('post__in', [0]); // Force empty result
                 }
             } elseif ($filter === 'no') {
-                if (!empty($sticky_ids)) {
-                    $query->set('post__not_in', $sticky_ids);
+                if (!empty($featured_ids)) {
+                    $query->set('post__not_in', $featured_ids);
                 }
             }
         }
@@ -148,14 +182,16 @@ class FeaturedListings {
      * ID: featured_listings
      */
     public function filter_elementor_query(WP_Query $query): void {
-        $sticky_posts = get_option('sticky_posts');
-        $sticky_ids = is_array($sticky_posts) ? $sticky_posts : [];
+        $featured_ids = $this->get_all_featured_ids();
 
-        if (!empty($sticky_ids)) {
-            $query->set('post__in', $sticky_ids);
+        if (!empty($featured_ids)) {
+            $query->set('post__in', $featured_ids);
         } else {
             $query->set('post__in', [0]); 
         }
+        
+        // Ensure strict inclusion logic by ignoring standard sticky injection
+        $query->set('ignore_sticky_posts', true);
     }
 
     /**
@@ -173,7 +209,7 @@ class FeaturedListings {
 
         $post_id = get_the_ID();
         
-        if ($post_id && is_sticky($post_id)) {
+        if ($post_id && $this->is_featured($post_id)) {
             $classes = 'yardlii-featured-badge ' . esc_attr((string) $a['class']);
             $styles  = '';
 

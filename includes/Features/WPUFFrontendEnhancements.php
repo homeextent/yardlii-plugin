@@ -7,6 +7,7 @@
  * * Managed Features:
  * 1. Enhanced Dropdown: Replaces native select with branded accordion.
  * 2. Card-Style Layout: Groups form fields into visual "cards" based on section breaks.
+ * 3. Modern Uploader: Reskins upload button to a dropzone.
  *
  * Configuration:
  * Controlled via Settings -> YARDLII Core -> General -> WPUF Customisations.
@@ -69,25 +70,25 @@ class WPUFFrontendEnhancements {
                 'yardlii-wpuf-cards',
                 plugins_url('/assets/css/yardlii-wpuf-cards.css', YARDLII_CORE_FILE),
                 [],
-                '1.0.0'
+                filemtime(plugin_dir_path(YARDLII_CORE_FILE) . 'assets/css/yardlii-wpuf-cards.css') // Dynamic Version
             );
-
-         // 4. Feature: Modern Uploader Skin
-        if (get_option('yardlii_wpuf_modern_uploader', false)) {
-            wp_enqueue_style(
-                'yardlii-wpuf-uploader',
-                plugins_url('/assets/css/yardlii-wpuf-uploader.css', YARDLII_CORE_FILE),
-                ['dashicons'], // Dependency: We use Dashicons for the cloud icon
-                '1.0.0'
-            );
-        }
 
             wp_enqueue_script(
                 'yardlii-wpuf-cards',
                 plugins_url('/assets/js/yardlii-wpuf-cards.js', YARDLII_CORE_FILE),
                 ['jquery'],
-                '1.0.0',
+                filemtime(plugin_dir_path(YARDLII_CORE_FILE) . 'assets/js/yardlii-wpuf-cards.js'), // Dynamic Version
                 true
+            );
+        }
+
+        // 4. Feature: Modern Uploader Skin
+        if (get_option('yardlii_wpuf_modern_uploader', false)) {
+            wp_enqueue_style(
+                'yardlii-wpuf-uploader',
+                plugins_url('/assets/css/yardlii-wpuf-uploader.css', YARDLII_CORE_FILE),
+                ['dashicons'], 
+                filemtime(plugin_dir_path(YARDLII_CORE_FILE) . 'assets/css/yardlii-wpuf-uploader.css') // Dynamic Version
             );
         }
     }

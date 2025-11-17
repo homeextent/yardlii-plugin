@@ -128,12 +128,22 @@ The Role Control tab remains visible but is locked (read-only). No Submit Access
 
 ---
 
-## **📦 Changelog**
+## 📦 Changelog
 
-### **3.10.1**
+### 3.11.0
+* **Feat:** Enabled selecting multiple forms for "Featured Image Automation" (previously only one).
+* **Feat:** Added a comprehensive "Diagnostics" panel to the "Advanced" tab for plugin health checks.
+* **Dev:** The new diagnostics panel includes:
+    * An Environment & Dependencies check (ACF, WPUF, FacetWP, etc.).
+    * An effective Feature Flag Status table (shows DB option vs. constant overrides).
+    * Role Control & Badges diagnostics (ACF Options check, Action Scheduler queue status, and an AJAX sync test button).
+    * Homepage Search diagnostics (FacetWP check and a transient cache clearing tool).
+* **Fix:** Added Action Scheduler stubs to the PHPStan bootstrap file to resolve CI analysis errors.
+
+### 3.10.1
 * **Fix**: Resolved styling conflicts for the Featured Badge by properly enqueuing a dedicated `frontend.css` file.
 * **Refactor**: Removed inline CSS from the `[yardlii_featured_badge]` shortcode to allow global styling control.
-* **UI**: Validated badge colors against Brand Identity Guidelines (Action Orange).
+* **UI**: Validated badge colors against Brand Identity Guidelines (Action Orange)..
 
 ### **3.10.0**
 * **Feat**: Added **Featured Listings Logic**.

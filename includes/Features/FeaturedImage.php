@@ -23,12 +23,16 @@ class FeaturedImage
      */
     public function maybe_set_featured_image($post_id, $form_id, $form_settings, $form_vars)
     {
-        $target_form = get_option('yardlii_listing_form_id');
+        // --- 1. MODIFICATION: Get an array of forms, not a single one ---
+        $target_forms = (array) get_option('yardlii_listing_form_id', []);
+        // --- End Modification ---
+        
         $acf_field   = get_option('yardlii_featured_image_field');
         $debug_mode  = (bool) get_option('yardlii_featured_image_debug', false);
 
-        // Only run for the configured form
-        if ((int) $form_id !== (int) $target_form || empty($acf_field)) {
+        // --- 2. MODIFICATION: Check if form ID is in the array ---
+        // Only run for the configured form(s)
+        if ( empty($target_forms) || ! in_array( (int) $form_id, $target_forms, true ) || empty($acf_field) ) {
             if ($debug_mode) {
                 $this->set_notice('⚠️ Featured image automation skipped — no matching form or gallery field.', 'warning');
             }

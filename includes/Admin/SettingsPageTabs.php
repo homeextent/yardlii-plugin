@@ -289,7 +289,23 @@ final class SettingsPageTabs
     {
         $N = self::success_notifier(self::GROUP_FEATURED_IMAGE);
         register_setting(self::GROUP_FEATURED_IMAGE, 'yardlii_featured_image_field', ['sanitize_callback' => $N]);
-        register_setting(self::GROUP_FEATURED_IMAGE, 'yardlii_listing_form_id',      ['sanitize_callback' => $N]);
+        
+        // --- 1. MODIFICATION: Added a sanitizer for the array ---
+        $sanitize_forms_cb = static function ($input) {
+            if (!is_array($input)) {
+                $input = [];
+            }
+            // Sanitize each value as an integer and remove any 0s or blanks
+            return array_values(array_filter(array_map('absint', $input)));
+        };
+
+        register_setting(
+            self::GROUP_FEATURED_IMAGE,
+            'yardlii_listing_form_id',
+            ['sanitize_callback' => self::success_notifier(self::GROUP_FEATURED_IMAGE, $sanitize_forms_cb)]
+        );
+        // --- End Modification ---
+
         register_setting(self::GROUP_FEATURED_IMAGE, 'yardlii_featured_image_debug', ['sanitize_callback' => $N]);
     }
 

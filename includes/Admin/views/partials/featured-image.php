@@ -8,8 +8,11 @@ defined('ABSPATH') || exit;
     <?php
     settings_fields('yardlii_featured_image_group');
 
+    // --- 1. MODIFICATION: Renamed variable and cast to (array) ---
+    $saved_forms = (array) get_option('yardlii_listing_form_id', []);
+    // --- End Modification ---
+
     $saved_field = get_option('yardlii_featured_image_field', '');
-    $saved_form  = get_option('yardlii_listing_form_id', '');
 
     // 🔍 Collect all ACF gallery fields site-wide
     $gallery_fields = [];
@@ -73,18 +76,23 @@ defined('ABSPATH') || exit;
 
 
       <tr valign="top">
-        <th scope="row"><?php esc_html_e('Listing Submission Form ID', 'yardlii-core'); ?></th>
+        <th scope="row"><?php esc_html_e('Listing Submission Form IDs', 'yardlii-core'); ?></th>
         <td>
-          <select name="yardlii_listing_form_id" style="min-width:300px;">
-            <option value=""><?php esc_html_e('Select form source for listings', 'yardlii-core'); ?></option>
+          <?php // --- 2. MODIFICATION: Added '[]' to name, 'multiple', and 'style' --- ?>
+          <select name="yardlii_listing_form_id[]" multiple style="min-width:300px; height: 150px;">
+          <?php // --- End Modification --- ?>
+            <option value=""><?php esc_html_e('Select form source(s) for listings', 'yardlii-core'); ?></option>
             <?php foreach ($forms as $id => $title) : ?>
-              <option value="<?php echo esc_attr($id); ?>" <?php selected($saved_form, $id); ?>>
+              <?php // --- 3. MODIFICATION: Changed 'selected()' to 'selected(in_array())' --- ?>
+              <option value="<?php echo esc_attr($id); ?>" <?php selected(in_array($id, $saved_forms, true)); ?>>
+              <?php // --- End Modification --- ?>
                 <?php echo esc_html($title); ?>
               </option>
             <?php endforeach; ?>
           </select>
           <p class="description">
-            <?php esc_html_e('Used to detect which form creates listings and pulls images for featured image automation.', 'yardlii-core'); ?>
+            <?php esc_html_e('Used to detect which form(s) create listings and pull images for featured image automation.', 'yardlii-core'); ?><br/>
+            <?php esc_html_e('Hold Ctrl (or Cmd on Mac) to select multiple forms.', 'yardlii-core'); ?>
           </p>
         </td>
       </tr>

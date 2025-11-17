@@ -342,6 +342,39 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+   // Search Cache Test
+    var searchBtn = document.getElementById('yardlii-diag-search-cache-test');
+    var searchOut = document.getElementById('yardlii-diag-search-cache-output');
+
+    if (searchBtn && searchOut && window.YARDLII_ADMIN && window.YARDLII_ADMIN.nonce_search_cache) {
+        searchBtn.addEventListener('click', function() {
+            searchOut.textContent = 'Clearing cache...';
+            searchOut.style.color = '#555';
+            searchOut.style.display = 'block';
+
+            fetch(YARDLII_ADMIN.ajaxurl, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: new URLSearchParams({
+                    'action': 'yardlii_diag_clear_search_cache',
+                    'nonce': YARDLII_ADMIN.nonce_search_cache
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                var msg = data.message || (data.data ? data.data.message : 'Unknown response.');
+                searchOut.textContent = msg;
+                searchOut.style.color = data.success ? '#0073aa' : '#d63638';
+            })
+            .catch(err => {
+                searchOut.textContent = 'AJAX request failed: ' + err;
+                searchOut.style.color = '#d63638';
+            });
+        });
+    }
+
+    // TV API Test (from original file)
+// ... (rest of the script) ...
 
     // TV API Test (from original file)
     var tvApiBtn = document.getElementById('yardlii-tv-api-test');
@@ -374,6 +407,41 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php // --- End Section 3 --- ?>
+
+
+<?php
+// --- 4. NEW: Homepage Search Diagnostics ---
+
+$hs_diag = [
+    'facetwp' => [
+        'name' => 'FacetWP',
+        'active' => function_exists('FWP'),
+        'ok' => 'Active',
+        'fail' => 'NOT FOUND. Required for Homepage Search.'
+    ],
+];
+?>
+<div class="form-config-block">
+  <h2>🔍 Homepage Search Diagnostics</h2>
+  <ul class="yardlii-diag-list" style="margin-top: 15px;">
+      <?php
+      foreach ($hs_diag as $check) {
+          yardlii_diag_check($check['name'], $check['active'], $check['ok'], $check['fail']);
+      }
+      ?>
+  </ul>
+
+  <hr style="margin: 15px 0;">
+  
+  <h3>Test Term Cache</h3>
+  <p class="description">Force-deletes the cached taxonomy term lists (transients) used by the homepage search dropdowns.</p>
+  <button type="button" class="button" id="yardlii-diag-search-cache-test" style="margin-left:1rem;">
+      <?php esc_html_e('Clear Homepage Term Cache', 'yardlii-core'); ?>
+  </button>
+  <pre id="yardlii-diag-search-cache-output" style="margin-top:1rem;max-height:100px;overflow:auto;background:#f6f7f7;padding:10px;border:1px solid #dcdcde;display:none;"></pre>
+</div>
+
+<?php // --- End Section 4 --- ?>
 
 
 <div class="form-config-block">

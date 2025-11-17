@@ -31,6 +31,8 @@ class HomepageSearch
         add_action('created_term', [$this, 'flush_term_cache']);
         add_action('edited_term',  [$this, 'flush_term_cache']);
         add_action('delete_term',  [$this, 'flush_term_cache']);
+        // AJAX handler for Diagnostics panel
+        add_action('wp_ajax_yardlii_diag_clear_search_cache', [$this, 'ajax_clear_search_cache']);
     }
 
     /**
@@ -218,4 +220,46 @@ class HomepageSearch
             delete_transient('yardlii_terms_' . sanitize_key($term->taxonomy) . '_all');
         }
     }
+    /**
+     * AJAX handler for the "Clear Homepage Term Cache" button in Diagnostics.
+     * Deletes the transients for the configured taxonomies.
+     * @since 3.11.0
+     */
+    public function ajax_clear_search_cache(): void
+    {
+        // 1. Security check
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'Error: Insufficient permissions.'], 403);
+        }
+        check_ajax_referer('yardlii_diag_search_cache_nonce', 'nonce');
+
+        // 2. Get configured taxonomies
+        $primary_tax = get_option(self::OPT_PRIMARY_TAXONOMY, '');
+        $secondary_tax = get_option(self::OPT_SECONDARY_TAXONOMY, '');
+
+        $deleted_count = 0;
+
+        // 3. Delete transients for both (hierarchical and non-hierarchical versions)
+        foreach ([$primary_tax, $secondary_tax] as $tax) {
+            if (!empty($tax)) {
+                $key_all = 'yardlii_terms_' . sanitize_key($tax) . '_all';
+                $key_parents = 'yardlii_terms_' . sanitize_key($tax) . '_parents';
+                
+                if (delete_transient($key_all)) {
+                    $deleted_count++;
+                }
+                if (delete_transient($key_parents)) {
+                    $deleted_count++;
+                }
+            }
+        }
+
+        wp_send_json_success([
+            'message' => sprintf(
+                'Success: Cleared %d term cache(s). The search dropdowns will rebuild on the next page load.',
+                $deleted_count
+            )
+        ]);
+    }
 }
+

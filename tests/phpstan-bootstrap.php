@@ -1,19 +1,38 @@
 <?php
-// tests/phpstan-bootstrap.php
+// Minimal bootstrap for static analysis
+if (!defined('ABSPATH')) {
+    define('ABSPATH', dirname(__DIR__) . '/'); // Point to project root
+}
 
-// PHPStan runs without WP core, so we define only what's needed to satisfy types.
+// Composer autoload is in the project root (dirname(__DIR__)), not the /tests directory (__DIR__)
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-if (!class_exists('WP_List_Table')) {
+
+// --- Stubs for Action Scheduler ---
+if (!function_exists('as_get_scheduled_actions')) {
     /**
-     * Minimal stub so PHPStan knows the parent exists.
-     * Methods/properties are intentionally omitted.
+     * @param array<string, mixed> $args
+     * @param string $return_format 'objects'|'ids'|'count'
+     * @return array|int
      */
-    abstract class WP_List_Table {}
+    function as_get_scheduled_actions(array $args = [], string $return_format = 'objects') {
+        if ($return_format === 'count') {
+            return 0;
+        }
+        return [];
+    }
 }
 
-if (!function_exists('esc_html')) {
-    function esc_html($text) { return (string) $text; }
-}
-if (!function_exists('esc_attr')) {
-    function esc_attr($text) { return (string) $text; }
+if (!class_exists('ActionScheduler_Store')) {
+    /**
+     * Stub for \ActionScheduler_Store class
+     * Provides constants for static analysis.
+     */
+    class ActionScheduler_Store {
+        public const STATUS_PENDING = 'pending';
+        public const STATUS_FAILED = 'failed';
+        public const STATUS_RUNNING = 'running';
+        public const STATUS_COMPLETE = 'complete';
+        public const STATUS_CANCELED = 'canceled';
+    }
 }

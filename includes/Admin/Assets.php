@@ -6,7 +6,7 @@ class Assets
     public function register(): void
     {
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
-        // ✅ Removed runtime diagnostics injection hook
+        // ✅ Removed runtime diagnostic injection hook
     }
 
     public function enqueue_admin_assets(): void
@@ -46,9 +46,10 @@ foreach ($registered_handlers as $key => $handler) {
 }
 
 wp_localize_script('yardlii-admin', 'YARDLII_ADMIN', [
-    'nonce'          => wp_create_nonce('yardlii_admin_nonce'),
-    'ajaxurl'        => admin_url('admin-ajax.php'),
-    'specialOptions' => $special_options,
+    'nonce'            => wp_create_nonce('yardlii_admin_nonce'),
+    'nonce_badge_sync' => wp_create_nonce('yardlii_diag_badge_sync_nonce'), // <-- ADD THIS LINE
+    'ajaxurl'          => admin_url('admin-ajax.php'),
+    'specialOptions'   => $special_options,
 ]);
 
     }

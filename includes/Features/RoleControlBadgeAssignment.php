@@ -27,6 +27,9 @@ class RoleControlBadgeAssignment
         add_action('admin_init',       [$this, 'handle_manual_resync']);
         add_action('yardlii_rc_resync_user_badge', [$this, 'sync_user_badge'], 10, 1);
 
+        // AJAX endpoint for Diagnostics panel
+        add_action('wp_ajax_yardlii_diag_test_badge_sync', [$this, 'ajax_test_badge_sync']);
+
          self::register_admin_hooks();
          self::register_profile_preview();
          self::register_users_table_column();
@@ -34,160 +37,160 @@ class RoleControlBadgeAssignment
 
 
     /** Users list table: add "Badge" column (with optional sorting) */
-public static function register_users_table_column(): void {
-    add_filter('manage_users_columns',        [__CLASS__, 'add_users_badge_column']);
-    add_filter('manage_users_custom_column',  [__CLASS__, 'render_users_badge_column'], 10, 3);
-    add_filter('manage_users_sortable_columns',[__CLASS__, 'make_users_badge_sortable']);
-    add_action('pre_get_users',               [__CLASS__, 'handle_users_badge_sorting']);
-    add_action('admin_head-users.php',        [__CLASS__, 'users_badge_column_style']);
-}
+    public static function register_users_table_column(): void {
+        add_filter('manage_users_columns',        [__CLASS__, 'add_users_badge_column']);
+        add_filter('manage_users_custom_column',  [__CLASS__, 'render_users_badge_column'], 10, 3);
+        add_filter('manage_users_sortable_columns',[__CLASS__, 'make_users_badge_sortable']);
+        add_action('pre_get_users',               [__CLASS__, 'handle_users_badge_sorting']);
+        add_action('admin_head-users.php',        [__CLASS__, 'users_badge_column_style']);
+    }
 
-public static function add_users_badge_column(array $columns): array {
-    // Only show when master + feature are on
-    if (!self::is_feature_active()) return $columns;
+    public static function add_users_badge_column(array $columns): array {
+        // Only show when master + feature are on
+        if (!self::is_feature_active()) return $columns;
 
-    // Insert after 'name' if present; otherwise append
-    $new = [];
-    $inserted = false;
-    foreach ($columns as $key => $label) {
-        $new[$key] = $label;
-        if (!$inserted && 'name' === $key) {
-            $new['yl_badge'] = esc_html__('Badge', 'yardlii-core');
-            $inserted = true;
+        // Insert after 'name' if present; otherwise append
+        $new = [];
+        $inserted = false;
+        foreach ($columns as $key => $label) {
+            $new[$key] = $label;
+            if (!$inserted && 'name' === $key) {
+                $new['yl_badge'] = esc_html__('Badge', 'yardlii-core');
+                $inserted = true;
+            }
         }
+        if (!$inserted) {
+            $new['yl_badge'] = esc_html__('Badge', 'yardlii-core');
+        }
+        return $new;
     }
-    if (!$inserted) {
-        $new['yl_badge'] = esc_html__('Badge', 'yardlii-core');
+
+    public static function render_users_badge_column(string $value, string $column_name, $user_id) {
+        if ('yl_badge' !== $column_name) return $value;
+        if (!self::is_feature_active())  return $value;
+
+        $opt = (array) get_option(self::OPTION_KEY, []);
+        $meta_key = !empty($opt['meta_key']) ? sanitize_key($opt['meta_key']) : self::DEFAULT_META_KEY;
+        $img_id = (int) get_user_meta((int) $user_id, $meta_key, true);
+
+        if ($img_id) {
+            // Small, round thumbnail for the table
+            $img = wp_get_attachment_image(
+                $img_id,
+                'thumbnail',
+                false,
+                [
+                    'style' => 'width:28px;height:28px;border-radius:50%;object-fit:cover;display:block;margin:auto;',
+                    'alt'   => esc_attr__('User badge', 'yardlii-core'),
+                ]
+            );
+            return $img ?: '—';
+        }
+        return '—';
     }
-    return $new;
-}
 
-public static function render_users_badge_column(string $value, string $column_name, $user_id) {
-    if ('yl_badge' !== $column_name) return $value;
-    if (!self::is_feature_active())  return $value;
-
-    $opt = (array) get_option(self::OPTION_KEY, []);
-    $meta_key = !empty($opt['meta_key']) ? sanitize_key($opt['meta_key']) : self::DEFAULT_META_KEY;
-    $img_id = (int) get_user_meta((int) $user_id, $meta_key, true);
-
-    if ($img_id) {
-        // Small, round thumbnail for the table
-        $img = wp_get_attachment_image(
-            $img_id,
-            'thumbnail',
-            false,
-            [
-                'style' => 'width:28px;height:28px;border-radius:50%;object-fit:cover;display:block;margin:auto;',
-                'alt'   => esc_attr__('User badge', 'yardlii-core'),
-            ]
-        );
-        return $img ?: '—';
+    public static function make_users_badge_sortable(array $columns): array {
+        if (!self::is_feature_active()) return $columns;
+        // Sort by our virtual key; we’ll map it in pre_get_users
+        $columns['yl_badge'] = 'yl_user_badge';
+        return $columns;
     }
-    return '—';
-}
 
-public static function make_users_badge_sortable(array $columns): array {
-    if (!self::is_feature_active()) return $columns;
-    // Sort by our virtual key; we’ll map it in pre_get_users
-    $columns['yl_badge'] = 'yl_user_badge';
-    return $columns;
-}
+    public static function handle_users_badge_sorting(\WP_User_Query $query): void {
+        if (!is_admin() || !function_exists('get_current_screen')) return;
+        $screen = get_current_screen();
+        if (!$screen || 'users' !== $screen->id) return;
+        if (!self::is_feature_active()) return;
 
-public static function handle_users_badge_sorting(\WP_User_Query $query): void {
-    if (!is_admin() || !function_exists('get_current_screen')) return;
-    $screen = get_current_screen();
-    if (!$screen || 'users' !== $screen->id) return;
-    if (!self::is_feature_active()) return;
+        $orderby = $query->get('orderby');
+        if ('yl_user_badge' !== $orderby) return;
 
-    $orderby = $query->get('orderby');
-    if ('yl_user_badge' !== $orderby) return;
+        $opt = (array) get_option(self::OPTION_KEY, []);
+        $meta_key = !empty($opt['meta_key']) ? sanitize_key($opt['meta_key']) : self::DEFAULT_META_KEY;
 
-    $opt = (array) get_option(self::OPTION_KEY, []);
-    $meta_key = !empty($opt['meta_key']) ? sanitize_key($opt['meta_key']) : self::DEFAULT_META_KEY;
-
-    // Sort by meta_value_num because the badge is stored as attachment ID (integer)
-    $query->set('meta_key', $meta_key);
-    $query->set('orderby',  'meta_value_num');
-    // 'order' (ASC/DESC) is handled by WordPress from the request
-}
-
-public static function users_badge_column_style(): void {
-    if (!self::is_feature_active()) return;
-    echo '<style>.column-yl_badge{width:60px;text-align:center;}</style>';
-}
-
-/** Helper: is Role Control + Badge feature active? */
-private static function is_feature_active(): bool {
-    $master = (bool) get_option('yardlii_enable_role_control', false);
-    if (defined('YARDLII_ENABLE_ROLE_CONTROL')) {
-        $master = (bool) YARDLII_ENABLE_ROLE_CONTROL;
+        // Sort by meta_value_num because the badge is stored as attachment ID (integer)
+        $query->set('meta_key', $meta_key);
+        $query->set('orderby',  'meta_value_num');
+        // 'order' (ASC/DESC) is handled by WordPress from the request
     }
-    if (!$master) return false;
-    return (bool) get_option(self::ENABLE_OPTION, true);
-}
+
+    public static function users_badge_column_style(): void {
+        if (!self::is_feature_active()) return;
+        echo '<style>.column-yl_badge{width:60px;text-align:center;}</style>';
+    }
+
+    /** Helper: is Role Control + Badge feature active? */
+    private static function is_feature_active(): bool {
+        $master = (bool) get_option('yardlii_enable_role_control', false);
+        if (defined('YARDLII_ENABLE_ROLE_CONTROL')) {
+            $master = (bool) YARDLII_ENABLE_ROLE_CONTROL;
+        }
+        if (!$master) return false;
+        return (bool) get_option(self::ENABLE_OPTION, true);
+    }
 
     /** Settings sanitizer wired from SettingsPageTabs.php */
     public static function sanitize_settings($raw)
-{
-    // Master OFF? keep previous
-    $master = (bool) get_option('yardlii_enable_role_control', false);
-    if (defined('YARDLII_ENABLE_ROLE_CONTROL')) {
-        $master = (bool) YARDLII_ENABLE_ROLE_CONTROL;
-    }
-    if (!$master) {
-        return get_option(self::OPTION_KEY, ['map'=>[], 'meta_key'=>self::DEFAULT_META_KEY, 'fallback_field'=>'']);
-    }
+    {
+        // Master OFF? keep previous
+        $master = (bool) get_option('yardlii_enable_role_control', false);
+        if (defined('YARDLII_ENABLE_ROLE_CONTROL')) {
+            $master = (bool) YARDLII_ENABLE_ROLE_CONTROL;
+        }
+        if (!$master) {
+            return get_option(self::OPTION_KEY, ['map'=>[], 'meta_key'=>self::DEFAULT_META_KEY, 'fallback_field'=>'']);
+        }
 
-    // Permission guard
-    if (!current_user_can('manage_options')) {
-        return get_option(self::OPTION_KEY, ['map'=>[], 'meta_key'=>self::DEFAULT_META_KEY, 'fallback_field'=>'']);
-    }
+        // Permission guard
+        if (!current_user_can('manage_options')) {
+            return get_option(self::OPTION_KEY, ['map'=>[], 'meta_key'=>self::DEFAULT_META_KEY, 'fallback_field'=>'']);
+        }
 
-    // Per-feature toggle guard
-    $enabled_post = isset($_POST[self::ENABLE_OPTION]) && (int) $_POST[self::ENABLE_OPTION] === 1;
-    $enabled = $enabled_post ? true : (bool) get_option(self::ENABLE_OPTION, true);
-    if (!$enabled) {
-        return get_option(self::OPTION_KEY, ['map'=>[], 'meta_key'=>self::DEFAULT_META_KEY, 'fallback_field'=>'']);
-    }
+        // Per-feature toggle guard
+        $enabled_post = isset($_POST[self::ENABLE_OPTION]) && (int) $_POST[self::ENABLE_OPTION] === 1;
+        $enabled = $enabled_post ? true : (bool) get_option(self::ENABLE_OPTION, true);
+        if (!$enabled) {
+            return get_option(self::OPTION_KEY, ['map'=>[], 'meta_key'=>self::DEFAULT_META_KEY, 'fallback_field'=>'']);
+        }
 
-    $out = ['map'=>[], 'meta_key'=>self::DEFAULT_META_KEY, 'fallback_field'=>''];
-    if (!is_array($raw)) $raw = [];
+        $out = ['map'=>[], 'meta_key'=>self::DEFAULT_META_KEY, 'fallback_field'=>''];
+        if (!is_array($raw)) $raw = [];
 
-    // Meta key + fallback
-    $out['meta_key'] = isset($raw['meta_key']) ? sanitize_key($raw['meta_key']) : self::DEFAULT_META_KEY;
-    $out['meta_key'] = $out['meta_key'] ?: self::DEFAULT_META_KEY;
-    $out['fallback_field'] = isset($raw['fallback_field']) ? sanitize_key($raw['fallback_field']) : '';
+        // Meta key + fallback
+        $out['meta_key'] = isset($raw['meta_key']) ? sanitize_key($raw['meta_key']) : self::DEFAULT_META_KEY;
+        $out['meta_key'] = $out['meta_key'] ?: self::DEFAULT_META_KEY;
+        $out['fallback_field'] = isset($raw['fallback_field']) ? sanitize_key($raw['fallback_field']) : '';
 
-    // Build canonical map from either legacy 'map' or new 'rows'
-    $map = [];
+        // Build canonical map from either legacy 'map' or new 'rows'
+        $map = [];
 
-    // New repeater format: rows[][role|field]
-    if (!empty($raw['rows']) && is_array($raw['rows'])) {
-        foreach ($raw['rows'] as $row) {
-            if (!is_array($row)) continue;
-            $role  = isset($row['role'])  ? sanitize_key($row['role'])  : '';
-            $field = isset($row['field']) ? sanitize_key($row['field']) : '';
-            // ignore empties; first mapping wins to avoid duplicates
-            if ($role && $field && !isset($map[$role])) {
-                $map[$role] = $field;
+        // New repeater format: rows[][role|field]
+        if (!empty($raw['rows']) && is_array($raw['rows'])) {
+            foreach ($raw['rows'] as $row) {
+                if (!is_array($row)) continue;
+                $role  = isset($row['role'])  ? sanitize_key($row['role'])  : '';
+                $field = isset($row['field']) ? sanitize_key($row['field']) : '';
+                // ignore empties; first mapping wins to avoid duplicates
+                if ($role && $field && !isset($map[$role])) {
+                    $map[$role] = $field;
+                }
             }
         }
-    }
 
-    // Legacy format: map[role] = field (keep supporting)
-    if (empty($map) && !empty($raw['map']) && is_array($raw['map'])) {
-        foreach ($raw['map'] as $role => $field) {
-            $role  = sanitize_key($role);
-            $field = sanitize_key($field);
-            if ($role && $field && !isset($map[$role])) {
-                $map[$role] = $field;
+        // Legacy format: map[role] = field (keep supporting)
+        if (empty($map) && !empty($raw['map']) && is_array($raw['map'])) {
+            foreach ($raw['map'] as $role => $field) {
+                $role  = sanitize_key($role);
+                $field = sanitize_key($field);
+                if ($role && $field && !isset($map[$role])) {
+                    $map[$role] = $field;
+                }
             }
         }
-    }
 
-    $out['map'] = $map;
-    return $out;
-}
+        $out['map'] = $map;
+        return $out;
+    }
 
 
     /** --- Sync engine --- */
@@ -388,4 +391,55 @@ private static function is_feature_active(): bool {
     }
     echo '</td></tr></table>';
     } 
+    
+    /**
+     * AJAX handler for the "Test Badge Sync" button in Diagnostics.
+     * @since 3.11.0
+     */
+    public function ajax_test_badge_sync(): void
+    {
+        // 1. Security check
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'Error: Insufficient permissions.'], 403);
+        }
+        check_ajax_referer('yardlii_diag_badge_sync_nonce', 'nonce');
+
+        // 2. Validate User ID
+        $user_id = isset($_POST['user_id']) ? absint($_POST['user_id']) : 0;
+        if ($user_id <= 0) {
+            wp_send_json_error(['message' => 'Error: Invalid User ID.'], 400);
+        }
+
+        $user = get_user_by('id', $user_id);
+        if (!$user) {
+            wp_send_json_error(['message' => "Error: User ID {$user_id} not found."], 404);
+        }
+
+        // 3. Run the sync
+        $this->sync_user_badge($user_id);
+
+        // 4. Get the new value to confirm
+        $opt = (array) get_option(self::OPTION_KEY, []);
+        $meta_key = !empty($opt['meta_key']) ? sanitize_key($opt['meta_key']) : self::DEFAULT_META_KEY;
+        $new_badge_id = get_user_meta($user_id, $meta_key, true);
+
+        if ($new_badge_id) {
+            wp_send_json_success([
+                'message' => sprintf(
+                    'Success: Badge sync ran for user %s (ID %d). New badge attachment ID: %s',
+                    esc_html($user->user_login),
+                    $user_id,
+                    esc_html($new_badge_id)
+                )
+            ]);
+        } else {
+            wp_send_json_success([
+                'message' => sprintf(
+                    'Success: Badge sync ran for user %s (ID %d). No matching badge was found, meta was cleared.',
+                    esc_html($user->user_login),
+                    $user_id
+                )
+            ]);
+        }
+    }
 }

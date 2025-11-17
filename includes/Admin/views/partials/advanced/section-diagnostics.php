@@ -96,9 +96,138 @@ $dependencies = [
 <?php // --- End New Section --- ?>
 
 
+<?php // --- End New Section --- ?>
+
+
+<?php
+// --- 2. NEW: Feature Flag Status Check ---
+
+// Helper function for this template
+if (!function_exists('yardlii_diag_flag_status_row')) {
+    /**
+     * Renders a single row for the feature flag status table.
+     *
+     * @param string $label            The user-friendly name of the feature.
+     * @param string $option_key       The wp_options key for the flag.
+     * @param string $constant_name    The name of the constant that can override it.
+     * @param bool   $master_depends   (Optional) If this feature depends on a master flag.
+     * @param bool   $master_effective (Optional) The effective status of the master flag.
+     */
+    function yardlii_diag_flag_status_row(
+        string $label,
+        string $option_key,
+        string $constant_name = '',
+        bool $master_depends = false,
+        bool $master_effective = true
+    ): void {
+        $option_val = (bool) get_option($option_key, false);
+        $const_defined = ($constant_name !== '') && defined($constant_name);
+        
+        $option_status = $option_val ? '<code>true</code>' : '<code>false</code>';
+        $const_status = '<em>Not Set</em>';
+        $effective_status = $option_val;
+
+        if ($const_defined) {
+            $const_val = (bool) constant($constant_name);
+            $const_status = 'Set to <code>' . ($const_val ? 'true' : 'false') . '</code>';
+            $effective_status = $const_val; // Constant overrides option
+        }
+
+        // Check master dependency
+        if ($master_depends && !$master_effective) {
+            $effective_status = false; // Overridden by master
+            $final_status = '<span style="color:#999;font-style:italic;">Disabled (Master Off)</span>';
+        } else {
+            $final_status = $effective_status
+                ? '<span style="color:#00a32a;"><strong>Running</strong></span>'
+                : '<span style="color:#d63638;"><strong>Disabled</strong></span>';
+        }
+
+        echo '<tr>';
+        echo '<td>' . esc_html($label) . '</td>';
+        echo '<td>' . $option_status . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo '<td>' . $const_status . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo '<td>' . $final_status . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo '</tr>';
+    }
+}
+
+// Get the effective status of the Role Control master flag
+$rc_master_effective = (bool) get_option('yardlii_enable_role_control', false);
+if (defined('YARDLII_ENABLE_ROLE_CONTROL')) {
+    $rc_master_effective = (bool) YARDLII_ENABLE_ROLE_CONTROL;
+}
+
+?>
+
 <div class="form-config-block">
-  <h2><?php esc_html_e('Plugin-Wide Diagnostics', 'yardlii-core'); ?></h2>
-  <p class="description">This section is a placeholder for future plugin-wide diagnostic tools.</p>
+  <h2>🚦 Feature Flag Status</h2>
+  <p class="description">Shows the runtime status of each module. A defined constant (e.g., in <code>wp-config.php</code>) will always override the database option.</p>
+  <table class="wp-list-table widefat striped" style="margin-top: 15px;">
+    <thead>
+      <tr>
+        <th scope="col"><?php esc_html_e('Feature Module', 'yardlii-core'); ?></th>
+        <th scope="col"><?php esc_html_e('Option Status (DB)', 'yardlii-core'); ?></th>
+        <th scope="col"><?php esc_html_e('Constant Override', 'yardlii-core'); ?></th>
+        <th scope="col"><?php esc_html_e('Effective Status', 'yardlii-core'); ?></th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php
+      yardlii_diag_flag_status_row(
+          'Trust & Verification',
+          'yardlii_enable_trust_verification',
+          'YARDLII_ENABLE_TRUST_VERIFICATION'
+      );
+      yardlii_diag_flag_status_row(
+          'Role Control (Master)',
+          'yardlii_enable_role_control',
+          'YARDLII_ENABLE_ROLE_CONTROL'
+      );
+      yardlii_diag_flag_status_row(
+          '— Role: Submit Access',
+          'yardlii_enable_role_control_submit',
+          '', // No constant override for this sub-feature
+          true,
+          $rc_master_effective
+      );
+      yardlii_diag_flag_status_row(
+          '— Role: Custom User Roles',
+          'yardlii_enable_custom_roles',
+          '', // No constant override for this sub-feature
+          true,
+          $rc_master_effective
+      );
+      yardlii_diag_flag_status_row(
+          '— Role: Badge Assignment',
+          'yardlii_enable_badge_assignment',
+          '', // No constant override for this sub-feature
+          true,
+          $rc_master_effective
+      );
+      yardlii_diag_flag_status_row(
+          'Featured Listings Logic',
+          'yardlii_enable_featured_listings',
+          '' // No constant override for this feature
+      );
+      yardlii_diag_flag_status_row(
+          'WPUF: Enhanced Dropdown',
+          'yardlii_enable_wpuf_dropdown',
+          '' // No constant override for this feature
+      );
+      yardlii_diag_flag_status_row(
+          'WPUF: Card-Style Layout',
+          'yardlii_wpuf_card_layout',
+          '' // No constant override for this feature
+      );
+      yardlii_diag_flag_status_row(
+          'WPUF: Modern Uploader',
+          'yardlii_wpuf_modern_uploader',
+          '' // No constant override for this feature
+      );
+      ?>
+    </tbody>
+  </table>
 </div>
 
 <div class="form-config-block">

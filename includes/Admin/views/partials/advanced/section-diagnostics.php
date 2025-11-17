@@ -2,13 +2,15 @@
 /**
  * YARDLII: Advanced -> Diagnostics Panel
  *
- * This partial now contains two sections:
- * 1. Environment & Dependencies Check (NEW)
- * 2. Trust & Verification Diagnostics (Existing)
+ * This partial now contains four sections:
+ * 1. Environment & Dependencies Check
+ * 2. Feature Flag Status
+ * 3. Role Control & Badges Diagnostics
+ * 4. Trust & Verification Diagnostics
  */
 defined('ABSPATH') || exit;
 
-// --- 1. NEW: Environment & Dependencies Check ---
+// --- 1. Environment & Dependencies Check ---
 
 // Helper function for this template
 if (!function_exists('yardlii_diag_check')) {
@@ -93,14 +95,11 @@ $dependencies = [
   </ul>
 </div>
 
-<?php // --- End New Section --- ?>
-
-
-<?php // --- End New Section --- ?>
+<?php // --- End Section 1 --- ?>
 
 
 <?php
-// --- 2. NEW: Feature Flag Status Check ---
+// --- 2. Feature Flag Status Check ---
 
 // Helper function for this template
 if (!function_exists('yardlii_diag_flag_status_row')) {
@@ -187,48 +186,195 @@ if (defined('YARDLII_ENABLE_ROLE_CONTROL')) {
       yardlii_diag_flag_status_row(
           '— Role: Submit Access',
           'yardlii_enable_role_control_submit',
-          '', // No constant override for this sub-feature
+          '',
           true,
           $rc_master_effective
       );
       yardlii_diag_flag_status_row(
           '— Role: Custom User Roles',
           'yardlii_enable_custom_roles',
-          '', // No constant override for this sub-feature
+          '',
           true,
           $rc_master_effective
       );
       yardlii_diag_flag_status_row(
           '— Role: Badge Assignment',
           'yardlii_enable_badge_assignment',
-          '', // No constant override for this sub-feature
+          '',
           true,
           $rc_master_effective
       );
       yardlii_diag_flag_status_row(
           'Featured Listings Logic',
           'yardlii_enable_featured_listings',
-          '' // No constant override for this feature
+          ''
       );
       yardlii_diag_flag_status_row(
           'WPUF: Enhanced Dropdown',
           'yardlii_enable_wpuf_dropdown',
-          '' // No constant override for this feature
+          ''
       );
       yardlii_diag_flag_status_row(
           'WPUF: Card-Style Layout',
           'yardlii_wpuf_card_layout',
-          '' // No constant override for this feature
+          ''
       );
       yardlii_diag_flag_status_row(
           'WPUF: Modern Uploader',
           'yardlii_wpuf_modern_uploader',
-          '' // No constant override for this feature
+          ''
       );
       ?>
     </tbody>
   </table>
 </div>
+
+<?php // --- End Section 2 --- ?>
+
+
+<?php
+// --- 3. Role Control & Badges Diagnostics ---
+
+$rc_diag = [
+    'acf_options' => [
+        'name' => 'ACF Options Page',
+        'active' => function_exists('acf_add_options_page'),
+        'ok' => 'Available',
+        'fail' => 'NOT FOUND. Required for Badge Assignment.'
+    ],
+    'action_scheduler' => [
+        'name' => 'Action Scheduler',
+        'active' => function_exists('as_get_scheduled_actions'),
+        'ok' => 'Loaded',
+        'fail' => 'NOT FOUND. Required for "Resync All Users".'
+    ],
+];
+
+$pending_actions = 0;
+$failed_actions = 0;
+if ($rc_diag['action_scheduler']['active']) {
+    $pending_actions = (int) as_get_scheduled_actions([
+        'hook' => 'yardlii_rc_resync_user_badge',
+        'status' => \ActionScheduler_Store::STATUS_PENDING,
+        'group' => 'yardlii-rc-badges',
+    ], 'count');
+    
+    $failed_actions = (int) as_get_scheduled_actions([
+        'hook' => 'yardlii_rc_resync_user_badge',
+        'status' => \ActionScheduler_Store::STATUS_FAILED,
+        'group' => 'yardlii-rc-badges',
+    ], 'count');
+}
+?>
+<div class="form-config-block">
+  <h2>🛡️ Role Control & Badges Diagnostics</h2>
+  <ul class="yardlii-diag-list" style="margin-top: 15px;">
+      <?php
+      foreach ($rc_diag as $check) {
+          yardlii_diag_check($check['name'], $check['active'], $check['ok'], $check['fail']);
+      }
+      
+      // Action Scheduler Queue Status
+      if ($rc_diag['action_scheduler']['active']) {
+          $fail_text = sprintf('<strong>%d Failed Actions</strong>. Check Action Scheduler logs.', $failed_actions);
+          yardlii_diag_check(
+              'Badge Resync Queue',
+              ($failed_actions === 0),
+              sprintf('%d Pending Actions', $pending_actions),
+              $fail_text
+          );
+      }
+      ?>
+  </ul>
+
+  <hr style="margin: 15px 0;">
+  
+  <h3>Test Badge Sync</h3>
+  <p class="description">Run the <code>sync_user_badge()</code> function for a specific user.</p>
+  <label>
+      <span><?php esc_html_e('User ID', 'yardlii-core'); ?></span>
+      <input type="number" id="yardlii-diag-badge-user" min="1" step="1" class="small-text" placeholder="e.g., 123" />
+  </label>
+  <button type="button" class="button" id="yardlii-diag-badge-test" style="margin-left:1rem;">
+      <?php esc_html_e('Run Sync for User', 'yardlii-core'); ?>
+  </button>
+  <pre id="yardlii-diag-badge-output" style="margin-top:1rem;max-height:100px;overflow:auto;background:#f6f7f7;padding:10px;border:1px solid #dcdcde;display:none;"></pre>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Badge Sync Test
+    var badgeBtn = document.getElementById('yardlii-diag-badge-test');
+    var badgeOut = document.getElementById('yardlii-diag-badge-output');
+
+    if (badgeBtn && badgeOut && window.YARDLII_ADMIN && window.YARDLII_ADMIN.nonce_badge_sync) {
+        badgeBtn.addEventListener('click', function() {
+            var uid = document.getElementById('yardlii-diag-badge-user').value;
+            if (!uid) {
+                badgeOut.textContent = 'Error: Please enter a User ID.';
+                badgeOut.style.color = '#d63638';
+                badgeOut.style.display = 'block';
+                return;
+            }
+
+            badgeOut.textContent = 'Running sync...';
+            badgeOut.style.color = '#555';
+            badgeOut.style.display = 'block';
+
+            fetch(YARDLII_ADMIN.ajaxurl, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: new URLSearchParams({
+                    'action': 'yardlii_diag_test_badge_sync',
+                    'nonce': YARDLII_ADMIN.nonce_badge_sync,
+                    'user_id': uid
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                var msg = data.message || (data.data ? data.data.message : 'Unknown response.');
+                badgeOut.textContent = msg;
+                badgeOut.style.color = data.success ? '#0073aa' : '#d63638';
+            })
+            .catch(err => {
+                badgeOut.textContent = 'AJAX request failed: ' + err;
+                badgeOut.style.color = '#d63638';
+            });
+        });
+    }
+
+    // TV API Test (from original file)
+    var tvApiBtn = document.getElementById('yardlii-tv-api-test');
+    var tvApiOut = document.getElementById('yardlii-tv-api-output');
+    
+    if (tvApiBtn && tvApiOut) {
+        tvApiBtn.addEventListener('click', function() {
+            var uid = document.getElementById('yardlii-tv-api-user').value;
+            if (!uid) {
+                tvApiOut.textContent = 'Error: Please enter a User ID.';
+                tvApiOut.style.color = '#d63638';
+                return;
+            }
+            tvApiOut.textContent = 'Testing API...'; // Clear previous
+            
+            var endpoint = (window.wpApiSettings && wpApiSettings.root ? wpApiSettings.root : '/wp-json/') + 'yardlii/v1/verification-status/' + uid;
+            var headers = { 'X-WP-Nonce': (window.YardliiTV && YardliiTV.restNonce) ? YardliiTV.restNonce : '' };
+            
+            fetch(endpoint, { 
+                credentials: 'same-origin',
+                headers: headers
+            }).then(r => r.json()).then(function(data){
+                tvApiOut.textContent = JSON.stringify(data, null, 2);
+            }).catch(function(err){
+                tvApiOut.textContent = String(err);
+            });
+        });
+    }
+});
+</script>
+
+<?php // --- End Section 3 --- ?>
+
 
 <div class="form-config-block">
   <h2><?php esc_html_e('Trust & Verification: Diagnostics', 'yardlii-core'); ?></h2>
@@ -250,27 +396,9 @@ if (defined('YARDLII_ENABLE_ROLE_CONTROL')) {
     <pre id="yardlii-tv-api-output" style="margin-top:1rem;max-height:220px;overflow:auto;background:#f6f7f7;padding:10px;border:1px solid #dcdcde;"></pre>
   </div>
 
-  <script>
-  document.addEventListener('click', function(e){
-    if (e.target && e.target.id === 'yardlii-tv-api-test') {
-      var uid = document.getElementById('yardlii-tv-api-user').value;
-      if (!uid) return;
-      var endpoint = (window.wpApiSettings && wpApiSettings.root ? wpApiSettings.root : '/wp-json/') + 'yardlii/v1/verification-status/' + uid;
-      
-      // Use wpApiSettings nonce if available (from trust-verification.js)
-      var headers = { 'X-WP-Nonce': (window.YardliiTV && YardliiTV.restNonce) ? YardliiTV.restNonce : '' };
-      
-      fetch(endpoint, { 
-        credentials: 'same-origin',
-        headers: headers
-      }).then(r => r.json()).then(function(data){
-        document.getElementById('yardlii-tv-api-output').textContent = JSON.stringify(data, null, 2);
-      }).catch(function(err){
-        document.getElementById('yardlii-tv-api-output').textContent = String(err);
-      });
-    }
-  });
-  </script>
+  <?php
+  // This script tag is now moved inside the new DOMContentLoaded listener above
+  ?>
 
   <?php
   if (class_exists('\Yardlii\Core\Features\TrustVerification\Requests\CPT')) {

@@ -350,11 +350,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (tvApiBtn && tvApiOut) {
         tvApiBtn.addEventListener('click', function() {
             var uid = document.getElementById('yardlii-tv-api-user').value;
+<<<<<<< HEAD
             if (!uid) {
                 tvApiOut.textContent = 'Error: Please enter a User ID.';
                 tvApiOut.style.color = '#d63638';
                 return;
             }
+=======
+            if (!uid) return;
+>>>>>>> 0758b61 (Feat: Add Role Control & Badge diagnostics)
             tvApiOut.textContent = 'Testing API...'; // Clear previous
             
             var endpoint = (window.wpApiSettings && wpApiSettings.root ? wpApiSettings.root : '/wp-json/') + 'yardlii/v1/verification-status/' + uid;
@@ -398,6 +402,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   <?php
   // This script tag is now moved inside the new DOMContentLoaded listener above
+<<<<<<< HEAD
+=======
+  // <script> ... </script>
+>>>>>>> 0758b61 (Feat: Add Role Control & Badge diagnostics)
   ?>
 
   <?php

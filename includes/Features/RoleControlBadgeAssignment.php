@@ -82,6 +82,53 @@ class RoleControlBadgeAssignment
         }
     }
 }
+    public function ajax_test_badge_sync(): void
+    {
+        // 1. Security check
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'Error: Insufficient permissions.'], 403);
+        }
+        check_ajax_referer('yardlii_diag_badge_sync_nonce', 'nonce');
+
+        // 2. Validate User ID
+        $user_id = isset($_POST['user_id']) ? absint($_POST['user_id']) : 0;
+        if ($user_id <= 0) {
+            wp_send_json_error(['message' => 'Error: Invalid User ID.'], 400);
+        }
+
+        $user = get_user_by('id', $user_id);
+        if (!$user) {
+            wp_send_json_error(['message' => "Error: User ID {$user_id} not found."], 404);
+        }
+
+        // 3. Run the sync
+        $this->sync_user_badge($user_id);
+
+        // 4. Get the new value to confirm
+        $opt = (array) get_option(self::OPTION_KEY, []);
+        $meta_key = !empty($opt['meta_key']) ? sanitize_key($opt['meta_key']) : self::DEFAULT_META_KEY;
+        $new_badge_id = get_user_meta($user_id, $meta_key, true);
+
+        if ($new_badge_id) {
+            wp_send_json_success([
+                'message' => sprintf(
+                    'Success: Badge sync ran for user %s (ID %d). New badge attachment ID: %s',
+                    esc_html($user->user_login),
+                    $user_id,
+                    esc_html($new_badge_id)
+                )
+            ]);
+        } else {
+            wp_send_json_success([
+                'message' => sprintf(
+                    'Success: Badge sync ran for user %s (ID %d). No matching badge was found, meta was cleared.',
+                    esc_html($user->user_login),
+                    $user_id
+                )
+            ]);
+        }
+    }
+}
     }
 
 

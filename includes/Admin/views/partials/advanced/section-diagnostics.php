@@ -70,7 +70,7 @@ $dependencies = [
     'action_scheduler' => [
         'name' => 'Action Scheduler',
         'active' => function_exists('as_enqueue_async_action'),
-        'ok' => 'Loaded (via Composer)',
+        'ok' => 'Loaded',
         'fail' => 'NOT FOUND. Required for Badge Resync.'
     ],
 ];
@@ -301,116 +301,11 @@ if ($rc_diag['action_scheduler']['active']) {
   <pre id="yardlii-diag-badge-output" style="margin-top:1rem;max-height:100px;overflow:auto;background:#f6f7f7;padding:10px;border:1px solid #dcdcde;display:none;"></pre>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Badge Sync Test
-    var badgeBtn = document.getElementById('yardlii-diag-badge-test');
-    var badgeOut = document.getElementById('yardlii-diag-badge-output');
-
-    if (badgeBtn && badgeOut && window.YARDLII_ADMIN && window.YARDLII_ADMIN.nonce_badge_sync) {
-        badgeBtn.addEventListener('click', function() {
-            var uid = document.getElementById('yardlii-diag-badge-user').value;
-            if (!uid) {
-                badgeOut.textContent = 'Error: Please enter a User ID.';
-                badgeOut.style.color = '#d63638';
-                badgeOut.style.display = 'block';
-                return;
-            }
-
-            badgeOut.textContent = 'Running sync...';
-            badgeOut.style.color = '#555';
-            badgeOut.style.display = 'block';
-
-            fetch(YARDLII_ADMIN.ajaxurl, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: new URLSearchParams({
-                    'action': 'yardlii_diag_test_badge_sync',
-                    'nonce': YARDLII_ADMIN.nonce_badge_sync,
-                    'user_id': uid
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                var msg = data.message || (data.data ? data.data.message : 'Unknown response.');
-                badgeOut.textContent = msg;
-                badgeOut.style.color = data.success ? '#0073aa' : '#d63638';
-            })
-            .catch(err => {
-                badgeOut.textContent = 'AJAX request failed: ' + err;
-                badgeOut.style.color = '#d63638';
-            });
-        });
-    }
-   // Search Cache Test
-    var searchBtn = document.getElementById('yardlii-diag-search-cache-test');
-    var searchOut = document.getElementById('yardlii-diag-search-cache-output');
-
-    if (searchBtn && searchOut && window.YARDLII_ADMIN && window.YARDLII_ADMIN.nonce_search_cache) {
-        searchBtn.addEventListener('click', function() {
-            searchOut.textContent = 'Clearing cache...';
-            searchOut.style.color = '#555';
-            searchOut.style.display = 'block';
-
-            fetch(YARDLII_ADMIN.ajaxurl, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: new URLSearchParams({
-                    'action': 'yardlii_diag_clear_search_cache',
-                    'nonce': YARDLII_ADMIN.nonce_search_cache
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                var msg = data.message || (data.data ? data.data.message : 'Unknown response.');
-                searchOut.textContent = msg;
-                searchOut.style.color = data.success ? '#0073aa' : '#d63638';
-            })
-            .catch(err => {
-                searchOut.textContent = 'AJAX request failed: ' + err;
-                searchOut.style.color = '#d63638';
-            });
-        });
-    }
-
-    // TV API Test (from original file)
-// ... (rest of the script) ...
-
-    // TV API Test (from original file)
-    var tvApiBtn = document.getElementById('yardlii-tv-api-test');
-    var tvApiOut = document.getElementById('yardlii-tv-api-output');
-    
-    if (tvApiBtn && tvApiOut) {
-        tvApiBtn.addEventListener('click', function() {
-            var uid = document.getElementById('yardlii-tv-api-user').value;
-            if (!uid) {
-                tvApiOut.textContent = 'Error: Please enter a User ID.';
-                tvApiOut.style.color = '#d63638';
-                return;
-            }
-            tvApiOut.textContent = 'Testing API...'; // Clear previous
-            
-            var endpoint = (window.wpApiSettings && wpApiSettings.root ? wpApiSettings.root : '/wp-json/') + 'yardlii/v1/verification-status/' + uid;
-            var headers = { 'X-WP-Nonce': (window.YardliiTV && YardliiTV.restNonce) ? YardliiTV.restNonce : '' };
-            
-            fetch(endpoint, { 
-                credentials: 'same-origin',
-                headers: headers
-            }).then(r => r.json()).then(function(data){
-                tvApiOut.textContent = JSON.stringify(data, null, 2);
-            }).catch(function(err){
-                tvApiOut.textContent = String(err);
-            });
-        });
-    }
-});
-</script>
-
 <?php // --- End Section 3 --- ?>
 
 
 <?php
-// --- 4. NEW: Homepage Search Diagnostics ---
+// --- 4. Homepage Search Diagnostics ---
 
 $hs_diag = [
     'facetwp' => [
@@ -465,10 +360,6 @@ $hs_diag = [
   </div>
 
   <?php
-  // This script tag is now moved inside the new DOMContentLoaded listener above
-  ?>
-
-  <?php
   if (class_exists('\Yardlii\Core\Features\TrustVerification\Requests\CPT')) {
       $cpt_slug = \Yardlii\Core\Features\TrustVerification\Requests\CPT::POST_TYPE;
 
@@ -507,3 +398,107 @@ $hs_diag = [
   }
   ?>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Badge Sync Test
+    var badgeBtn = document.getElementById('yardlii-diag-badge-test');
+    var badgeOut = document.getElementById('yardlii-diag-badge-output');
+
+    if (badgeBtn && badgeOut && window.YARDLII_ADMIN && window.YARDLII_ADMIN.nonce_badge_sync) {
+        badgeBtn.addEventListener('click', function() {
+            var uid = document.getElementById('yardlii-diag-badge-user').value;
+            if (!uid) {
+                badgeOut.textContent = 'Error: Please enter a User ID.';
+                badgeOut.style.color = '#d63638';
+                badgeOut.style.display = 'block';
+                return;
+            }
+
+            badgeOut.textContent = 'Running sync...';
+            badgeOut.style.color = '#555';
+            badgeOut.style.display = 'block';
+
+            fetch(YARDLII_ADMIN.ajaxurl, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: new URLSearchParams({
+                    'action': 'yardlii_diag_test_badge_sync',
+                    'nonce': YARDLII_ADMIN.nonce_badge_sync,
+                    'user_id': uid
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                var msg = data.message || (data.data ? data.data.message : 'Unknown response.');
+                badgeOut.textContent = msg;
+                badgeOut.style.color = data.success ? '#0073aa' : '#d63638';
+            })
+            .catch(err => {
+                badgeOut.textContent = 'AJAX request failed: ' + err;
+                badgeOut.style.color = '#d63638';
+            });
+        });
+    }
+
+    // Search Cache Test
+    var searchBtn = document.getElementById('yardlii-diag-search-cache-test');
+    var searchOut = document.getElementById('yardlii-diag-search-cache-output');
+
+    if (searchBtn && searchOut && window.YARDLII_ADMIN && window.YARDLII_ADMIN.nonce_search_cache) {
+        searchBtn.addEventListener('click', function() {
+            searchOut.textContent = 'Clearing cache...';
+            searchOut.style.color = '#555';
+            searchOut.style.display = 'block';
+
+            fetch(YARDLII_ADMIN.ajaxurl, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: new URLSearchParams({
+                    'action': 'yardlii_diag_clear_search_cache',
+                    'nonce': YARDLII_ADMIN.nonce_search_cache
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                var msg = data.message || (data.data ? data.data.message : 'Unknown response.');
+                searchOut.textContent = msg;
+                searchOut.style.color = data.success ? '#0073aa' : '#d63638';
+            })
+            .catch(err => {
+                searchOut.textContent = 'AJAX request failed: ' + err;
+                searchOut.style.color = '#d63638';
+            });
+        });
+    }
+
+    // TV API Test (from original file)
+    var tvApiBtn = document.getElementById('yardlii-tv-api-test');
+    var tvApiOut = document.getElementById('yardlii-tv-api-output');
+    
+    if (tvApiBtn && tvApiOut) {
+        tvApiBtn.addEventListener('click', function() {
+            var uid = document.getElementById('yardlii-tv-api-user').value;
+            if (!uid) {
+                tvApiOut.textContent = 'Error: Please enter a User ID.';
+                tvApiOut.style.color = '#d63638';
+                return;
+            }
+            tvApiOut.textContent = 'Testing API...'; // Clear previous
+            
+            var endpoint = (window.wpApiSettings && wpApiSettings.root ? wpApiSettings.root : '/wp-json/') + 'yardlii/v1/verification-status/' + uid;
+            var headers = { 'X-WP-Nonce': (window.YardliiTV && YardliiTV.restNonce) ? YardliiTV.restNonce : '' };
+            
+            fetch(endpoint, { 
+                credentials: 'same-origin',
+                headers: headers
+            }).then(r => r.json()).then(function(data){
+                tvApiOut.textContent = JSON.stringify(data, null, 2);
+            }).catch(function(err){
+                tvApiOut.textContent = String(err);
+            });
+        });
+    }
+});
+</script>

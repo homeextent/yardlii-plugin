@@ -35,24 +35,6 @@ if (file_exists($autoload_path)) {
     require_once $autoload_path;
 }
 
-// --- START FALLBACK ---
-// Manually load Action Scheduler files if the autoloader
-// fails (due to server permission/ownership issues).
-if (!function_exists('as_get_scheduled_actions')) {
-    $as_functions = YARDLII_CORE_PATH . 'vendor/woocommerce/action-scheduler/functions.php';
-    if (is_readable($as_functions)) {
-        require_once $as_functions;
-    }
-}
-if (!class_exists('ActionScheduler_Store')) {
-    // This is the file you found at: classes/abstracts/ActionScheduler_Store.php
-    $as_class = YARDLII_CORE_PATH . 'vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Store.php';
-    if (is_readable($as_class)) {
-        require_once $as_class;
-    }
-}
-// --- END FALLBACK ---
-
 // Lightweight PSR-4 for Yardlii\Core\* (always)
 spl_autoload_register(static function ($class) {
     $prefix   = 'Yardlii\\Core\\';
